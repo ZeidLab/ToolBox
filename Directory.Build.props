@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup Label="NuspecSettings">
+        <Company>ZeidLabCo</Company>
+        <Authors>Zeid Youssefzadeh</Authors>
+        <Copyright>Copyright © $(Company) $([System.DateTime]::Now.Year)</Copyright>
+        <Trademark>$(Company)™</Trademark>
+        <Product>$(Company) Projects</Product>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <LangVersion>12</LangVersion>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <AssemblyName>$(MSBuildProjectName)</AssemblyName>
+        <RootNamespace>ZeidLab.$(MSBuildProjectName)</RootNamespace>
+        <Configurations>Debug;Release;Production</Configurations>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <Deterministic>true</Deterministic>
+        <RestoreIgnoreFailedSource>true</RestoreIgnoreFailedSource>
+        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+        <RunAnalyzersDuringLiveAnalysis>True</RunAnalyzersDuringLiveAnalysis>
+        <RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
+        <EnableNETAnalyzers>True</EnableNETAnalyzers>
+        <Optimize>True</Optimize>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <ManagePackageVersionsCentrally>True</ManagePackageVersionsCentrally>
+    </PropertyGroup>
+
+    <ItemGroup Condition="!$(MSBuildProjectName.Contains('.Test.'))">
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>$(MSBuildProjectName.Replace(" ", "_")).Test.UI</_Parameter1>
+        </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>$(MSBuildProjectName.Replace(" ", "_")).Test.Integrations</_Parameter1>
+        </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>$(MSBuildProjectName.Replace(" ", "_")).Test.Units</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
+    <PropertyGroup Label="ConfigFiles">
+        <EditorConfigFile Condition=" '$(EditorConfigFile)' == '' ">$([MSBuild]::GetPathOfFileAbove('.editorconfig',
+            $(MSBuildProjectDirectory)))
+        </EditorConfigFile>
+    </PropertyGroup>
+
+    <ItemGroup >
+        <Content Include="..\.gitignore">
+            <Link>.gitignore</Link>
+        </Content>
+    </ItemGroup>
+    
+</Project>

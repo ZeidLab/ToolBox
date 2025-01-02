@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolBox", "ToolBox\ToolBox.csproj", "{E3719B5B-363E-414F-9822-5772429EB797}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{763B823B-67B8-48A1-BA0A-4FEF19ED30EA}"
+	ProjectSection(SolutionItems) = preProject
+		nuget.config = nuget.config
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		global.json = global.json
+		Directory.Packages.props = Directory.Packages.props
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolBox.Test.Units", "ToolBox.Test.Units\ToolBox.Test.Units.csproj", "{AB608E21-4CC3-45BC-B245-55F8F6BD95B2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E3719B5B-363E-414F-9822-5772429EB797}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3719B5B-363E-414F-9822-5772429EB797}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3719B5B-363E-414F-9822-5772429EB797}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3719B5B-363E-414F-9822-5772429EB797}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB608E21-4CC3-45BC-B245-55F8F6BD95B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB608E21-4CC3-45BC-B245-55F8F6BD95B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB608E21-4CC3-45BC-B245-55F8F6BD95B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB608E21-4CC3-45BC-B245-55F8F6BD95B2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
