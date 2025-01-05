@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.SymbolStore;
-// ReSharper disable once CheckNamespace
+﻿// ReSharper disable once CheckNamespace
 using ZeidLab.ToolBox.Common;
 
 namespace ZeidLab.ToolBox.Options;

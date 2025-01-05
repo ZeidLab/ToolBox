@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 // ReSharper disable once CheckNamespace
-using ZeidLab.ToolBox.Common;
 
 namespace ZeidLab.ToolBox.Options;
 
