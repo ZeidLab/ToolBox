@@ -25,16 +25,8 @@ public readonly record struct Result<TValue>
     [Pure]
     public bool IsFailure => !IsSuccess;
 
-    private Result(bool isSuccess, TValue value, Error? error)
+    private Result(bool isSuccess, TValue value, Error? error = null)
     {
-        switch (isSuccess)
-        {
-            case true when (error is not null || value is null):
-                throw new ArgumentException("Value cannot be null and error should be null when IsSuccess is true.");
-            case false when (error is null || value is not null):
-                throw new ArgumentException(
-                    "Value should be null and error should not be null when IsSuccess is false.");
-        }
         Value = value;
         Error = error;
         IsSuccess = isSuccess;
@@ -60,7 +52,7 @@ public readonly record struct Result<TValue>
     public static Result<TValue> Success(TValue value)
     {
         ArgumentNullException.ThrowIfNull(value, nameof(value));
-        return new Result<TValue>(true, value, null);
+        return new Result<TValue>(true, value);
     }
 
     /// <summary>
@@ -72,3 +64,6 @@ public readonly record struct Result<TValue>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<TValue> Failure(Error error) => new(false, default!, error);
 }
+
+public delegate Result<TIn> Try<TIn>();
+public delegate Task<Result<TIn>> TryAsync<TIn>();

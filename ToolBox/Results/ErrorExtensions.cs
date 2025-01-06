@@ -17,7 +17,7 @@ public static class ErrorExtensions
     /// </returns>
     public static bool TryGetException(this Error self, out Exception? exception)
     {
-        exception = self.UnhandledException;
+        exception = self.Exception;
         return exception is not null;
     } 
     
@@ -31,7 +31,7 @@ public static class ErrorExtensions
     /// </returns>
     public static Maybe<Exception> TryGetException(this Error self)
     {
-        return self.UnhandledException is {} exception ? exception.ToSome(): Maybe<Exception>.None();
+        return self.Exception is {} exception ? exception.ToSome(): Maybe<Exception>.None();
         
     }
 
@@ -46,7 +46,7 @@ public static class ErrorExtensions
     public static Error WithCode(this Error self, int code)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(code, nameof(code));
-        return new Error(code, self.Name, self.Message, self.UnhandledException);
+        return new Error(code, self.Name, self.Message, self.Exception);
     }
 
     /// <summary>
@@ -62,7 +62,7 @@ public static class ErrorExtensions
     public static Error WithMessage(this Error self, string message)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(message, nameof(message));
-        return new Error(self.Code, self.Name, message, self.UnhandledException);
+        return new Error(self.Code, self.Name, message, self.Exception);
     }
 
     /// <summary>
@@ -79,7 +79,7 @@ public static class ErrorExtensions
     public static Error WithName(this Error self, string name)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name, nameof(name));
-        return new Error(self.Code, name, self.Message, self.UnhandledException);
+        return new Error(self.Code, name, self.Message, self.Exception);
     }
 
     /// <summary>

@@ -1,11 +1,14 @@
 ﻿using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using ZeidLab.ToolBox.Common;
 using ZeidLab.ToolBox.Options;
 
 namespace ZeidLab.ToolBox.Results;
 
 public static class ResultExtensions
 {
+    
+
     /// <summary>
     /// Converts the provided object to a successful Result instance.
     /// </summary>
@@ -38,7 +41,7 @@ public static class ResultExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<TIn> ToFailure<TIn>(this Exception self)
         => Result<TIn>.Failure(Error.New(self));
-    
+
     /// <summary>
     /// Converts a Result instance to a Maybe instance.
     /// </summary>
@@ -49,6 +52,7 @@ public static class ResultExtensions
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Maybe<TIn> ToMaybe<TIn>(this Result<TIn> self)
-        => self.IsSuccess ? Maybe<TIn>.Some(self.Value!) 
+        => self.IsSuccess
+            ? Maybe<TIn>.Some(self.Value!)
             : Maybe<TIn>.None();
 }

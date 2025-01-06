@@ -76,7 +76,7 @@ public class ErrorExtensionsTests
         result.Code.Should().Be(newCode);
         result.Name.Should().Be(originalError.Name);
         result.Message.Should().Be(originalError.Message);
-        result.UnhandledException.Should().Be(originalError.UnhandledException);
+        result.Exception.Should().Be(originalError.Exception);
     }
 
     [Fact]
@@ -121,7 +121,7 @@ public class ErrorExtensionsTests
         result.Message.Should().Be(newMessage);
         result.Code.Should().Be(originalError.Code);
         result.Name.Should().Be(originalError.Name);
-        result.UnhandledException.Should().Be(originalError.UnhandledException);
+        result.Exception.Should().Be(originalError.Exception);
     }
 
     [Fact]
@@ -166,7 +166,7 @@ public class ErrorExtensionsTests
         result.Name.Should().Be(newName);
         result.Code.Should().Be(originalError.Code);
         result.Message.Should().Be(originalError.Message);
-        result.UnhandledException.Should().Be(originalError.UnhandledException);
+        result.Exception.Should().Be(originalError.Exception);
     }
 
     [Fact]
@@ -208,7 +208,7 @@ public class ErrorExtensionsTests
         var result = originalError.WithException(newException);
 
         // Assert
-        result.UnhandledException.Should().Be(newException);
+        result.Exception.Should().Be(newException);
         result.Code.Should().Be(originalError.Code);
         result.Name.Should().Be(originalError.Name);
         result.Message.Should().Be(originalError.Message);

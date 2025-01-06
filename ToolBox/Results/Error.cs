@@ -21,7 +21,7 @@ public readonly record struct Error
     public readonly string Message;
 
     /// <summary>system exception</summary>
-    public readonly Exception? UnhandledException;
+    public readonly Exception? Exception;
     
 
     /// <summary>
@@ -30,21 +30,21 @@ public readonly record struct Error
     /// <param name="code">The error code.</param>
     /// <param name="name">The error name. It is a meaningful name instead of numbers and more readable.</param>
     /// <param name="message">The error message.</param>
-    /// <param name="unhandledException">The exception associated with this error, or <see langword="null"/> if there is no exception.</param>
+    /// <param name="exception">The exception associated with this error, or <see langword="null"/> if there is no exception.</param>
     /// <param name="isEmpty"></param>
-    internal Error(int code, string name, string message, Exception? unhandledException = null)
+    internal Error(int code, string name, string message, Exception? exception = null)
     {
         Code = code;
         Name = name;
         Message = message;
-        UnhandledException = unhandledException;
+        Exception = exception;
     }
     /// <summary>
     /// Initializes a new instance of the <see cref="Error"/> struct.
     /// </summary>
     /// <remarks>
     /// This constructor is not intended to be used directly. Instead, use the static factory methods
-    /// like <see cref="New(string)"/> or <see cref="New(Exception)"/>.
+    /// like <see cref="New(string)"/> or <see cref="New(System.Exception)"/>.
     /// </remarks>
     [Obsolete("Use factory methods like Error.New() instead. Any instance of public constructor will be considered empty.")]
     public Error() => throw new InvalidOperationException("Use factory methods like Error.New() instead.");
@@ -169,6 +169,6 @@ public readonly record struct Error
         code = Code;
         name = Name;
         message = Message;
-        unhandledException = UnhandledException;
+        unhandledException = Exception;
     }
 }

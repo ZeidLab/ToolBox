@@ -21,7 +21,7 @@ public class ErrorTests
         error.Code.Should().Be(code);
         error.Name.Should().Be(name);
         error.Message.Should().Be(message);
-        error.UnhandledException.Should().Be(exception);
+        error.Exception.Should().Be(exception);
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public class ErrorTests
         error.Code.Should().Be(Error.DefaultCode);
         error.Name.Should().Be(Error.DefaultName);
         error.Message.Should().Be(message);
-        error.UnhandledException.Should().BeNull();
+        error.Exception.Should().BeNull();
     }
 
     [Fact]
@@ -65,7 +65,7 @@ public class ErrorTests
         error.Code.Should().Be(exception.HResult);
         error.Name.Should().Be(Error.DefaultName);
         error.Message.Should().Be(exception.Message);
-        error.UnhandledException.Should().Be(exception);
+        error.Exception.Should().Be(exception);
     }
 
     [Fact]
@@ -82,7 +82,7 @@ public class ErrorTests
         error.Code.Should().Be(code);
         error.Name.Should().Be(Error.DefaultName);
         error.Message.Should().Be(message);
-        error.UnhandledException.Should().BeNull();
+        error.Exception.Should().BeNull();
     }
 
     [Fact]
@@ -99,7 +99,7 @@ public class ErrorTests
         error.Code.Should().Be(Error.DefaultCode);
         error.Name.Should().Be(name);
         error.Message.Should().Be(message);
-        error.UnhandledException.Should().BeNull();
+        error.Exception.Should().BeNull();
     }
 
     [Fact]
@@ -117,7 +117,7 @@ public class ErrorTests
         error.Code.Should().Be(exception.HResult);
         error.Name.Should().Be(name);
         error.Message.Should().Be(message);
-        error.UnhandledException.Should().Be(exception);
+        error.Exception.Should().Be(exception);
     }
 
     [Fact]
@@ -135,7 +135,7 @@ public class ErrorTests
         error.Code.Should().Be(code);
         error.Name.Should().Be(Error.DefaultName);
         error.Message.Should().Be(message);
-        error.UnhandledException.Should().Be(exception);
+        error.Exception.Should().Be(exception);
     }
 
     [Fact]
@@ -152,7 +152,7 @@ public class ErrorTests
         error.Code.Should().Be(exception.HResult);
         error.Name.Should().Be(Error.DefaultName);
         error.Message.Should().Be(message);
-        error.UnhandledException.Should().Be(exception);
+        error.Exception.Should().Be(exception);
     }
 
     [Fact]
@@ -168,7 +168,7 @@ public class ErrorTests
         error.Code.Should().Be(exception.HResult);
         error.Name.Should().Be(Error.DefaultName);
         error.Message.Should().Be(exception.Message);
-        error.UnhandledException.Should().Be(exception);
+        error.Exception.Should().Be(exception);
     }
 
     [Fact]
@@ -184,7 +184,7 @@ public class ErrorTests
         error.Code.Should().Be(Error.DefaultCode);
         error.Name.Should().Be(Error.DefaultName);
         error.Message.Should().Be(message);
-        error.UnhandledException.Should().BeNull();
+        error.Exception.Should().BeNull();
     }
 
     [Fact]
