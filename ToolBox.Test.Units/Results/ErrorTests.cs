@@ -114,7 +114,7 @@ public class ErrorTests
         var error = Error.New(name, message, exception);
 
         // Assert
-        error.Code.Should().Be(exception.HResult);
+        error.Code.Should().Be(Error.DefaultCode);
         error.Name.Should().Be(name);
         error.Message.Should().Be(message);
         error.Exception.Should().Be(exception);
@@ -149,7 +149,7 @@ public class ErrorTests
         var error = Error.New(message, exception);
 
         // Assert
-        error.Code.Should().Be(exception.HResult);
+        error.Code.Should().Be(Error.DefaultCode);
         error.Name.Should().Be(Error.DefaultName);
         error.Message.Should().Be(message);
         error.Exception.Should().Be(exception);

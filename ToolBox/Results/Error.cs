@@ -122,7 +122,7 @@ public readonly record struct Error
         ArgumentException.ThrowIfNullOrWhiteSpace(message, nameof(message));
         ArgumentException.ThrowIfNullOrWhiteSpace(name, nameof(name));
 
-        return new Error(exception.HResult, name, message, exception);
+        return new Error(DefaultCode, name, message, exception);
     }
 
     /// <summary>
@@ -154,7 +154,7 @@ public readonly record struct Error
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(message, nameof(message));
         ArgumentNullException.ThrowIfNull(exception, nameof(exception));
-        return new Error(exception.HResult, DefaultName, message, exception);
+        return new Error(DefaultCode, DefaultName, message, exception);
     }
 
     /// <summary>
