@@ -22,14 +22,14 @@ public readonly record struct Result<TValue>
     /// <summary>
     /// Gets a value indicating whether the operation failed.
     /// </summary>
-    [Pure]
-    public bool IsFailure => !IsSuccess;
-
+    public readonly bool IsFailure;
+    
     private Result(bool isSuccess, TValue value, Error? error = null)
     {
         Value = value;
         Error = error;
         IsSuccess = isSuccess;
+        IsFailure = !isSuccess;
         IsDefault = Value.IsDefault();
     }
 
@@ -66,4 +66,5 @@ public readonly record struct Result<TValue>
 }
 
 public delegate Result<TIn> Try<TIn>();
+
 public delegate Task<Result<TIn>> TryAsync<TIn>();
