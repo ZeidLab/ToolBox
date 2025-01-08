@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using ZeidLab.ToolBox.Results;
 
 namespace ZeidLab.ToolBox.Common;
 
@@ -37,4 +38,19 @@ public static class TaskExtensions
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Task<TIn> AsTask<TIn>(this TIn self) => Task.FromResult(self);
+
+    /// <summary>Flatten the nested Task type</summary>
+    [Pure]
+    public static async Task<TIn> Flatten<TIn>(this Task<Task<TIn>> self)
+    {
+        return await (await self.ConfigureAwait(false)).ConfigureAwait(false);
+    }
+
+    /// <summary>Flatten the nested Task type</summary>
+    [Pure]
+    public static async Task<TIn> Flatten<TIn>(this Task<Task<Task<TIn>>> self)
+    {
+        return await (await (await self.ConfigureAwait(false)).ConfigureAwait(false)).ConfigureAwait(false);
+    }
+    
 }
