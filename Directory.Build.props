@@ -39,6 +39,9 @@
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
             <_Parameter1>$(MSBuildProjectName.Replace(" ", "_")).Test.Units</_Parameter1>
         </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>$(MSBuildProjectName.Replace(" ", "_")).Test.Benchmarks</_Parameter1>
+        </AssemblyAttribute>
     </ItemGroup>
 
     <PropertyGroup Label="ConfigFiles">

@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="BenchmarkDotNet" />
+      <PackageReference Include="LanguageExt.Core" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ToolBox\ToolBox.csproj" />
+    </ItemGroup>
+
+</Project>
