@@ -1,5 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" >
     <PropertyGroup>
-        <Version>1.0.0-preview</Version>
+        <!-- Base version (e.g., 1.0.0-preview) -->
+        <VersionBase>1.0.0-preview</VersionBase>
+
+        <!-- Generate the build date dynamically -->
+        <BuildDate>$([System.DateTime]::Now.ToString("yyyyMMddHHmmss"))</BuildDate>
+
+        <!-- Full version with the build date -->
+        <Version>$(VersionBase)-$(BuildDate)</Version>
     </PropertyGroup>
 </Project>
