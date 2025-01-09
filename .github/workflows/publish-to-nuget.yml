@@ -40,11 +40,14 @@ jobs:
       - name: Run unit tests with coverage
         id: run_tests
         run: |
-          dotnet test ToolBox.Test.Units --configuration Release --collect:"XPlat Code Coverage" --logger trx || echo "Tests failed"
+          if dotnet test ToolBox.Test.Units --configuration Release --collect:"XPlat Code Coverage" --logger trx; then
+            echo "test_passed=true" >> $GITHUB_OUTPUT
+            echo "failure_reason=" >> $GITHUB_OUTPUT
+          else
+            echo "test_passed=false" >> $GITHUB_OUTPUT
+            echo "failure_reason=Test failures" >> $GITHUB_OUTPUT
+          fi
         continue-on-error: true
-        outputs:
-          test_passed: ${{ steps.run_tests.outcome == 'success' }}
-          failure_reason: ${{ steps.run_tests.outcome != 'success' && 'Test failures' || '' }}
 
       - name: Generate coverage report
         run: |
@@ -59,7 +62,7 @@ jobs:
           
           if [ -z "$COVERAGE_FILE" ]; then
             echo "No coverage report found."
-            echo "coverage_passed=false" >> $GITHUB_ENV
+            echo "coverage_passed=false" >> $GITHUB_OUTPUT
             exit 1
           fi
           
@@ -68,7 +71,7 @@ jobs:
           
           if [ -z "$COVERAGE" ] || [ "$COVERAGE" = "null" ]; then
             echo "Coverage report is invalid or missing coverage data."
-            echo "coverage_passed=false" >> $GITHUB_ENV
+            echo "coverage_passed=false" >> $GITHUB_OUTPUT
             exit 1
           fi
           
@@ -77,10 +80,10 @@ jobs:
           # Check if the code coverage meets the threshold
           if (( $(echo "$COVERAGE > 95" | bc -l) )); then
             echo "Coverage threshold met."
-            echo "coverage_passed=true" >> $GITHUB_ENV
+            echo "coverage_passed=true" >> $GITHUB_OUTPUT
           else
             echo "Coverage threshold not met."
-            echo "coverage_passed=false" >> $GITHUB_ENV
+            echo "coverage_passed=false" >> $GITHUB_OUTPUT
             exit 1
           fi
 
