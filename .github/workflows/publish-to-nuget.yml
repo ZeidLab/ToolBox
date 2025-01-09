@@ -64,8 +64,11 @@ jobs:
             exit 1
           fi
 
-          # Merge all coverage reports into a single report using xargs
-          echo "$COVERAGE_FILES" | xargs reportgenerator -reports: -targetdir:./merged-coverage-report -reporttypes:Cobertura
+          # Format the file paths as a semicolon-separated list
+          COVERAGE_FILES_SEMICOLON=$(echo "$COVERAGE_FILES" | tr '\n' ';' | sed 's/;$//')
+
+          # Merge all coverage reports into a single report
+          reportgenerator "-reports:$COVERAGE_FILES_SEMICOLON" -targetdir:./merged-coverage-report -reporttypes:Cobertura
 
           # Use the merged report for coverage calculation
           MERGED_COVERAGE_FILE="./merged-coverage-report/Cobertura.xml"
