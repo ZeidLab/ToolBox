@@ -2,11 +2,10 @@
     <PropertyGroup>
         <!-- Base version (e.g., 1.0.0-preview) -->
         <VersionBase>1.0.0-preview</VersionBase>
-
-        <!-- Generate the build date dynamically -->
-        <BuildDate>$([System.DateTime]::Now.ToString("yyyyMMddHHmmss"))</BuildDate>
-
+        <!-- Generate the build date dynamically as the build number 
+        and it will be a chronologically random number -->
+        <BuildNumber>$([System.DateTime]::Now.ToString("yyMMddHHmmss"))</BuildNumber>
         <!-- Full version with the build date -->
-        <Version>$(VersionBase)-$(BuildDate)</Version>
+        <Version>$(VersionBase)-$(BuildNumber)</Version>
     </PropertyGroup>
 </Project>
