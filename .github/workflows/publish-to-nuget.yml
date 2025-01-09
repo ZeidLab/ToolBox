@@ -55,6 +55,10 @@ jobs:
           # Install reportgenerator if not already installed
           dotnet tool install -g dotnet-reportgenerator-globaltool
 
+          # Install libxml2-utils for xmllint
+          sudo apt-get update
+          sudo apt-get install -y libxml2-utils
+
           # Find all coverage.cobertura.xml files
           COVERAGE_FILES=$(find ToolBox.Test.Units/TestResults -name "coverage.cobertura.xml")
 
