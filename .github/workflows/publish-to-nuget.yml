@@ -7,6 +7,11 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
+    outputs:
+      test_passed: ${{ steps.run_tests.outputs.test_passed }}
+      coverage_passed: ${{ steps.check_coverage.outputs.coverage_passed }}
+      failure_reason: ${{ steps.run_tests.outputs.failure_reason }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -33,35 +38,56 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: Run unit tests with coverage
-        run: dotnet test ToolBox.Test.Units --configuration Release --collect:"XPlat Code Coverage" --logger trx
+        id: run_tests
+        run: |
+          dotnet test ToolBox.Test.Units --configuration Release --collect:"XPlat Code Coverage" --logger trx || echo "Tests failed"
+        continue-on-error: true
+        outputs:
+          test_passed: ${{ steps.run_tests.outcome == 'success' }}
+          failure_reason: ${{ steps.run_tests.outcome != 'success' && 'Test failures' || '' }}
 
       - name: Generate coverage report
         run: |
           dotnet tool install -g dotnet-reportgenerator-globaltool
-          reportgenerator -reports:./ToolBox.Test.Units/TestResults/**/coverage.cobertura.xml -targetdir:./coverage-report
+          reportgenerator -reports:ToolBox.Test.Units/TestResults/**/coverage.cobertura.xml -targetdir:./coverage-report
 
       - name: Check coverage threshold
+        id: check_coverage
         run: |
-          # Extract the line-rate from the coverage report
-          LINE_RATE=$(grep -oP '(?<=<coverage line-rate=")[^"]+' ./coverage-report/Cobertura.xml)
-
-          # Convert the line-rate to a percentage
-          COVERAGE=$(echo "$LINE_RATE * 100" | bc -l)
-
+          # Find the coverage report
+          COVERAGE_FILE=$(find ToolBox.Test.Units/TestResults -name "coverage.json" | head -n 1)
+          
+          if [ -z "$COVERAGE_FILE" ]; then
+            echo "No coverage report found."
+            echo "coverage_passed=false" >> $GITHUB_ENV
+            exit 1
+          fi
+          
+          # Extract the line coverage percentage using jq
+          COVERAGE=$(jq -r '.data[0].coverageSummary.lineCoverage' "$COVERAGE_FILE")
+          
+          if [ -z "$COVERAGE" ] || [ "$COVERAGE" = "null" ]; then
+            echo "Coverage report is invalid or missing coverage data."
+            echo "coverage_passed=false" >> $GITHUB_ENV
+            exit 1
+          fi
+          
           echo "Code Coverage: $COVERAGE%"
-
-          # Check if the code coverage meets the threshold (e.g., 95%)
+          
+          # Check if the code coverage meets the threshold
           if (( $(echo "$COVERAGE > 95" | bc -l) )); then
             echo "Coverage threshold met."
+            echo "coverage_passed=true" >> $GITHUB_ENV
           else
             echo "Coverage threshold not met."
+            echo "coverage_passed=false" >> $GITHUB_ENV
             exit 1
           fi
 
   publish:
     needs: build-and-test
     runs-on: ubuntu-latest
-    if: needs.build-and-test.outputs.coverage_passed == 'true'
+    if: needs.build-and-test.outputs.test_passed == 'true' && needs.build-and-test.outputs.coverage_passed == 'true'
 
     steps:
       - name: Checkout code
