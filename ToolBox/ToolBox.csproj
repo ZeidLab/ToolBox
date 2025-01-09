@@ -1,11 +1,42 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" >
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <!-- Base version (e.g., 1.0.0-preview) -->
+
+        <!-- Versioning -->
         <VersionBase>1.0.0-preview</VersionBase>
-        <!-- Generate the build date dynamically as the build number 
-        and it will be a chronologically random number -->
         <BuildNumber>$([System.DateTime]::Now.ToString("yyMMddHHmmss"))</BuildNumber>
-        <!-- Full version with the build date -->
         <Version>$(VersionBase)-$(BuildNumber)</Version>
+        
+        <!-- Basic Project Properties -->
+
+        <PackageId>$(RootNamespace)</PackageId>
+        <PackageVersion>$(Version)</PackageVersion>
+        <Title>ZeidLab ToolBox</Title> <!-- A friendly title for your package -->
+        <Product>ToolBox</Product> <!-- The product name -->
+        <Description>A toolbox library for adding Railway-Oriented Programming, and Functional Programming in c# by using Result{T} and Maybe{T} extension methods.</Description>
+        <PackageProjectUrl>https://github.com/ZeidLab/ToolBox</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/ZeidLab/ToolBox</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>
+            RailwayOriented; OptionalParameter;
+            Result; Maybe; Either; Validation; FunctionalProgramming
+        </PackageTags>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression> <!-- Specify the license type -->
+        
+
+
+
+        <!-- Documentation -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile> <!-- Generate XML documentation -->
+        <PublishRepositoryUrl>true</PublishRepositoryUrl> <!-- Publish the repository URL in the package -->
+        <EmbedUntrackedSources>true</EmbedUntrackedSources> <!-- Embed untracked sources in the package -->
+
+        <!-- Source Link Support -->
+        <IncludeSymbols>true</IncludeSymbols> <!-- Include symbols in the package -->
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat> <!-- Use the snupkg format for symbols -->
+        <PublishDocumentationFile>true</PublishDocumentationFile> <!-- Publish documentation file -->
     </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub"  PrivateAssets="All" />
+    </ItemGroup>
 </Project>

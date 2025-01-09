@@ -10,6 +10,7 @@
     <PackageVersion Include="Verify.XUnit" Version="28.7.0" />
     <PackageVersion Include="FluentAssertions" Version="7.0.0" />
     <PackageVersion Include="NSubstitute" Version="5.3.0" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup Condition="$(MSBuildProjectName.EndsWith('.Test.Units')) or $(MSBuildProjectName.EndsWith('.Test.Integrations'))">
     <PackageReference Include="Microsoft.NET.Test.Sdk" />

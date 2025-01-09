@@ -6,7 +6,7 @@
         <Copyright>Copyright © $(Company) $([System.DateTime]::Now.Year)</Copyright>
         <Trademark>$(Company)™</Trademark>
         <Product>$(Company) Projects</Product>
-   
+        <NeutralLanguage>en</NeutralLanguage> <!-- The default language of the package -->
     </PropertyGroup>
 
     <PropertyGroup>

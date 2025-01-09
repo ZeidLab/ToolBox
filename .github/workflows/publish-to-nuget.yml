@@ -119,7 +119,6 @@ jobs:
   publish:
     needs: build-and-test
     runs-on: ubuntu-latest
-    environment: production  # Use the environment
     if: needs.build-and-test.outputs.test_passed == 'true' && needs.build-and-test.outputs.coverage_passed == 'true'
 
     steps:
