@@ -32,31 +32,30 @@ jobs:
       - name: Build the solution
         run: dotnet build --configuration Release
 
-      - name: Run unit tests for ToolBox.Test.Units
-        run: dotnet test ToolBox.Test.Units --configuration Release --collect:"XPlat Code Coverage" --logger trx -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=json
-      
-      - name: Check code coverage
-        id: coverage
+      - name: Run unit tests with coverage
+        run: dotnet test ToolBox.Test.Units --configuration Release --collect:"XPlat Code Coverage" --logger trx
+
+      - name: Generate coverage report
         run: |
-          # Find the coverage report
-          COVERAGE_FILE=$(find ToolBox.Test.Units/TestResults -name "coverage.json" | head -n 1)
-          
-          if [ -z "$COVERAGE_FILE" ]; then
-            echo "No coverage report found."
-            echo "::set-output name=coverage_passed::false"
-            exit 0
-          fi
-          
-          # Extract the line coverage percentage
-          COVERAGE=$(jq -r '.data[0].coverageSummary.lineCoverage' "$COVERAGE_FILE")
-          
+          dotnet tool install -g dotnet-reportgenerator-globaltool
+          reportgenerator -reports:./ToolBox.Test.Units/TestResults/**/coverage.cobertura.xml -targetdir:./coverage-report
+
+      - name: Check coverage threshold
+        run: |
+          # Extract the line-rate from the coverage report
+          LINE_RATE=$(grep -oP '(?<=<coverage line-rate=")[^"]+' ./coverage-report/Cobertura.xml)
+
+          # Convert the line-rate to a percentage
+          COVERAGE=$(echo "$LINE_RATE * 100" | bc -l)
+
           echo "Code Coverage: $COVERAGE%"
-          
-          # Check if the code coverage meets the threshold
+
+          # Check if the code coverage meets the threshold (e.g., 95%)
           if (( $(echo "$COVERAGE > 95" | bc -l) )); then
-            echo "::set-output name=coverage_passed::true"
+            echo "Coverage threshold met."
           else
-            echo "::set-output name=coverage_passed::false"
+            echo "Coverage threshold not met."
+            exit 1
           fi
 
   publish:
