@@ -133,5 +133,8 @@ jobs:
       - name: Pack the ToolBox project
         run: dotnet pack ToolBox --configuration Release --output ./artifacts
 
+      - name: Debug API Key
+        run: echo "API Key is ${{ secrets.NUGET_TOKEN }}"
+
       - name: Publish to NuGet
         run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source https://api.nuget.org/v3/index.json
