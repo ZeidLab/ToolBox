@@ -119,6 +119,7 @@ jobs:
   publish:
     needs: build-and-test
     runs-on: ubuntu-latest
+    environment: production  # Use the environment
     if: needs.build-and-test.outputs.test_passed == 'true' && needs.build-and-test.outputs.coverage_passed == 'true'
 
     steps:
@@ -132,9 +133,6 @@ jobs:
 
       - name: Pack the ToolBox project
         run: dotnet pack ToolBox --configuration Release --output ./artifacts
-
-      - name: Debug API Key
-        run: echo "API Key is ${{ secrets.NUGET_TOKEN }}"
 
       - name: Publish to NuGet
         run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source https://api.nuget.org/v3/index.json
