@@ -33,14 +33,26 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: Run unit tests for ToolBox.Test.Units
-        run: dotnet test ToolBox.Test.Units --configuration Release --collect:"XPlat Code Coverage" --logger trx
-
+        run: dotnet test ToolBox.Test.Units --configuration Release --collect:"XPlat Code Coverage" --logger trx -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=json
+      
       - name: Check code coverage
         id: coverage
         run: |
-          # Extract the code coverage percentage from the test results
-          COVERAGE=$(grep -oP '(?<=<Result Outcome="Passed">)[^<]+' ToolBox.Test.Units/TestResults/*.trx | awk '{sum+=$1} END {print sum/NR}')
+          # Find the coverage report
+          COVERAGE_FILE=$(find ToolBox.Test.Units/TestResults -name "coverage.json" | head -n 1)
+          
+          if [ -z "$COVERAGE_FILE" ]; then
+            echo "No coverage report found."
+            echo "::set-output name=coverage_passed::false"
+            exit 0
+          fi
+          
+          # Extract the line coverage percentage
+          COVERAGE=$(jq -r '.data[0].coverageSummary.lineCoverage' "$COVERAGE_FILE")
+          
           echo "Code Coverage: $COVERAGE%"
+          
+          # Check if the code coverage meets the threshold
           if (( $(echo "$COVERAGE > 95" | bc -l) )); then
             echo "::set-output name=coverage_passed::true"
           else
