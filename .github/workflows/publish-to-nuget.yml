@@ -64,8 +64,11 @@ jobs:
             exit 1
           fi
 
+          # Format the file paths as a comma-separated list
+          COVERAGE_FILES_CSV=$(echo "$COVERAGE_FILES" | tr '\n' ',' | sed 's/,$//')
+
           # Merge all coverage reports into a single report
-          reportgenerator -reports:"$COVERAGE_FILES" -targetdir:./merged-coverage-report -reporttypes:Cobertura
+          reportgenerator -reports:"$COVERAGE_FILES_CSV" -targetdir:./merged-coverage-report -reporttypes:Cobertura
 
           # Use the merged report for coverage calculation
           MERGED_COVERAGE_FILE="./merged-coverage-report/Cobertura.xml"
