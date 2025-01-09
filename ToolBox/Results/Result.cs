@@ -65,6 +65,3 @@ public readonly record struct Result<TValue>
     public static Result<TValue> Failure(Error error) => new(false, default!, error);
 }
 
-public delegate Result<TIn> Try<TIn>();
-
-public delegate Task<Result<TIn>> TryAsync<TIn>();

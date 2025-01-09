@@ -4,6 +4,8 @@ using ZeidLab.ToolBox.Common;
 
 namespace ZeidLab.ToolBox.Results;
 
+public delegate Result<TIn> Try<TIn>();
+public delegate Task<Result<TIn>> TryAsync<TIn>();
 public static class ResultExtensionsTry
 {
     [Pure]
