@@ -41,6 +41,7 @@ public static class TaskExtensions
 
     /// <summary>Flatten the nested Task type</summary>
     [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<TIn> Flatten<TIn>(this Task<Task<TIn>> self)
     {
         return await (await self.ConfigureAwait(false)).ConfigureAwait(false);
@@ -48,6 +49,7 @@ public static class TaskExtensions
 
     /// <summary>Flatten the nested Task type</summary>
     [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<TIn> Flatten<TIn>(this Task<Task<Task<TIn>>> self)
     {
         return await (await (await self.ConfigureAwait(false)).ConfigureAwait(false)).ConfigureAwait(false);
