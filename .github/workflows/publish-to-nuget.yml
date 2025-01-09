@@ -98,13 +98,13 @@ jobs:
           fi
 
       - name: Upload test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: ToolBox.Test.Units/TestResults
 
       - name: Upload merged coverage report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: merged-coverage-report
           path: ./merged-coverage-report
