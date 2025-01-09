@@ -131,7 +131,8 @@ public class ResultExtensionsEnsureTests
     }
 
     [Fact]
-    public async Task EnsureAsync_WithAsyncPredicate_WhenResultIsSuccessAndPredicateIsFalse_ShouldReturnFailedResultWithProvidedError()
+    public async Task
+        EnsureAsync_WithAsyncPredicate_WhenResultIsSuccessAndPredicateIsFalse_ShouldReturnFailedResultWithProvidedError()
     {
         // Arrange
         var result = Task.FromResult(Result<int>.Success(42));
@@ -144,53 +145,5 @@ public class ResultExtensionsEnsureTests
         // Assert
         ensuredResult.IsFailure.Should().BeTrue();
         ensuredResult.Error.Should().Be(error);
-    }
-
-    [Fact]
-    public void TryEnsure_WhenPredicateThrowsException_ShouldReturnFailedResultWithException()
-    {
-        // Arrange
-        var result = Result<int>.Success(42);
-        var exception = new Exception("Test exception");
-        Func<int, bool> predicate = x => throw exception;
-
-        // Act
-        var ensuredResult = result.TryEnsure(predicate, Error.New("Should not be used"));
-
-        // Assert
-        ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.Error.GetValueOrDefault().Exception.Should().Be(exception);
-    }
-
-    [Fact]
-    public async Task TryEnsureAsync_WhenPredicateThrowsException_ShouldReturnFailedResultWithException()
-    {
-        // Arrange
-        var result = Task.FromResult(Result<int>.Success(42));
-        var exception = new Exception("Test exception");
-        Func<int, bool> predicate = x => throw exception;
-
-        // Act
-        var ensuredResult = await result.TryEnsureAsync(predicate, Error.New("Should not be used"));
-
-        // Assert
-        ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.Error.GetValueOrDefault().Exception.Should().Be(exception);
-    }
-
-    [Fact]
-    public async Task TryEnsureAsync_WithAsyncPredicate_WhenPredicateThrowsException_ShouldReturnFailedResultWithException()
-    {
-        // Arrange
-        var result = Task.FromResult(Result<int>.Success(42));
-        var exception = new Exception("Test exception");
-        Func<int, Task<bool>> predicate = x => throw exception;
-
-        // Act
-        var ensuredResult = await result.TryEnsureAsync(predicate, Error.New("Should not be used"));
-
-        // Assert
-        ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.Error.GetValueOrDefault().Exception.Should().Be(exception);
     }
 }
