@@ -6,6 +6,7 @@
         <Copyright>Copyright © $(Company) $([System.DateTime]::Now.Year)</Copyright>
         <Trademark>$(Company)™</Trademark>
         <Product>$(Company) Projects</Product>
+   
     </PropertyGroup>
 
     <PropertyGroup>

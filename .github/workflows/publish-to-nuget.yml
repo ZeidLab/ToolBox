@@ -1,0 +1,58 @@
+﻿name: Publish to NuGet
+
+on:
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build the solution
+        run: dotnet build --configuration Release
+
+      - name: Run unit tests for ToolBox.Test.Units
+        run: dotnet test ToolBox.Test.Units --configuration Release --collect:"XPlat Code Coverage" --logger trx
+
+      - name: Check code coverage
+        id: coverage
+        run: |
+          # Extract the code coverage percentage from the test results
+          COVERAGE=$(grep -oP '(?<=<Result Outcome="Passed">)[^<]+' ToolBox.Test.Units/TestResults/*.trx | awk '{sum+=$1} END {print sum/NR}')
+          echo "Code Coverage: $COVERAGE%"
+          if (( $(echo "$COVERAGE > 95" | bc -l) )); then
+            echo "::set-output name=coverage_passed::true"
+          else
+            echo "::set-output name=coverage_passed::false"
+          fi
+
+  publish:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: needs.build-and-test.outputs.coverage_passed == 'true'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Pack the ToolBox project
+        run: dotnet pack ToolBox --configuration Release --output ./artifacts
+
+      - name: Publish to NuGet
+        run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source https://api.nuget.org/v3/index.json

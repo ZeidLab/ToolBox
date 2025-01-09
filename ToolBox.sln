@@ -16,6 +16,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolBox.Test.Units", "ToolB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolBox.Test.Benchmarks", "ToolBox.Test.Benchmarks\ToolBox.Test.Benchmarks.csproj", "{712B7BFB-A104-4791-A009-3A474E13A2D7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "githubWorkflows", "githubWorkflows", "{4CC0B56A-DE64-46E0-8CEA-11ACBD529699}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\publish-to-nuget.yml = .github\workflows\publish-to-nuget.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,5 +39,8 @@ Global
 		{712B7BFB-A104-4791-A009-3A474E13A2D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{712B7BFB-A104-4791-A009-3A474E13A2D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{712B7BFB-A104-4791-A009-3A474E13A2D7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4CC0B56A-DE64-46E0-8CEA-11ACBD529699} = {763B823B-67B8-48A1-BA0A-4FEF19ED30EA}
 	EndGlobalSection
 EndGlobal
