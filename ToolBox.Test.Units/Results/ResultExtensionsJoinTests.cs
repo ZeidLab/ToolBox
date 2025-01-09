@@ -247,33 +247,7 @@ public class ResultExtensionsJoinTests
 
     #region SuccessTests
 
-    [Fact]
-    public void Join_WithNineSuccessResults_ShouldReturnSuccessResult()
-    {
-        // Arrange
-        var results = TestHelper.CreateResults(9, 10).ToList();
-
-        Func<int, int, int, int, int, int, int, int, int, Result<int>> func =
-            (x1, x2, x3, x4, x5, x6, x7, x8, x9) =>
-                TestHelper.CreateSuccessResult(x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9);
-
-        // Act
-        var result = results[0].Join(
-            results[1],
-            results[2],
-            results[3],
-            results[4],
-            results[5],
-            results[6],
-            results[7],
-            results[8],
-            func);
-
-        // Assert
-        result.IsSuccess.Should().BeTrue();
-        result.Value.Should().Be(results.Sum(x => x.Value));
-    }
-
+  
     [Fact]
     public void Join_With02SuccessResults_ShouldReturnSuccessResult()
     {
