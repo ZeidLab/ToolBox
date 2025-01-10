@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
-using ZeidLab.ToolBox.Results;
 
 namespace ZeidLab.ToolBox.Common;
 
+/// <summary>
+/// provides extension methods for <see cref="Task{TIn}"/>
+/// </summary>
 public static class TaskExtensions
 {
     /// <summary>

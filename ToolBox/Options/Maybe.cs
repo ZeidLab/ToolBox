@@ -100,7 +100,9 @@ public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
         if (other.IsNull) return 1;
 
         // Compare content
+#pragma warning disable CS8604 // Possible null reference argument.
         return Comparer<TIn>.Default.Compare(Content, other.Content);
+#pragma warning restore CS8604 // Possible null reference argument.
     }
 
     /// <summary>

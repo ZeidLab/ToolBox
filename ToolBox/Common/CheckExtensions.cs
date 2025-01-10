@@ -5,6 +5,9 @@ using System.Runtime.CompilerServices;
 
 namespace ZeidLab.ToolBox.Common
 {
+  /// <summary>
+  /// provides extension methods for <see cref="Check{TIn}"/>
+  /// </summary>
   public static class CheckExtensions
   {
     /// <summary>

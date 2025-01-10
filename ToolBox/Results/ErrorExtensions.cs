@@ -4,6 +4,9 @@ using ZeidLab.ToolBox.Options;
 
 namespace ZeidLab.ToolBox.Results;
 
+/// <summary>
+/// an extension class for <see cref="Error"/>
+/// </summary>
 public static class ErrorExtensions
 {
     /// <summary>

@@ -17,9 +17,15 @@ public static class MaybeExtensions
     /// <returns>A Maybe instance with the provided object as its content.</returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Maybe<TIn> ToSome<TIn>(this TIn? self) where TIn : notnull
-        => Maybe<TIn>.Some(self!);
+    public static Maybe<TIn> ToSome<TIn>(this TIn self) where TIn : notnull
+        => Maybe<TIn>.Some(self);
 
+    /// <summary>
+    /// Converts the provided object to a Maybe instance in the None state.
+    /// </summary>
+    /// <typeparam name="TIn">The type of the object.</typeparam>
+    /// <param name="self">The object to convert.</param>
+    /// <returns>A Maybe instance in the None state.</returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Maybe<TIn> ToNone<TIn>(this TIn? self)
@@ -38,7 +44,9 @@ public static class MaybeExtensions
     public static Maybe<TOut> Map<TIn, TOut>(this Maybe<TIn> self, Func<TIn, TOut> map)
         where TOut : notnull
         where TIn : notnull =>
-        !self.IsNull ? Maybe<TOut>.Some(map(self.Content!)) : Maybe<TOut>.None();
+#pragma warning disable CS8604 // Possible null reference argument.
+        !self.IsNull ? Maybe<TOut>.Some(map(self.Content)) : Maybe<TOut>.None();
+#pragma warning restore CS8604 // Possible null reference argument.
 
 
     /// <summary>
@@ -72,7 +80,9 @@ public static class MaybeExtensions
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool If<TIn>(this Maybe<TIn> self, Func<TIn, bool> predicate)
-        where TIn : notnull => !self.IsNull && predicate(self.Content!);
+#pragma warning disable CS8604 // Possible null reference argument.
+        where TIn : notnull => !self.IsNull && predicate(self.Content);
+#pragma warning restore CS8604 // Possible null reference argument.
 
     /// <summary>
     /// Filters a sequence of Maybe instances based on a predicate applied to their content.
@@ -86,7 +96,9 @@ public static class MaybeExtensions
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<Maybe<TIn>> Where<TIn>(this IEnumerable<Maybe<TIn>> self, Func<TIn, bool> predicate)
-        where TIn : notnull => self.Where(x => !x.IsNull && predicate(x.Content!));
+#pragma warning disable CS8604 // Possible null reference argument.
+        where TIn : notnull => self.Where(x => !x.IsNull && predicate(x.Content));
+#pragma warning restore CS8604 // Possible null reference argument.
 
     /// <summary>
     /// Converts a sequence of Maybe instances to an IEnumerable of their content, excluding None instances.
@@ -109,6 +121,7 @@ public static class MaybeExtensions
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<TIn> ToEnumerable<TIn>(this IEnumerable<Maybe<TIn>> self)
+        // ReSharper disable once NullableWarningSuppressionIsUsed
         where TIn : notnull => self.Where(x => !x.IsNull).Select(x => x.Content!);
 
     /// <summary>
@@ -147,7 +160,9 @@ public static class MaybeExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TIn Reduce<TIn>(this Maybe<TIn> self, TIn substitute)
         where TIn : notnull =>
-        !self.IsNull ? self.Content! : substitute;
+#pragma warning disable CS8603 // Possible null reference return.
+        !self.IsNull ? self.Content : substitute;
+#pragma warning restore CS8603 // Possible null reference return.
 
     /// <summary>
     /// Reduces the content of a Maybe instance to a single value using the provided function.
@@ -160,7 +175,9 @@ public static class MaybeExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TIn Reduce<TIn>(this Maybe<TIn> self, Func<TIn> substitute)
         where TIn : notnull =>
-        !self.IsNull ? self.Content! : substitute();
+#pragma warning disable CS8603 // Possible null reference return.
+        !self.IsNull ? self.Content : substitute();
+#pragma warning restore CS8603 // Possible null reference return.
 
     /// <summary>
     /// Applies the provided action to the content of the Maybe instance if it is Some.
@@ -175,7 +192,9 @@ public static class MaybeExtensions
         where TIn : notnull
     {
         if (!self.IsNull)
-            action(self.Content!);
+#pragma warning disable CS8604 // Possible null reference argument.
+            action(self.Content);
+#pragma warning restore CS8604 // Possible null reference argument.
         return self;
     }
 

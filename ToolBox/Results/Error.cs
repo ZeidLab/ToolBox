@@ -4,6 +4,43 @@ using ZeidLab.ToolBox.Common;
 
 namespace ZeidLab.ToolBox.Results;
 
+/// <summary>
+/// Represents an error in a structured and immutable way, encapsulating details such as an error code,
+/// a human-readable name, a descriptive message, and an optional exception. This type is designed to
+/// be used in railway-oriented programming (ROP) paradigms, where operations are modeled as a series
+/// of steps that either succeed or fail. The <see cref="Error"/> type is typically used as part of a
+/// <see cref="Result{T}"/> type to represent the failure state of an operation.
+/// 
+/// The <see cref="Error"/> type provides factory methods for creating instances with validation,
+/// ensuring that all errors are constructed with valid data. It also supports implicit conversions
+/// from <see cref="string"/> and <see cref="Exception"/> to simplify error creation in common scenarios.
+/// 
+/// Key Features:
+/// - Immutable and thread-safe: Once created, an <see cref="Error"/> instance cannot be modified.
+/// - Value semantics: As a <see><cref>record struct</cref></see> , it is lightweight and copied by value.
+/// - Serialization support: Marked with <see cref="SerializableAttribute"/> for use in logging,
+///   transmission, or persistence scenarios.
+/// - Deconstruction: Allows easy extraction of error details using tuple deconstruction.
+/// - Default values: Provides default error codes and names for common use cases.
+/// 
+/// Example Usage:
+/// <code>
+/// // Create an error with a custom message
+/// Error error1 = Error.New("An unexpected error occurred.");
+/// 
+/// // Create an error from an exception
+/// Error error2 = new InvalidOperationException("Invalid operation");
+/// 
+/// // Create an error with a custom code, name, and message
+/// Error error3 = Error.New(404, "NotFound", "The requested resource was not found.");
+/// 
+/// // Deconstruct an error into its components
+/// var (code, name, message, exception) = error3;
+/// </code>
+/// 
+/// This type is a fundamental building block for robust and predictable error handling in functional-style
+/// C# applications.
+/// </summary>
 [Serializable]
 [StructLayout(LayoutKind.Sequential)]
 public readonly record struct Error
@@ -23,7 +60,7 @@ public readonly record struct Error
 
     /// <summary>system exception</summary>
     public readonly Exception? Exception;
-    
+
 
     /// <summary>
     /// Creates an instance of the <see cref="Error"/> struct.
@@ -32,7 +69,6 @@ public readonly record struct Error
     /// <param name="name">The error name. It is a meaningful name instead of numbers and more readable.</param>
     /// <param name="message">The error message.</param>
     /// <param name="exception">The exception associated with this error, or <see langword="null"/> if there is no exception.</param>
-    /// <param name="isEmpty"></param>
     internal Error(int code, string name, string message, Exception? exception = null)
     {
         Code = code;
@@ -51,8 +87,18 @@ public readonly record struct Error
     public Error() => throw new InvalidOperationException("Use factory methods like Error.New() instead.");
     
 
+    /// <summary>
+    /// implicitly converts an exception to an error
+    /// </summary>
+    /// <param name="exception"></param>
+    /// <returns></returns>
     public static implicit operator Error(Exception exception) => New(exception);
 
+    /// <summary>
+    /// implicitly converts an error message to an error
+    /// </summary>
+    /// <param name="message"></param>
+    /// <returns></returns>
     public static implicit operator Error(string message) => New(message);
 
     /// <summary>

@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
-using ZeidLab.ToolBox.Common;
 
 namespace ZeidLab.ToolBox.Results;
 
+/// <summary>
+/// provides extension methods for ensuring the <see cref="Result{TValue}"/> will pass the given predicate
+/// </summary>
 public static class ResultExtensionsEnsure
 {
     /// <summary>

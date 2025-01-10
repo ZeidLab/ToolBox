@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework/>
-        <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <TargetFramework>netstandard2.1</TargetFramework>
         <!-- Versioning -->
         <VersionBase>1.0.0-preview</VersionBase>
         <BuildNumber>$([System.DateTime]::Now.ToString("yyMMddHHmmss"))</BuildNumber>

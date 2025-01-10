@@ -1,7 +1,9 @@
-﻿using ZeidLab.ToolBox.Common;
+﻿namespace ZeidLab.ToolBox.Results;
 
-namespace ZeidLab.ToolBox.Results;
-
+/// <summary>
+/// provides extension methods for joining multiple <see cref="Result{TValue}"/>
+/// with different value types.
+/// </summary>
 public static class ResultExtensionsJoin
 {
     #region Join
