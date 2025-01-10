@@ -4,6 +4,10 @@ using ZeidLab.ToolBox.Common;
 
 namespace ZeidLab.ToolBox.Results;
 
+/// <summary>
+/// 
+/// </summary>
+/// <typeparam name="TValue"></typeparam>
 public readonly record struct Result<TValue>
 {
     internal readonly TValue Value;
@@ -51,7 +55,7 @@ public readonly record struct Result<TValue>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<TValue> Success(TValue value)
     {
-        ArgumentNullException.ThrowIfNull(value, nameof(value));
+        Guards.ThrowIfNull(value, nameof(value));
         return new Result<TValue>(true, value);
     }
 

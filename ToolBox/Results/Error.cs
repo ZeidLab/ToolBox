@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ZeidLab.ToolBox.Common;
 
 namespace ZeidLab.ToolBox.Results;
 
@@ -62,7 +63,7 @@ public readonly record struct Error
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Error New(string message)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(message, nameof(message));
+        Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
         return new Error(DefaultCode, DefaultName, message);
     }
 
@@ -74,7 +75,7 @@ public readonly record struct Error
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Error New(Exception exception)
     {
-        ArgumentNullException.ThrowIfNull(exception);
+        Guards.ThrowIfNull(exception,nameof(exception));
         return new Error(exception.HResult, DefaultName, exception.Message, exception);
     }
 
@@ -87,8 +88,8 @@ public readonly record struct Error
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Error New(int code, string message)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(message, nameof(message));
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(code, nameof(code));
+        Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
+        Guards.ThrowIfNegativeOrZero(code, nameof(code));
         return new Error(code, DefaultName, message);
     }
 
@@ -102,8 +103,8 @@ public readonly record struct Error
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Error New(string name, string message)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(message, nameof(message));
-        ArgumentException.ThrowIfNullOrWhiteSpace(name, nameof(name));
+        Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
+        Guards.ThrowIfNullOrWhiteSpace(name, nameof(name));
 
         return new Error(DefaultCode, name, message);
     }
@@ -119,8 +120,8 @@ public readonly record struct Error
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Error New(string name, string message, Exception exception)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(message, nameof(message));
-        ArgumentException.ThrowIfNullOrWhiteSpace(name, nameof(name));
+        Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
+        Guards.ThrowIfNullOrWhiteSpace(name, nameof(name));
 
         return new Error(DefaultCode, name, message, exception);
     }
@@ -135,8 +136,8 @@ public readonly record struct Error
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Error New(int code, string message, Exception exception)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(message, nameof(message));
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(code, nameof(code));
+        Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
+        Guards.ThrowIfNegativeOrZero(code, nameof(code));
 
         return new Error(code, DefaultName, message, exception);
     }
@@ -152,8 +153,8 @@ public readonly record struct Error
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Error New(string message, Exception exception)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(message, nameof(message));
-        ArgumentNullException.ThrowIfNull(exception, nameof(exception));
+        Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
+        Guards.ThrowIfNull(exception, nameof(exception));
         return new Error(DefaultCode, DefaultName, message, exception);
     }
 

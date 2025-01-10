@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-
+        <TargetFramework/>
+        <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
         <!-- Versioning -->
         <VersionBase>1.0.0-preview</VersionBase>
         <BuildNumber>$([System.DateTime]::Now.ToString("yyMMddHHmmss"))</BuildNumber>
@@ -33,7 +34,9 @@
         <!-- Source Link Support -->
         <IncludeSymbols>true</IncludeSymbols> <!-- Include symbols in the package -->
         <SymbolPackageFormat>snupkg</SymbolPackageFormat> <!-- Use the snupkg format for symbols -->
-        <PublishDocumentationFile>true</PublishDocumentationFile> <!-- Publish documentation file -->
+        <PublishDocumentationFile>true</PublishDocumentationFile>
+       
+        <!-- Publish documentation file -->
     </PropertyGroup>
     
     <ItemGroup>

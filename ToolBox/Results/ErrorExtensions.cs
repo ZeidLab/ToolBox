@@ -45,7 +45,7 @@ public static class ErrorExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Error WithCode(this Error self, int code)
     {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(code, nameof(code));
+        Guards.ThrowIfNegativeOrZero(code, nameof(code));
         return new Error(code, self.Name, self.Message, self.Exception);
     }
 
@@ -61,7 +61,7 @@ public static class ErrorExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Error WithMessage(this Error self, string message)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(message, nameof(message));
+        Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
         return new Error(self.Code, self.Name, message, self.Exception);
     }
 
@@ -78,7 +78,7 @@ public static class ErrorExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Error WithName(this Error self, string name)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(name, nameof(name));
+        Guards.ThrowIfNullOrWhiteSpace(name, nameof(name));
         return new Error(self.Code, name, self.Message, self.Exception);
     }
 
@@ -94,7 +94,7 @@ public static class ErrorExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Error WithException(this Error self, Exception exception)
     {
-        ArgumentNullException.ThrowIfNull(exception, nameof(exception));
+        Guards.ThrowIfNull(exception, nameof(exception));
         return new Error(self.Code, self.Name, self.Message, exception);
     }
 }
