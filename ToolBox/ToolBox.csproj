@@ -6,7 +6,7 @@
         <VersionBase>1.0.0-preview</VersionBase>
         <BuildNumber>$([System.DateTime]::Now.ToString("yyMMddHHmmss"))</BuildNumber>
         <Version>$(VersionBase)-$(BuildNumber)</Version>
-        
+
         <!-- Basic Project Properties -->
 
         <PackageId>$(RootNamespace)</PackageId>
@@ -22,8 +22,6 @@
             Result; Maybe; Either; Validation; FunctionalProgramming
         </PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression> <!-- Specify the license type -->
-        
-
 
 
         <!-- Documentation -->
@@ -38,14 +36,18 @@
         <!-- Source Link Support -->
         <IncludeSymbols>true</IncludeSymbols> <!-- Include symbols in the package -->
         <SymbolPackageFormat>snupkg</SymbolPackageFormat> <!-- Use the snupkg format for symbols -->
-        
+
     </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
+    </ItemGroup>
+   
+    <ItemGroup>
+        <!-- Exclude .gitignore from the build and packaging process -->
+        <Content Remove=".gitignore"/>
+        <!-- Include ReadMe.md in the package -->
+        <None Include="ReadMe.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
     
-    <ItemGroup>
-        <PackageReference Include="Microsoft.SourceLink.GitHub"  PrivateAssets="All" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="ReadMe.md" Pack="true" PackagePath="\" />
-        <None Remove=".gitignore" />
-    </ItemGroup>
 </Project>
