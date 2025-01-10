@@ -50,11 +50,5 @@
             $(MSBuildProjectDirectory)))
         </EditorConfigFile>
     </PropertyGroup>
-
-    <ItemGroup >
-        <Content Include="..\.gitignore">
-            <Link>.gitignore</Link>
-        </Content>
-    </ItemGroup>
     
 </Project>

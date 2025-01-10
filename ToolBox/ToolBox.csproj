@@ -44,8 +44,6 @@
     </ItemGroup>
    
     <ItemGroup>
-        <!-- Exclude .gitignore from the build and packaging process -->
-        <Content Remove=".gitignore"/>
         <!-- Include ReadMe.md in the package -->
         <None Include="ReadMe.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
