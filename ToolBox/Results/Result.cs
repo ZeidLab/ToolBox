@@ -5,9 +5,13 @@ using ZeidLab.ToolBox.Common;
 namespace ZeidLab.ToolBox.Results;
 
 /// <summary>
-/// 
+/// Represents the result of an operation that may or may not be successful.
+/// <para>
+/// This type is commonly used to represent the result of an operation that may
+/// or may not be successful, such as a database query or a web service call.
+/// </para>
+/// <typeparam name="TValue">The value type of the result.</typeparam>
 /// </summary>
-/// <typeparam name="TValue"></typeparam>
 public readonly record struct Result<TValue>
 {
     internal readonly TValue Value;
@@ -37,12 +41,30 @@ public readonly record struct Result<TValue>
         IsDefault = Value.IsDefault();
     }
 
+
+    /// <summary>
+    /// Implicitly converts a value to a success of <see cref="Result{TValue}"/>.
+    /// </summary>
+    /// <param name="value">specified value</param>
+    /// <returns>returns an immutable record struct of <see cref="Result{TValue}"/></returns>
     [Pure]
     public static implicit operator Result<TValue>(TValue value) => Success(value);
 
+
+    /// <summary>
+    /// Implicitly converts an error to a failure of <see cref="Result{TValue}"/>
+    /// </summary>
+    /// <param name="error">specified error</param>
+    /// <returns>returns an immutable record struct of <see cref="Result{TValue}"/> with error</returns>
     [Pure]
     public static implicit operator Result<TValue>(Error error) => Failure(error);
 
+  
+    /// <summary>
+    /// Implicitly converts an exception to a failure of <see cref="Result{TValue}"/>
+    /// </summary>
+    /// <param name="error">specified exception</param>
+    /// <returns>returns an immutable record struct of <see cref="Result{TValue}"/> with error including exception</returns>
     [Pure]
     public static implicit operator Result<TValue>(Exception error) => Failure(error);
 
