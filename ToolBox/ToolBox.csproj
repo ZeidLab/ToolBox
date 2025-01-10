@@ -27,19 +27,25 @@
 
 
         <!-- Documentation -->
-        <GenerateDocumentationFile>true</GenerateDocumentationFile> <!-- Generate XML documentation -->
         <PublishRepositoryUrl>true</PublishRepositoryUrl> <!-- Publish the repository URL in the package -->
-        <EmbedUntrackedSources>true</EmbedUntrackedSources> <!-- Embed untracked sources in the package -->
+
+        <!-- Publish documentation file -->
+        <DocumentationFile>$(MSBuildProjectName).xml</DocumentationFile>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile> <!-- Generate XML documentation -->
+        <PublishDocumentationFile>true</PublishDocumentationFile>
+        <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
 
         <!-- Source Link Support -->
         <IncludeSymbols>true</IncludeSymbols> <!-- Include symbols in the package -->
         <SymbolPackageFormat>snupkg</SymbolPackageFormat> <!-- Use the snupkg format for symbols -->
-        <PublishDocumentationFile>true</PublishDocumentationFile>
-       
-        <!-- Publish documentation file -->
+        
     </PropertyGroup>
     
     <ItemGroup>
         <PackageReference Include="Microsoft.SourceLink.GitHub"  PrivateAssets="All" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="ReadMe.md" Pack="true" PackagePath="\" />
+        <None Remove=".gitignore" />
     </ItemGroup>
 </Project>
