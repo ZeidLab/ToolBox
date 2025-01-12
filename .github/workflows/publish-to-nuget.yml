@@ -2,6 +2,9 @@
 
 on:
   workflow_dispatch:  # Manual trigger
+  push:               # Automatic trigger on push to main
+    branches:
+      - main
 
 jobs:
   build-and-test:
@@ -142,7 +145,7 @@ jobs:
 
       - name: Restore dependencies
         run: dotnet restore --configfile ./nuget.config
-        
+
       - name: Pack the ToolBox project
         run: dotnet pack ToolBox --configuration Release --output ./artifacts
 
