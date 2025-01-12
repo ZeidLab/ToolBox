@@ -10,8 +10,6 @@ namespace ZeidLab.ToolBox.Results;
 /// </summary>
 public static class ResultExtensions
 {
-    
-
     /// <summary>
     /// Converts the provided object to a successful Result instance.
     /// </summary>
@@ -56,9 +54,51 @@ public static class ResultExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Maybe<TIn> ToMaybe<TIn>(this Result<TIn> self)
         => self.IsSuccess
-            ? Maybe<TIn>.Some(self.Value!)
+            ? Maybe<TIn>.Some(self.Value)
             : Maybe<TIn>.None(); 
     
+    /// <summary>
+    /// Converts a <see cref="Try{TIn}"/> instance to a <see cref="Maybe{TIn}"/> instance.
+    /// </summary>
+    /// <remarks>
+    /// If the try is successful, the value of the try is returned as a <see cref="Maybe{TIn}.Some"/> instance.
+    /// If the try is failed, a <see cref="Maybe{TIn}.None"/> instance is returned.
+    /// </remarks>
+    [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Maybe<TIn> ToMaybe<TIn>(this Try<TIn> self)
+        => self.Try() is {IsSuccess:true} result
+            ? Maybe<TIn>.Some(result.Value)
+            : Maybe<TIn>.None();
+
+    /// <summary>
+    /// Converts a Result instance to a Maybe instance asynchronously.
+    /// </summary>
+    /// <remarks>
+    /// If the result is successful, the value of the result is returned as a <see cref="Maybe{TIn}.Some"/> instance.
+    /// If the result is failed, a <see cref="Maybe{TIn}.None"/> instance is returned.
+    /// </remarks>
+    [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static async Task<Maybe<TIn>> ToMaybeAsync<TIn>(this Task<Result<TIn>> self)
+        => (await self) is { IsSuccess: true } result
+            ? Maybe<TIn>.Some(result.Value)
+            : Maybe<TIn>.None();   
+    
+    /// <summary>
+    /// Converts a <see cref="TryAsync{TIn}"/> instance to a <see cref="Maybe{TIn}"/> instance asynchronously.
+    /// </summary>
+    /// <remarks>
+    /// If the try is successful, the value of the try is returned as a <see cref="Maybe{TIn}.Some"/> instance.
+    /// If the try is failed, a <see cref="Maybe{TIn}.None"/> instance is returned.
+    /// </remarks>
+    [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static async Task<Maybe<TIn>> ToMaybeAsync<TIn>(this TryAsync<TIn> self)
+        => (await self.Try()) is { IsSuccess: true } result
+            ? Maybe<TIn>.Some(result.Value)
+            : Maybe<TIn>.None();
+
     /// <summary>
     /// Converts a Result instance to a Result{Unit} instance which in fact is a void result containing possible error.
     /// </summary>
