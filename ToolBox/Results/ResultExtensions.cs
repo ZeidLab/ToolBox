@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using ZeidLab.ToolBox.Common;
 using ZeidLab.ToolBox.Options;
 
 namespace ZeidLab.ToolBox.Results;
@@ -56,5 +57,38 @@ public static class ResultExtensions
     public static Maybe<TIn> ToMaybe<TIn>(this Result<TIn> self)
         => self.IsSuccess
             ? Maybe<TIn>.Some(self.Value!)
-            : Maybe<TIn>.None();
+            : Maybe<TIn>.None(); 
+    
+    /// <summary>
+    /// Converts a Result instance to a Result{Unit} instance which in fact is a void result containing possible error.
+    /// </summary>
+    /// <remarks>
+    /// If the result is successful, the value of the result is returned as a <see cref="Result{Unit}.Success"/> instance.
+    /// If the result is failed, a <see><cref>Result{Unit}.failure</cref></see>
+    /// instance is returned.
+    /// </remarks>
+    [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Result<Unit> ToUnitResult<TIn>(this Result<TIn> self)
+        => self.IsSuccess
+            ? Result<Unit>.Success(Unit.Default)
+            : Result<Unit>.Failure(self.Error.GetValueOrDefault());
+
+    /// <summary>
+    /// Converts a Result instance to a Result{Unit} instance which in fact is a void result containing possible error.
+    /// </summary>
+    /// <remarks>
+    /// If the result is successful, the value of the result is returned as a <see cref="Result{Unit}.Success"/> instance.
+    /// If the result is failed, a <see><cref>Result{Unit}.failure</cref></see>
+    /// instance is returned.
+    /// </remarks>
+    [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static async Task<Result<Unit>> ToUnitResultAsync<TIn>(this Task<Result<TIn>> self)
+    {
+        var result = await self;
+        return result.IsSuccess
+            ? Result<Unit>.Success(Unit.Default)
+            : Result<Unit>.Failure(result.Error.GetValueOrDefault());
+    }
 }

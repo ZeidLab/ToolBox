@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using ZeidLab.ToolBox.Common;
 using ZeidLab.ToolBox.Results;
 
 namespace ZeidLab.ToolBox.Test.Units.Results
@@ -139,6 +140,64 @@ namespace ZeidLab.ToolBox.Test.Units.Results
 
             // Assert
             act.Should().Throw<ArgumentNullException>();
+        }
+        
+         [Fact]
+        public void ToUnitResult_ShouldReturnSuccessResultWithUnit_WhenInputResultIsSuccess()
+        {
+            // Arrange
+            var successResult = TestHelper.CreateSuccessResult(42);
+
+            // Act
+            var unitResult = successResult.ToUnitResult();
+
+            // Assert
+            unitResult.IsSuccess.Should().BeTrue();
+            unitResult.Value.Should().Be(Unit.Default);
+        }
+
+        [Fact]
+        public void ToUnitResult_ShouldReturnFailureResultWithError_WhenInputResultIsFailure()
+        {
+            // Arrange
+            var error = Error.New("Test error");
+            var failureResult = TestHelper.CreateFailureResult<int>(error);
+
+            // Act
+            var unitResult = failureResult.ToUnitResult();
+
+            // Assert
+            unitResult.IsFailure.Should().BeTrue();
+            unitResult.Error.Should().Be(error);
+        }
+
+        [Fact]
+        public async Task ToUnitResultAsync_ShouldReturnSuccessResultWithUnit_WhenInputResultIsSuccess()
+        {
+            // Arrange
+            var successResult = Task.FromResult(TestHelper.CreateSuccessResult(42));
+
+            // Act
+            var unitResult = await successResult.ToUnitResultAsync();
+
+            // Assert
+            unitResult.IsSuccess.Should().BeTrue();
+            unitResult.Value.Should().Be(Unit.Default);
+        }
+
+        [Fact]
+        public async Task ToUnitResultAsync_ShouldReturnFailureResultWithError_WhenInputResultIsFailure()
+        {
+            // Arrange
+            var error = Error.New("Test error");
+            var failureResult = Task.FromResult(TestHelper.CreateFailureResult<int>(error));
+
+            // Act
+            var unitResult = await failureResult.ToUnitResultAsync();
+
+            // Assert
+            unitResult.IsFailure.Should().BeTrue();
+            unitResult.Error.Should().Be(error);
         }
     }
 }
