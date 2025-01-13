@@ -76,6 +76,7 @@ public readonly record struct Error
         Message = message;
         Exception = exception;
     }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Error"/> struct.
     /// </summary>
@@ -83,9 +84,13 @@ public readonly record struct Error
     /// This constructor is not intended to be used directly. Instead, use the static factory methods
     /// like <see cref="New(string)"/> or <see cref="New(System.Exception)"/>.
     /// </remarks>
-    [Obsolete("Use factory methods like Error.New() instead. Any instance of public constructor will be considered empty.",true)]
+#pragma warning disable S1133 // Do not forget to remove this deprecated code someday
+    [Obsolete(
+        "Use factory methods like Error.New() instead. Any instance of public constructor will be considered empty.",
+        true)]
     public Error() => throw new InvalidOperationException("Use factory methods like Error.New() instead.");
-    
+#pragma warning restore S1133 //Do not forget to remove this deprecated code someday
+
 
     /// <summary>
     /// implicitly converts an exception to an error
@@ -121,7 +126,7 @@ public readonly record struct Error
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Error New(Exception exception)
     {
-        Guards.ThrowIfNull(exception,nameof(exception));
+        Guards.ThrowIfNull(exception, nameof(exception));
         return new Error(exception.HResult, DefaultName, exception.Message, exception);
     }
 

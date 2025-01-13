@@ -92,9 +92,10 @@ public readonly record struct Result<TValue>
     /// Use factory methods like <see cref="Success(TValue)"/>
     /// or <see cref="Failure(Results.Error)"/> instead. Using public constructor will throw exception.
     /// </remarks>
+#pragma warning disable S1133 // Do not forget to remove this deprecated code someday
     [Obsolete("Use factory methods like Result<TIn>.Success or Result<TIn>.Failure instead. Any instance of public constructor will be considered empty.",true)]
     public Result() => throw new InvalidOperationException("Use factory methods like Result<TIn>.Success or Result<TIn>.Failure instead.");
-
+#pragma warning restore S1133 // Do not forget to remove this deprecated code someday
 
     /// <summary>
     /// Implicitly converts a value to a success of <see cref="Result{TValue}"/>.
