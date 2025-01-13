@@ -127,7 +127,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
             maybe.IsNone.Should().BeFalse();
             maybe.Content.Should().Be(value);
         }
-        
+
 
         [Fact]
         public void ToFailure_WithNullException_ShouldThrowArgumentNullException()
@@ -141,7 +141,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
             // Assert
             act.Should().Throw<ArgumentNullException>();
         }
-        
+
          [Fact]
         public void ToUnitResult_ShouldReturnSuccessResultWithUnit_WhenInputResultIsSuccess()
         {
@@ -198,6 +198,117 @@ namespace ZeidLab.ToolBox.Test.Units.Results
             // Assert
             unitResult.IsFailure.Should().BeTrue();
             unitResult.ResultError.Should().Be(error);
+        }
+
+        // Helper function to create a successful Try<TIn>
+        private Try<T> CreateSuccessfulTry<T>(T value) => () => value;
+
+        // Helper function to create a failed Try<TIn>
+        private Try<T> CreateFailedTry<T>() => () => throw new Exception("Test exception");
+
+        // Helper function to create a successful Result<TIn>
+        private Result<T> CreateSuccessfulResult<T>(T value) => Result<T>.Success(value);
+
+        // Helper function to create a failed Result<TIn>
+        private Result<T> CreateFailedResult<T>() => Result<T>.Failure(new Exception("Test exception"));
+
+        // Helper function to create a successful TryAsync<TIn>
+        private TryAsync<T> CreateSuccessfulTryAsync<T>(T value) => async () => value;
+
+        // Helper function to create a failed TryAsync<TIn>
+        private TryAsync<T> CreateFailedTryAsync<T>() => async () => throw new Exception("Test exception");
+
+        [Fact]
+        public void ToMaybe_WithSuccessfulTry_ShouldReturnSomeWithValue()
+        {
+            // Arrange
+            var value = 42;
+            var tryInstance = CreateSuccessfulTry(value);
+
+            // Act
+            var maybe = tryInstance.ToMaybe();
+
+            // Assert
+            maybe.IsSome.Should().BeTrue();
+            maybe.IsNone.Should().BeFalse();
+            maybe.Content.Should().Be(value);
+        }
+
+        [Fact]
+        public void ToMaybe_WithFailedTry_ShouldReturnNone()
+        {
+            // Arrange
+            var tryInstance = CreateFailedTry<int>();
+
+            // Act
+            var maybe = tryInstance.ToMaybe();
+
+            // Assert
+            maybe.IsSome.Should().BeFalse();
+            maybe.IsNone.Should().BeTrue();
+            maybe.Content.Should().Be(default);
+        }
+
+        [Fact]
+        public async Task ToMaybeAsync_WithSuccessfulResult_ShouldReturnSomeWithValue()
+        {
+            // Arrange
+            var value = 42;
+            var resultTask = Task.FromResult(CreateSuccessfulResult(value));
+
+            // Act
+            var maybe = await resultTask.ToMaybeAsync();
+
+            // Assert
+            maybe.IsSome.Should().BeTrue();
+            maybe.IsNone.Should().BeFalse();
+            maybe.Content.Should().Be(value);
+        }
+
+        [Fact]
+        public async Task ToMaybeAsync_WithFailedResult_ShouldReturnNone()
+        {
+            // Arrange
+            var resultTask = Task.FromResult(CreateFailedResult<int>());
+
+            // Act
+            var maybe = await resultTask.ToMaybeAsync();
+
+            // Assert
+            maybe.IsSome.Should().BeFalse();
+            maybe.IsNone.Should().BeTrue();
+            maybe.Content.Should().Be(default);
+        }
+
+        [Fact]
+        public async Task ToMaybeAsync_WithSuccessfulTryAsync_ShouldReturnSomeWithValue()
+        {
+            // Arrange
+            var value = 42;
+            var tryAsyncInstance = CreateSuccessfulTryAsync(value);
+
+            // Act
+            var maybe = await tryAsyncInstance.ToMaybeAsync();
+
+            // Assert
+            maybe.IsSome.Should().BeTrue();
+            maybe.IsNone.Should().BeFalse();
+            maybe.Content.Should().Be(value);
+        }
+
+        [Fact]
+        public async Task ToMaybeAsync_WithFailedTryAsync_ShouldReturnNone()
+        {
+            // Arrange
+            var tryAsyncInstance = CreateFailedTryAsync<int>();
+
+            // Act
+            var maybe = await tryAsyncInstance.ToMaybeAsync();
+
+            // Assert
+            maybe.IsSome.Should().BeFalse();
+            maybe.IsNone.Should().BeTrue();
+            maybe.Content.Should().Be(default);
         }
     }
 }
