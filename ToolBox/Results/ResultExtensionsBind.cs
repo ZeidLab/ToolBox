@@ -80,7 +80,7 @@ public static class ResultExtensionsBind
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Task<Result<TOut>> BindAsync<TIn, TOut>(this Try<TIn> self, Func<TIn, TryAsync<TOut>> func)
-        => self.Try().BindAsync(input => func(input).Try());
+        => self.Try().BindAsync(input => func(input).TryAsync());
 
     /// <summary>
     /// Binds the value of a successful <see cref="Try{TIn}"/> to a new result by applying the specified asynchronous function.
@@ -96,7 +96,7 @@ public static class ResultExtensionsBind
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Task<Result<TOut>> BindAsync<TIn, TOut>(this TryAsync<TIn> self, Func<TIn, TryAsync<TOut>> func)
-        => self.Try().BindAsync(input => func(input).Try());
+        => self.TryAsync().BindAsync(input => func(input).TryAsync());
 
     /// <summary>
     /// Asynchronously binds the value of a successful <see cref="TryAsync{TIn}"/> to a new result by applying the specified function.
@@ -104,7 +104,7 @@ public static class ResultExtensionsBind
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Task<Result<TOut>> BindAsync<TIn, TOut>(this TryAsync<TIn> self, Func<TIn, Try<TOut>> func)
-        => self.Try().BindAsync(input => func(input).Try());
+        => self.TryAsync().BindAsync(input => func(input).Try());
 
     /// <summary>
     /// Asynchronously binds the value of a successful result to a new result by applying the specified function.
@@ -112,7 +112,7 @@ public static class ResultExtensionsBind
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<Result<TOut>> BindAsync<TIn, TOut>(this TryAsync<TIn> self, Func<TIn, Result<TOut>> func)
-        => (await self.Try().ConfigureAwait(false)).Bind(func);
+        => (await self.TryAsync().ConfigureAwait(false)).Bind(func);
 
     /// <summary>
     /// Asynchronously binds the value of a successful result to a new result by applying the specified asynchronous function.
@@ -120,7 +120,7 @@ public static class ResultExtensionsBind
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Task<Result<TOut>> BindAsync<TIn, TOut>(this TryAsync<TIn> self, Func<TIn, Task<Result<TOut>>> func)
-        => self.Try().BindAsync(func);
+        => self.TryAsync().BindAsync(func);
 
     #endregion
 }

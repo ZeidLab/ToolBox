@@ -97,7 +97,7 @@ public static class ResultExtensions
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<Maybe<TIn>> ToMaybeAsync<TIn>(this TryAsync<TIn> self)
-        => (await self.Try().ConfigureAwait(false)) is { IsSuccess: true } result
+        => (await self.TryAsync().ConfigureAwait(false)) is { IsSuccess: true } result
             ? Maybe<TIn>.Some(result.Value)
             : Maybe<TIn>.None();
 

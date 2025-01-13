@@ -150,7 +150,7 @@ public static class ResultExtensionsMatch
     public static async Task<TOut> MatchAsync<TIn, TOut>(this TryAsync<TIn> self, Func<TIn, TOut> success,
         Func<ResultError, TOut> failure)
     {
-        var result = await self.Try().ConfigureAwait(false);
+        var result = await self.TryAsync().ConfigureAwait(false);
         return result.Match(success, failure);
     }
 
@@ -169,7 +169,7 @@ public static class ResultExtensionsMatch
         Func<TIn, Result<TOut>> success,
         Func<ResultError, Result<TOut>> failure)
     {
-        var result = await self.Try().ConfigureAwait(false);
+        var result = await self.TryAsync().ConfigureAwait(false);
         return result.Match(success, failure);
     }
 
@@ -187,7 +187,7 @@ public static class ResultExtensionsMatch
     public static async Task<TOut> MatchAsync<TIn, TOut>(this TryAsync<TIn> self, Func<TIn, Task<TOut>> success,
         Func<ResultError, Task<TOut>> failure)
     {
-        var result = await self.Try().ConfigureAwait(false);
+        var result = await self.TryAsync().ConfigureAwait(false);
         return result.IsSuccess
             ? await success(result.Value).ConfigureAwait(false)
             : await failure(result.ResultError).ConfigureAwait(false);
@@ -207,7 +207,7 @@ public static class ResultExtensionsMatch
     public static Task<Result<TOut>> MatchAsync<TIn, TOut>(this TryAsync<TIn> self,
         Func<TIn, Task<Result<TOut>>> success,
         Func<ResultError, Task<Result<TOut>>> failure)
-        => self.Try().MatchAsync(success, failure);
+        => self.TryAsync().MatchAsync(success, failure);
 
     #endregion
 }

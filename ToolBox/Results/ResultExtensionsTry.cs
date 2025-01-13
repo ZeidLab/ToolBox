@@ -83,9 +83,8 @@ public static class ResultExtensionsTry
 	/// <param name="self">The asynchronous <see cref="Results.TryAsync{TIn}"/> delegate to invoke.</param>
 	/// <returns>The result of invoking the specified delegate.</returns>
 	[Pure]
-#pragma warning disable AMNF0001
-	public static async Task<Result<TIn>> Try<TIn>(this TryAsync<TIn> self)
-#pragma warning restore AMNF0001
+	public static async Task<Result<TIn>> TryAsync<TIn>(this TryAsync<TIn> self)
+
 	{
         try
         {
