@@ -7,7 +7,7 @@ namespace ZeidLab.ToolBox.Results;
 /// <summary>
 /// an extension class for <see cref="ResultError"/>
 /// </summary>
-public static class ErrorExtensions
+public static class ResultErrorExtensions
 {
     /// <summary>
     /// Tries to get the exception associated with this error.
@@ -22,8 +22,8 @@ public static class ErrorExtensions
     {
         exception = self.Exception;
         return exception is not null;
-    } 
-    
+    }
+
     /// <summary>
     /// Tries to get the exception associated with this error.
     /// </summary>
@@ -35,7 +35,7 @@ public static class ErrorExtensions
     public static Maybe<Exception> TryGetException(this ResultError self)
     {
         return self.Exception is {} exception ? exception.ToSome(): Maybe<Exception>.None();
-        
+
     }
 
     /// <summary>

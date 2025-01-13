@@ -3,7 +3,7 @@ using ZeidLab.ToolBox.Results;
 
 namespace ZeidLab.ToolBox.Test.Units.Results;
 
-public class ErrorExtensionsTests
+public class ResultErrorExtensionsTests
 {
     [Fact]
     public void TryGetException_WhenUnhandledExceptionIsNotNull_ShouldReturnTrueAndException()
