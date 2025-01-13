@@ -45,7 +45,9 @@ public static class MaybeExtensions
         where TOut : notnull
         where TIn : notnull =>
 #pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CA1062
         !self.IsNull ? Maybe<TOut>.Some(map(self.Content)) : Maybe<TOut>.None();
+#pragma warning restore CA1062
 #pragma warning restore CS8604 // Possible null reference argument.
 
 
@@ -81,7 +83,9 @@ public static class MaybeExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool If<TIn>(this Maybe<TIn> self, Func<TIn, bool> predicate)
 #pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CA1062
         where TIn : notnull => !self.IsNull && predicate(self.Content);
+#pragma warning restore CA1062
 #pragma warning restore CS8604 // Possible null reference argument.
 
     /// <summary>
@@ -176,7 +180,9 @@ public static class MaybeExtensions
     public static TIn Reduce<TIn>(this Maybe<TIn> self, Func<TIn> substitute)
         where TIn : notnull =>
 #pragma warning disable CS8603 // Possible null reference return.
+#pragma warning disable CA1062
         !self.IsNull ? self.Content : substitute();
+#pragma warning restore CA1062
 #pragma warning restore CS8603 // Possible null reference return.
 
     /// <summary>
@@ -193,7 +199,9 @@ public static class MaybeExtensions
     {
         if (!self.IsNull)
 #pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CA1062
             action(self.Content);
+#pragma warning restore CA1062
 #pragma warning restore CS8604 // Possible null reference argument.
         return self;
     }
@@ -211,7 +219,9 @@ public static class MaybeExtensions
         where TIn : notnull
     {
         if (self.IsNull)
+#pragma warning disable CA1062
             action();
+#pragma warning restore CA1062
         return self;
     }
 }

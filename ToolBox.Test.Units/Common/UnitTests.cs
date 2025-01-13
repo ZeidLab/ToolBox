@@ -120,7 +120,7 @@ public class UnitTests
         int expectedValue = 42;
 
         // Act
-        int result = unit.Return(expectedValue);
+        int result = Unit.Return(expectedValue);
 
         // Assert
         result.Should().Be(expectedValue);

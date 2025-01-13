@@ -1,7 +1,19 @@
-﻿[*.cs]
+﻿root = true
+
+[*]
+indent_style = tab
+indent_size = 4
+trim_trailing_whitespace = true
+
+[*.cs]
+
+# all await keyword should fallow with ConfigureAwait(false)
+dotnet_diagnostic.ConfigureAwaitChecker.severity = warning
 
 # SA1309: Field names should not begin with underscore
 dotnet_diagnostic.SA1309.severity = none
+# CA2225:Operator overloads have named alternates
+dotnet_diagnostic.CA2225.severity = none
 
 # SA1600: Elements should be documented
 dotnet_diagnostic.SA1600.severity = none

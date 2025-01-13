@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 
 namespace ZeidLab.ToolBox.Results;
@@ -8,6 +9,7 @@ namespace ZeidLab.ToolBox.Results;
 /// you need to consider both success and failure cases while using this extension methods
 /// which is the main idea of doing railway oriented programming
 /// </summary>
+[SuppressMessage("Design", "CA1062:Validate arguments of public methods")]
 public static class ResultExtensionsMatch
 {
     #region Match
@@ -24,8 +26,8 @@ public static class ResultExtensionsMatch
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<TOut> Match<TIn, TOut>(this Result<TIn> self, Func<TIn, Result<TOut>> success,
-        Func<Error, Result<TOut>> failure)
-        => self.IsSuccess ? success(self.Value) : failure(self.Error);
+        Func<ResultError, Result<TOut>> failure)
+        => self.IsSuccess ? success(self.Value) : failure(self.ResultError);
 
     /// <summary>
     /// Matches the content of a <see cref="Result{TIn}"/> instance to either a successful or failed result.
@@ -39,8 +41,8 @@ public static class ResultExtensionsMatch
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TOut Match<TIn, TOut>(this Result<TIn> self, Func<TIn, TOut> success,
-        Func<Error, TOut> failure)
-        => self.IsSuccess ? success(self.Value) : failure(self.Error);
+        Func<ResultError, TOut> failure)
+        => self.IsSuccess ? success(self.Value) : failure(self.ResultError);
 
     /// <summary>
     /// Matches the content of a <see cref="Try{TIn}"/> instance to either a successful or failed result.
@@ -54,7 +56,7 @@ public static class ResultExtensionsMatch
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<TOut> Match<TIn, TOut>(this Try<TIn> self, Func<TIn, Result<TOut>> success,
-        Func<Error, Result<TOut>> failure)
+        Func<ResultError, Result<TOut>> failure)
         => self.Try().Match(success, failure);
 
     /// <summary>
@@ -68,7 +70,7 @@ public static class ResultExtensionsMatch
     /// <returns>The result of applying the success or failure function to the content of the original result.</returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static TOut Match<TIn, TOut>(this Try<TIn> self, Func<TIn, TOut> success, Func<Error, TOut> failure)
+    public static TOut Match<TIn, TOut>(this Try<TIn> self, Func<TIn, TOut> success, Func<ResultError, TOut> failure)
         => self.Try().Match(success, failure);
 
     #endregion
@@ -88,7 +90,7 @@ public static class ResultExtensionsMatch
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<TOut> MatchAsync<TIn, TOut>(this Task<Result<TIn>> self, Func<TIn, TOut> success,
-        Func<Error, TOut> failure)
+        Func<ResultError, TOut> failure)
     {
         var result = await self.ConfigureAwait(false);
         return result.Match(success, failure);
@@ -108,14 +110,14 @@ public static class ResultExtensionsMatch
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<Result<TOut>> MatchAsync<TIn, TOut>(this Task<Result<TIn>> self,
         Func<TIn, Result<TOut>> success,
-        Func<Error, Result<TOut>> failure)
+        Func<ResultError, Result<TOut>> failure)
     {
         var result = await self.ConfigureAwait(false);
         return result.Match(success, failure);
     }
 
     /// <summary>
-    /// Asynchronously matches the content of a <see><cref>Task{Result{TIn}}</cref></see> instance to either a 
+    /// Asynchronously matches the content of a <see><cref>Task{Result{TIn}}</cref></see> instance to either a
     /// successful or failed result by applying asynchronous functions.
     /// </summary>
     /// <typeparam name="TIn">The type of the value contained in the result.</typeparam>
@@ -128,7 +130,7 @@ public static class ResultExtensionsMatch
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<Result<TOut>> MatchAsync<TIn, TOut>(this Task<Result<TIn>> self,
         Func<TIn, Task<Result<TOut>>> success,
-        Func<Error, Task<Result<TOut>>> failure)
+        Func<ResultError, Task<Result<TOut>>> failure)
     {
         var result = await self.ConfigureAwait(false);
         return await result.Match(success, failure).ConfigureAwait(false);
@@ -146,7 +148,7 @@ public static class ResultExtensionsMatch
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<TOut> MatchAsync<TIn, TOut>(this TryAsync<TIn> self, Func<TIn, TOut> success,
-        Func<Error, TOut> failure)
+        Func<ResultError, TOut> failure)
     {
         var result = await self.Try().ConfigureAwait(false);
         return result.Match(success, failure);
@@ -165,7 +167,7 @@ public static class ResultExtensionsMatch
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<Result<TOut>> MatchAsync<TIn, TOut>(this TryAsync<TIn> self,
         Func<TIn, Result<TOut>> success,
-        Func<Error, Result<TOut>> failure)
+        Func<ResultError, Result<TOut>> failure)
     {
         var result = await self.Try().ConfigureAwait(false);
         return result.Match(success, failure);
@@ -183,12 +185,12 @@ public static class ResultExtensionsMatch
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<TOut> MatchAsync<TIn, TOut>(this TryAsync<TIn> self, Func<TIn, Task<TOut>> success,
-        Func<Error, Task<TOut>> failure)
+        Func<ResultError, Task<TOut>> failure)
     {
         var result = await self.Try().ConfigureAwait(false);
         return result.IsSuccess
             ? await success(result.Value).ConfigureAwait(false)
-            : await failure(result.Error).ConfigureAwait(false);
+            : await failure(result.ResultError).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -204,7 +206,7 @@ public static class ResultExtensionsMatch
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Task<Result<TOut>> MatchAsync<TIn, TOut>(this TryAsync<TIn> self,
         Func<TIn, Task<Result<TOut>>> success,
-        Func<Error, Task<Result<TOut>>> failure)
+        Func<ResultError, Task<Result<TOut>>> failure)
         => self.Try().MatchAsync(success, failure);
 
     #endregion

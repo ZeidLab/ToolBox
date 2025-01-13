@@ -3,7 +3,7 @@ using ZeidLab.ToolBox.Results;
 
 namespace ZeidLab.ToolBox.Test.Units.Results;
 
-public class ErrorTests
+public class ResultErrorTests
 {
     [Fact]
     public void Constructor_ShouldInitializeFieldsCorrectly()
@@ -15,7 +15,7 @@ public class ErrorTests
         var exception = new Exception("Test exception");
 
         // Act
-        var error = new Error(code, name, message, exception);
+        var error = new ResultError(code, name, message, exception);
 
         // Assert
         error.Code.Should().Be(code);
@@ -32,11 +32,11 @@ public class ErrorTests
         var message = "Test error message";
 
         // Act
-        var error = Error.New(message);
+        var error = ResultError.New(message);
 
         // Assert
-        error.Code.Should().Be(Error.DefaultCode);
-        error.Name.Should().Be(Error.DefaultName);
+        error.Code.Should().Be(ResultError.DefaultCode);
+        error.Name.Should().Be(ResultError.DefaultName);
         error.Message.Should().Be(message);
         error.Exception.Should().BeNull();
     }
@@ -48,11 +48,11 @@ public class ErrorTests
         var exception = new Exception("Test exception");
 
         // Act
-        var error = Error.New(exception);
+        var error = ResultError.New(exception);
 
         // Assert
         error.Code.Should().Be(exception.HResult);
-        error.Name.Should().Be(Error.DefaultName);
+        error.Name.Should().Be(ResultError.DefaultName);
         error.Message.Should().Be(exception.Message);
         error.Exception.Should().Be(exception);
     }
@@ -65,11 +65,11 @@ public class ErrorTests
         var message = "Internal server error";
 
         // Act
-        var error = Error.New(code, message);
+        var error = ResultError.New(code, message);
 
         // Assert
         error.Code.Should().Be(code);
-        error.Name.Should().Be(Error.DefaultName);
+        error.Name.Should().Be(ResultError.DefaultName);
         error.Message.Should().Be(message);
         error.Exception.Should().BeNull();
     }
@@ -82,10 +82,10 @@ public class ErrorTests
         var message = "Custom error message";
 
         // Act
-        var error = Error.New(name, message);
+        var error = ResultError.New(name, message);
 
         // Assert
-        error.Code.Should().Be(Error.DefaultCode);
+        error.Code.Should().Be(ResultError.DefaultCode);
         error.Name.Should().Be(name);
         error.Message.Should().Be(message);
         error.Exception.Should().BeNull();
@@ -100,10 +100,10 @@ public class ErrorTests
         var exception = new Exception("Test exception");
 
         // Act
-        var error = Error.New(name, message, exception);
+        var error = ResultError.New(name, message, exception);
 
         // Assert
-        error.Code.Should().Be(Error.DefaultCode);
+        error.Code.Should().Be(ResultError.DefaultCode);
         error.Name.Should().Be(name);
         error.Message.Should().Be(message);
         error.Exception.Should().Be(exception);
@@ -118,11 +118,11 @@ public class ErrorTests
         var exception = new Exception("Test exception");
 
         // Act
-        var error = Error.New(code, message, exception);
+        var error = ResultError.New(code, message, exception);
 
         // Assert
         error.Code.Should().Be(code);
-        error.Name.Should().Be(Error.DefaultName);
+        error.Name.Should().Be(ResultError.DefaultName);
         error.Message.Should().Be(message);
         error.Exception.Should().Be(exception);
     }
@@ -135,11 +135,11 @@ public class ErrorTests
         var exception = new Exception("Test exception");
 
         // Act
-        var error = Error.New(message, exception);
+        var error = ResultError.New(message, exception);
 
         // Assert
-        error.Code.Should().Be(Error.DefaultCode);
-        error.Name.Should().Be(Error.DefaultName);
+        error.Code.Should().Be(ResultError.DefaultCode);
+        error.Name.Should().Be(ResultError.DefaultName);
         error.Message.Should().Be(message);
         error.Exception.Should().Be(exception);
     }
@@ -151,13 +151,13 @@ public class ErrorTests
         var exception = new Exception("Test exception");
 
         // Act
-        Error error = exception;
+        ResultError resultError = exception;
 
         // Assert
-        error.Code.Should().Be(exception.HResult);
-        error.Name.Should().Be(Error.DefaultName);
-        error.Message.Should().Be(exception.Message);
-        error.Exception.Should().Be(exception);
+        resultError.Code.Should().Be(exception.HResult);
+        resultError.Name.Should().Be(ResultError.DefaultName);
+        resultError.Message.Should().Be(exception.Message);
+        resultError.Exception.Should().Be(exception);
     }
 
     [Fact]
@@ -167,13 +167,13 @@ public class ErrorTests
         var message = "Test error message";
 
         // Act
-        Error error = message;
+        ResultError resultError = message;
 
         // Assert
-        error.Code.Should().Be(Error.DefaultCode);
-        error.Name.Should().Be(Error.DefaultName);
-        error.Message.Should().Be(message);
-        error.Exception.Should().BeNull();
+        resultError.Code.Should().Be(ResultError.DefaultCode);
+        resultError.Name.Should().Be(ResultError.DefaultName);
+        resultError.Message.Should().Be(message);
+        resultError.Exception.Should().BeNull();
     }
 
     [Fact]
@@ -184,7 +184,7 @@ public class ErrorTests
         var name = "NotFound";
         var message = "Resource not found";
         var exception = new Exception("Test exception");
-        var error = new Error(code, name, message, exception);
+        var error = new ResultError(code, name, message, exception);
 
         // Act
         var (deconstructedCode, deconstructedName, deconstructedMessage, deconstructedException) = error;
@@ -203,7 +203,7 @@ public class ErrorTests
         string message = null!;
 
         // Act
-        Action act = () => Error.New(message);
+        Action act = () => ResultError.New(message);
 
         // Assert
         act.Should().Throw<ArgumentNullException>();
@@ -216,7 +216,7 @@ public class ErrorTests
         Exception exception = null!;
 
         // Act
-        Action act = () => Error.New(exception);
+        Action act = () => ResultError.New(exception);
 
         // Assert
         act.Should().Throw<ArgumentNullException>().WithMessage("Value cannot be null. (Parameter 'exception')");
@@ -230,7 +230,7 @@ public class ErrorTests
         var message = "Test message";
 
         // Act
-        Action act = () => Error.New(code, message);
+        Action act = () => ResultError.New(code, message);
 
         // Assert
         act.Should().Throw<ArgumentOutOfRangeException>();
@@ -244,7 +244,7 @@ public class ErrorTests
         var message = "Test message";
            
         // Act
-        Action act = () => Error.New(code, message);
+        Action act = () => ResultError.New(code, message);
 
         // Assert
         act.Should().Throw<ArgumentOutOfRangeException>();
@@ -258,7 +258,7 @@ public class ErrorTests
         var message = "Test message";
 
         // Act
-        Action act = () => Error.New(name, message);
+        Action act = () => ResultError.New(name, message);
 
         // Assert
         act.Should().Throw<ArgumentNullException>();
@@ -272,7 +272,7 @@ public class ErrorTests
         var exception = new Exception("Test exception");
 
         // Act
-        Action act = () => Error.New(message, exception);
+        Action act = () => ResultError.New(message, exception);
 
         // Assert
         act.Should().Throw<ArgumentNullException>();

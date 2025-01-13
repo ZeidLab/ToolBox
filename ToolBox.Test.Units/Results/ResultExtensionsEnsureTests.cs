@@ -9,16 +9,16 @@ public class ResultExtensionsEnsureTests
     public void Ensure_WhenResultIsFailure_ShouldReturnOriginalResult()
     {
         // Arrange
-        var error = Error.New("Test error");
+        var error = ResultError.New("Test error");
         var result = Result<int>.Failure(error);
         Func<int, bool> predicate = x => x > 0;
 
         // Act
-        var ensuredResult = result.Ensure(predicate, Error.New("Should not be used"));
+        var ensuredResult = result.Ensure(predicate, ResultError.New("Should not be used"));
 
         // Assert
         ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.Error.Should().Be(error);
+        ensuredResult.ResultError.Should().Be(error);
     }
 
     [Fact]
@@ -29,7 +29,7 @@ public class ResultExtensionsEnsureTests
         Func<int, bool> predicate = x => x > 0;
 
         // Act
-        var ensuredResult = result.Ensure(predicate, Error.New("Should not be used"));
+        var ensuredResult = result.Ensure(predicate, ResultError.New("Should not be used"));
 
         // Assert
         ensuredResult.IsSuccess.Should().BeTrue();
@@ -41,7 +41,7 @@ public class ResultExtensionsEnsureTests
     {
         // Arrange
         var result = Result<int>.Success(42);
-        var error = Error.New("Predicate failed");
+        var error = ResultError.New("Predicate failed");
         Func<int, bool> predicate = x => x < 0;
 
         // Act
@@ -49,23 +49,23 @@ public class ResultExtensionsEnsureTests
 
         // Assert
         ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.Error.Should().Be(error);
+        ensuredResult.ResultError.Should().Be(error);
     }
 
     [Fact]
     public async Task EnsureAsync_WhenResultIsFailure_ShouldReturnOriginalResult()
     {
         // Arrange
-        var error = Error.New("Test error");
+        var error = ResultError.New("Test error");
         var result = Task.FromResult(Result<int>.Failure(error));
         Func<int, bool> predicate = x => x > 0;
 
         // Act
-        var ensuredResult = await result.EnsureAsync(predicate, Error.New("Should not be used"));
+        var ensuredResult = await result.EnsureAsync(predicate, ResultError.New("Should not be used"));
 
         // Assert
         ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.Error.Should().Be(error);
+        ensuredResult.ResultError.Should().Be(error);
     }
 
     [Fact]
@@ -76,7 +76,7 @@ public class ResultExtensionsEnsureTests
         Func<int, bool> predicate = x => x > 0;
 
         // Act
-        var ensuredResult = await result.EnsureAsync(predicate, Error.New("Should not be used"));
+        var ensuredResult = await result.EnsureAsync(predicate, ResultError.New("Should not be used"));
 
         // Assert
         ensuredResult.IsSuccess.Should().BeTrue();
@@ -88,7 +88,7 @@ public class ResultExtensionsEnsureTests
     {
         // Arrange
         var result = Task.FromResult(Result<int>.Success(42));
-        var error = Error.New("Predicate failed");
+        var error = ResultError.New("Predicate failed");
         Func<int, bool> predicate = x => x < 0;
 
         // Act
@@ -96,23 +96,23 @@ public class ResultExtensionsEnsureTests
 
         // Assert
         ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.Error.Should().Be(error);
+        ensuredResult.ResultError.Should().Be(error);
     }
 
     [Fact]
     public async Task EnsureAsync_WithAsyncPredicate_WhenResultIsFailure_ShouldReturnOriginalResult()
     {
         // Arrange
-        var error = Error.New("Test error");
+        var error = ResultError.New("Test error");
         var result = Task.FromResult(Result<int>.Failure(error));
         Func<int, Task<bool>> predicate = x => Task.FromResult(x > 0);
 
         // Act
-        var ensuredResult = await result.EnsureAsync(predicate, Error.New("Should not be used"));
+        var ensuredResult = await result.EnsureAsync(predicate, ResultError.New("Should not be used"));
 
         // Assert
         ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.Error.Should().Be(error);
+        ensuredResult.ResultError.Should().Be(error);
     }
 
     [Fact]
@@ -123,7 +123,7 @@ public class ResultExtensionsEnsureTests
         Func<int, Task<bool>> predicate = x => Task.FromResult(x > 0);
 
         // Act
-        var ensuredResult = await result.EnsureAsync(predicate, Error.New("Should not be used"));
+        var ensuredResult = await result.EnsureAsync(predicate, ResultError.New("Should not be used"));
 
         // Assert
         ensuredResult.IsSuccess.Should().BeTrue();
@@ -136,7 +136,7 @@ public class ResultExtensionsEnsureTests
     {
         // Arrange
         var result = Task.FromResult(Result<int>.Success(42));
-        var error = Error.New("Predicate failed");
+        var error = ResultError.New("Predicate failed");
         Func<int, Task<bool>> predicate = x => Task.FromResult(x < 0);
 
         // Act
@@ -144,6 +144,6 @@ public class ResultExtensionsEnsureTests
 
         // Assert
         ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.Error.Should().Be(error);
+        ensuredResult.ResultError.Should().Be(error);
     }
 }

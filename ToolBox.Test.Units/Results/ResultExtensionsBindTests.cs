@@ -24,7 +24,7 @@ public class ResultExtensionsBindTests
     public void Bind_WhenResultIsFailure_ShouldReturnFailureResult()
     {
         // Arrange
-        var failureResult = TestHelper.CreateFailureResult<int>(TestHelper.DefaultError);
+        var failureResult = TestHelper.CreateFailureResult<int>(TestHelper.DefaultResultError);
         Func<int, Result<string>> func = x => TestHelper.CreateSuccessResult(x.ToString());
 
         // Act
@@ -32,7 +32,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(TestHelper.DefaultError);
+        result.ResultError.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -54,7 +54,7 @@ public class ResultExtensionsBindTests
     public async Task BindAsync_WhenResultIsFailure_ShouldReturnFailureResult()
     {
         // Arrange
-        var failureResult = TestHelper.CreateFailureResult<int>(TestHelper.DefaultError);
+        var failureResult = TestHelper.CreateFailureResult<int>(TestHelper.DefaultResultError);
         Func<int, Task<Result<string>>> func = x => Task.FromResult(TestHelper.CreateSuccessResult(x.ToString()));
 
         // Act
@@ -62,7 +62,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(TestHelper.DefaultError);
+        result.ResultError.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -84,7 +84,7 @@ public class ResultExtensionsBindTests
     public async Task BindAsync_WhenTaskResultIsFailure_ShouldReturnFailureResult()
     {
         // Arrange
-        var failureResult = Task.FromResult(TestHelper.CreateFailureResult<int>(TestHelper.DefaultError));
+        var failureResult = Task.FromResult(TestHelper.CreateFailureResult<int>(TestHelper.DefaultResultError));
         Func<int, Result<string>> func = x => TestHelper.CreateSuccessResult(x.ToString());
 
         // Act
@@ -92,7 +92,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(TestHelper.DefaultError);
+        result.ResultError.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -114,7 +114,7 @@ public class ResultExtensionsBindTests
     public async Task BindAsync_WhenTaskResultIsFailure_ShouldReturnFailureResultAsync()
     {
         // Arrange
-        var failureResult = Task.FromResult(TestHelper.CreateFailureResult<int>(TestHelper.DefaultError));
+        var failureResult = Task.FromResult(TestHelper.CreateFailureResult<int>(TestHelper.DefaultResultError));
         Func<int, Task<Result<string>>> func = x => Task.FromResult(TestHelper.CreateSuccessResult(x.ToString()));
 
         // Act
@@ -122,7 +122,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(TestHelper.DefaultError);
+        result.ResultError.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -144,7 +144,7 @@ public class ResultExtensionsBindTests
     public void Bind_WhenTryIsFailure_ShouldReturnFailureResult()
     {
         // Arrange
-        Try<int> tryFunc = () => TestHelper.CreateFailureResult<int>(TestHelper.DefaultError);
+        Try<int> tryFunc = () => TestHelper.CreateFailureResult<int>(TestHelper.DefaultResultError);
         Func<int, Result<string>> func = x => TestHelper.CreateSuccessResult(x.ToString());
 
         // Act
@@ -152,7 +152,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(TestHelper.DefaultError);
+        result.ResultError.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -174,7 +174,7 @@ public class ResultExtensionsBindTests
     public async Task BindAsync_WhenTryIsFailure_ShouldReturnFailureResultAsync()
     {
         // Arrange
-        Try<int> tryFunc = () => TestHelper.CreateFailureResult<int>(TestHelper.DefaultError);
+        Try<int> tryFunc = () => TestHelper.CreateFailureResult<int>(TestHelper.DefaultResultError);
         Func<int, Task<Result<string>>> func = x => Task.FromResult(TestHelper.CreateSuccessResult(x.ToString()));
 
         // Act
@@ -182,7 +182,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(TestHelper.DefaultError);
+        result.ResultError.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -204,7 +204,7 @@ public class ResultExtensionsBindTests
     public async Task BindAsync_WhenTryAsyncIsFailure_ShouldReturnFailureResult()
     {
         // Arrange
-        TryAsync<int> tryAsyncFunc = () => Task.FromResult(TestHelper.CreateFailureResult<int>(TestHelper.DefaultError));
+        TryAsync<int> tryAsyncFunc = () => Task.FromResult(TestHelper.CreateFailureResult<int>(TestHelper.DefaultResultError));
         Func<int, Result<string>> func = x => TestHelper.CreateSuccessResult(x.ToString());
 
         // Act
@@ -212,7 +212,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(TestHelper.DefaultError);
+        result.ResultError.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -234,7 +234,7 @@ public class ResultExtensionsBindTests
     public async Task BindAsync_WhenTryAsyncIsFailure_ShouldReturnFailureResultAsync()
     {
         // Arrange
-        TryAsync<int> tryAsyncFunc = () => Task.FromResult(TestHelper.CreateFailureResult<int>(TestHelper.DefaultError));
+        TryAsync<int> tryAsyncFunc = () => Task.FromResult(TestHelper.CreateFailureResult<int>(TestHelper.DefaultResultError));
         Func<int, Task<Result<string>>> func = x => Task.FromResult(TestHelper.CreateSuccessResult(x.ToString()));
 
         // Act
@@ -242,7 +242,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(TestHelper.DefaultError);
+        result.ResultError.Should().Be(TestHelper.DefaultResultError);
     }
         
     [Fact]
@@ -264,7 +264,7 @@ public class ResultExtensionsBindTests
     public void Bind_WhenTryIsFailureAndFuncReturnsTry_ShouldReturnFailureResult()
     {
         // Arrange
-        Try<int> tryFunc = () => TestHelper.CreateFailureResult<int>(TestHelper.DefaultError);
+        Try<int> tryFunc = () => TestHelper.CreateFailureResult<int>(TestHelper.DefaultResultError);
         Func<int, Try<string>> func = x => () => TestHelper.CreateSuccessResult(x.ToString());
 
         // Act
@@ -272,7 +272,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(TestHelper.DefaultError);
+        result.ResultError.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -294,7 +294,7 @@ public class ResultExtensionsBindTests
     public async Task BindAsync_WhenTryIsFailureAndFuncReturnsTryAsync_ShouldReturnFailureResult()
     {
         // Arrange
-        Try<int> tryFunc = () => TestHelper.CreateFailureResult<int>(TestHelper.DefaultError);
+        Try<int> tryFunc = () => TestHelper.CreateFailureResult<int>(TestHelper.DefaultResultError);
         Func<int, TryAsync<string>> func = x => () => Task.FromResult(TestHelper.CreateSuccessResult(x.ToString()));
 
         // Act
@@ -302,7 +302,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(TestHelper.DefaultError);
+        result.ResultError.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -324,7 +324,7 @@ public class ResultExtensionsBindTests
     public async Task BindAsync_WhenTryAsyncIsFailureAndFuncReturnsTryAsync_ShouldReturnFailureResult()
     {
         // Arrange
-        TryAsync<int> tryAsyncFunc = () => Task.FromResult(TestHelper.CreateFailureResult<int>(TestHelper.DefaultError));
+        TryAsync<int> tryAsyncFunc = () => Task.FromResult(TestHelper.CreateFailureResult<int>(TestHelper.DefaultResultError));
         Func<int, TryAsync<string>> func = x => () => Task.FromResult(TestHelper.CreateSuccessResult(x.ToString()));
 
         // Act
@@ -332,7 +332,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(TestHelper.DefaultError);
+        result.ResultError.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -354,7 +354,7 @@ public class ResultExtensionsBindTests
     public async Task BindAsync_WhenTryAsyncIsFailureAndFuncReturnsTry_ShouldReturnFailureResult()
     {
         // Arrange
-        TryAsync<int> tryAsyncFunc = () => Task.FromResult(TestHelper.CreateFailureResult<int>(TestHelper.DefaultError));
+        TryAsync<int> tryAsyncFunc = () => Task.FromResult(TestHelper.CreateFailureResult<int>(TestHelper.DefaultResultError));
         Func<int, Try<string>> func = x => () => TestHelper.CreateSuccessResult(x.ToString());
 
         // Act
@@ -362,6 +362,6 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(TestHelper.DefaultError);
+        result.ResultError.Should().Be(TestHelper.DefaultResultError);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 
 namespace ZeidLab.ToolBox.Common;
@@ -6,6 +7,7 @@ namespace ZeidLab.ToolBox.Common;
 /// <summary>
 /// provides extension methods for <see cref="Task{TIn}"/>
 /// </summary>
+[SuppressMessage("Design", "CA1062:Validate arguments of public methods")]
 public static class TaskExtensions
 {
     /// <summary>
@@ -20,7 +22,7 @@ public static class TaskExtensions
     {
         return task is { IsCompleted: true, IsFaulted: false, IsCanceled: false };
     }
-    
+
     /// <summary>
     /// Converts the provided exception to a Task that is faulted
     /// with the exception.
@@ -29,7 +31,7 @@ public static class TaskExtensions
     /// <returns>A Task that has already completed with the exception.</returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Task<TIn> AsFailedTask<TIn>(this Exception ex)
+    public static Task<TIn> AsFailedTaskAsync<TIn>(this Exception ex)
     {
         TaskCompletionSource<TIn> completionSource = new();
         completionSource.SetException(ex);
@@ -39,22 +41,22 @@ public static class TaskExtensions
     /// <summary>Convert a value to a Task that completes immediately</summary>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Task<TIn> AsTask<TIn>(this TIn self) => Task.FromResult(self);
+    public static Task<TIn> AsTaskAsync<TIn>(this TIn self) => Task.FromResult(self);
 
-    /// <summary>Flatten the nested Task type</summary>
+    /// <summary>FlattenAsync the nested Task type</summary>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static async Task<TIn> Flatten<TIn>(this Task<Task<TIn>> self)
+    public static async Task<TIn> FlattenAsync<TIn>(this Task<Task<TIn>> self)
     {
         return await (await self.ConfigureAwait(false)).ConfigureAwait(false);
     }
 
-    /// <summary>Flatten the nested Task type</summary>
+    /// <summary>FlattenAsync the nested Task type</summary>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static async Task<TIn> Flatten<TIn>(this Task<Task<Task<TIn>>> self)
+    public static async Task<TIn> FlattenAsync<TIn>(this Task<Task<Task<TIn>>> self)
     {
         return await (await (await self.ConfigureAwait(false)).ConfigureAwait(false)).ConfigureAwait(false);
     }
-    
+
 }

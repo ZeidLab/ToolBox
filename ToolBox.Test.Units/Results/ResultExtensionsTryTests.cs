@@ -52,8 +52,8 @@ public class ResultExtensionsTryTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().NotBeNull();
-        result.Error.Exception.Should().Be(exception);
+        result.ResultError.Should().NotBeNull();
+        result.ResultError.Exception.Should().Be(exception);
     }
 
     
@@ -86,8 +86,8 @@ public class ResultExtensionsTryTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().NotBeNull();
-        result.Error.Exception.Should().Be(exception);
+        result.ResultError.Should().NotBeNull();
+        result.ResultError.Exception.Should().Be(exception);
     }
    
 }

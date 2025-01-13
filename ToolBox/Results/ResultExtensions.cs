@@ -29,7 +29,7 @@ public static class ResultExtensions
     /// <returns>A failed Result instance containing the provided error.</returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Result<TIn> ToFailure<TIn>(this Error self)
+    public static Result<TIn> ToFailure<TIn>(this ResultError self)
         => Result<TIn>.Failure(self);
 
     /// <summary>
@@ -41,7 +41,7 @@ public static class ResultExtensions
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<TIn> ToFailure<TIn>(this Exception self)
-        => Result<TIn>.Failure(Error.New(self));
+        => Result<TIn>.Failure(ResultError.New(self));
 
     /// <summary>
     /// Converts a Result instance to a Maybe instance.
@@ -55,8 +55,8 @@ public static class ResultExtensions
     public static Maybe<TIn> ToMaybe<TIn>(this Result<TIn> self)
         => self.IsSuccess
             ? Maybe<TIn>.Some(self.Value)
-            : Maybe<TIn>.None(); 
-    
+            : Maybe<TIn>.None();
+
     /// <summary>
     /// Converts a <see cref="Try{TIn}"/> instance to a <see cref="Maybe{TIn}"/> instance.
     /// </summary>
@@ -81,10 +81,12 @@ public static class ResultExtensions
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<Maybe<TIn>> ToMaybeAsync<TIn>(this Task<Result<TIn>> self)
-        => (await self) is { IsSuccess: true } result
+#pragma warning disable CA1062
+        => (await self.ConfigureAwait(false)) is { IsSuccess: true } result
+#pragma warning restore CA1062
             ? Maybe<TIn>.Some(result.Value)
-            : Maybe<TIn>.None();   
-    
+            : Maybe<TIn>.None();
+
     /// <summary>
     /// Converts a <see cref="TryAsync{TIn}"/> instance to a <see cref="Maybe{TIn}"/> instance asynchronously.
     /// </summary>
@@ -95,7 +97,7 @@ public static class ResultExtensions
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<Maybe<TIn>> ToMaybeAsync<TIn>(this TryAsync<TIn> self)
-        => (await self.Try()) is { IsSuccess: true } result
+        => (await self.Try().ConfigureAwait(false)) is { IsSuccess: true } result
             ? Maybe<TIn>.Some(result.Value)
             : Maybe<TIn>.None();
 
@@ -112,7 +114,7 @@ public static class ResultExtensions
     public static Result<Unit> ToUnitResult<TIn>(this Result<TIn> self)
         => self.IsSuccess
             ? Result<Unit>.Success(Unit.Default)
-            : Result<Unit>.Failure(self.Error);
+            : Result<Unit>.Failure(self.ResultError);
 
     /// <summary>
     /// Converts a Result instance to a Result{Unit} instance which in fact is a void result containing possible error.
@@ -126,9 +128,11 @@ public static class ResultExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<Result<Unit>> ToUnitResultAsync<TIn>(this Task<Result<TIn>> self)
     {
-        var result = await self;
+#pragma warning disable CA1062
+        var result = await self.ConfigureAwait(false);
+#pragma warning restore CA1062
         return result.IsSuccess
             ? Result<Unit>.Success(Unit.Default)
-            : Result<Unit>.Failure(result.Error);
+            : Result<Unit>.Failure(result.ResultError);
     }
 }

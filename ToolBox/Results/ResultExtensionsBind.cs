@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ZeidLab.ToolBox.Common;
 
@@ -7,6 +8,7 @@ namespace ZeidLab.ToolBox.Results;
 /// <summary>
 /// Provides extension methods for binding operations on <see cref="Result{TValue}"/> objects.
 /// </summary>
+[SuppressMessage("Design", "CA1062:Validate arguments of public methods")]
 public static class ResultExtensionsBind
 {
     #region Bind
@@ -19,7 +21,7 @@ public static class ResultExtensionsBind
     public static Result<TOut> Bind<TIn, TOut>(this Result<TIn> self, Func<TIn, Result<TOut>> func)
         => self.IsSuccess
             ? func(self.Value)
-            : Result<TOut>.Failure(self.Error);
+            : Result<TOut>.Failure(self.ResultError);
 
     /// <summary>
     /// Binds the value of a successful <see cref="Try{TIn}"/> to a new result by applying the specified function.
@@ -49,7 +51,7 @@ public static class ResultExtensionsBind
     public static Task<Result<TOut>> BindAsync<TIn, TOut>(this Result<TIn> self, Func<TIn, Task<Result<TOut>>> func)
         => self.IsSuccess
             ? func(self.Value)
-            : Result<TOut>.Failure(self.Error).AsTask();
+            : Result<TOut>.Failure(self.ResultError).AsTaskAsync();
 
     /// <summary>
     /// Binds the value of a successful result to a new result by applying the specified function.
@@ -66,10 +68,10 @@ public static class ResultExtensionsBind
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<Result<TOut>> BindAsync<TIn, TOut>(this Task<Result<TIn>> self, Func<TIn, Task<Result<TOut>>> func)
     {
-        var result = await self;
+        var result = await self.ConfigureAwait(false);
         return result.IsSuccess
             ? await func(result.Value).ConfigureAwait(false)
-            : Result<TOut>.Failure(result.Error);
+            : Result<TOut>.Failure(result.ResultError);
     }
 
     /// <summary>
@@ -110,7 +112,7 @@ public static class ResultExtensionsBind
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<Result<TOut>> BindAsync<TIn, TOut>(this TryAsync<TIn> self, Func<TIn, Result<TOut>> func)
-        => (await self.Try()).Bind(func);
+        => (await self.Try().ConfigureAwait(false)).Bind(func);
 
     /// <summary>
     /// Asynchronously binds the value of a successful result to a new result by applying the specified asynchronous function.

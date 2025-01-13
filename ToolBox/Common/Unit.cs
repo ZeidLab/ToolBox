@@ -1,4 +1,5 @@
 ﻿#nullable disable
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
 using ZeidLab.ToolBox.Results;
@@ -11,12 +12,12 @@ namespace ZeidLab.ToolBox.Common;
 /// in functional programming and railway-oriented programming (ROP) to provide a concrete type when no
 /// meaningful value is returned. This is particularly useful in scenarios where methods must return a value
 /// for chaining or composition, even when the operation itself does not produce a meaningful result.
-/// 
+///
 /// In railway-oriented programming, the <see cref="Unit"/> type is commonly used with <see cref="Result{TValue}"/>
 /// to represent successful operations that do not return a value. For example, a method that performs a side
 /// effect (e.g., logging) can return <see cref="Result{Unit}"/> to indicate success or failure without needing
 /// to return a specific value.
-/// 
+///
 /// Key Features:
 /// - Single Value: The <see cref="Unit"/> type has only one value, <see cref="Default"/>, which represents the
 ///   absence of a meaningful value.
@@ -24,7 +25,7 @@ namespace ZeidLab.ToolBox.Common;
 /// , it is a lightweight and efficient type.
 /// - Compatibility: Can be implicitly converted to and from <see cref="ValueTuple"/> for interoperability with
 ///   other functional programming constructs.
-/// 
+///
 /// Example Usage:
 /// <code>
 /// // A method that performs a side effect and returns Result&lt;Unit&gt;
@@ -33,7 +34,7 @@ namespace ZeidLab.ToolBox.Common;
 ///     Console.WriteLine(message);
 ///     return Result&lt;Unit&gt;.Success(Unit.Default);
 /// }
-/// 
+///
 /// // Chaining methods in railway-oriented programming
 /// Result&lt;Unit&gt; result = LogMessage("Hello, World!")
 ///     .Bind(_ => LogMessage("Another message."));
@@ -41,13 +42,17 @@ namespace ZeidLab.ToolBox.Common;
 /// </summary>
 [Serializable]
 [StructLayout(LayoutKind.Sequential, Size = 1)]
+[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
+[SuppressMessage("Performance", "CA1822:Mark members as static")]
 public readonly record struct Unit : IComparable<Unit>
 {
     /// <summary>
     /// The single instance of the <see cref="Unit"/> type. This is the only value that a <see cref="Unit"/>
     /// can hold, representing the absence of a meaningful value.
     /// </summary>
+#pragma warning disable CA1805
     public static readonly Unit Default = new();
+#pragma warning restore CA1805
 
     /// <summary>
     /// Returns a string representation of the current unit. This is always "()", which is a common
@@ -105,7 +110,8 @@ public readonly record struct Unit : IComparable<Unit>
     /// <param name="anything">The alternative value to return.</param>
     /// <returns>The alternative value.</returns>
     [Pure]
-    public T Return<T>(T anything) => anything;
+    public static T Return<T>(T anything) => anything;
+
 
     /// <summary>
     /// Provides an alternative value to <see cref="Unit"/> by invoking a function. This method is useful
@@ -115,7 +121,11 @@ public readonly record struct Unit : IComparable<Unit>
     /// <param name="anything">A function that produces the alternative value.</param>
     /// <returns>The alternative value produced by the function.</returns>
     [Pure]
+
+#pragma warning disable CA1062
     public T Return<T>(Func<T> anything) => anything();
+#pragma warning restore CA1062
+
 
     /// <summary>
     /// Always returns 0, as all instances of <see cref="Unit"/> are equal.

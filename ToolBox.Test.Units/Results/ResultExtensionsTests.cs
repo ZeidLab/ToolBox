@@ -7,9 +7,9 @@ namespace ZeidLab.ToolBox.Test.Units.Results
     public class ResultExtensionsTests
     {
         // Helper method to create a sample error
-        private static Error CreateSampleError(string message = "Sample error message")
+        private static ResultError CreateSampleError(string message = "Sample error message")
         {
-            return Error.New(message);
+            return ResultError.New(message);
         }
 
         // Helper method to create a sample exception
@@ -58,7 +58,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().Be(error);
+            result.ResultError.Should().Be(error);
             result.IsSuccess.Should().BeFalse();
             result.Value.Should().Be(default);
         }
@@ -74,8 +74,8 @@ namespace ZeidLab.ToolBox.Test.Units.Results
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().NotBeNull();
-            result.Error.Exception.Should().Be(exception);
+            result.ResultError.Should().NotBeNull();
+            result.ResultError.Exception.Should().Be(exception);
             result.IsSuccess.Should().BeFalse();
             result.Value.Should().Be(default);
         }
@@ -160,7 +160,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
         public void ToUnitResult_ShouldReturnFailureResultWithError_WhenInputResultIsFailure()
         {
             // Arrange
-            var error = Error.New("Test error");
+            var error = ResultError.New("Test error");
             var failureResult = TestHelper.CreateFailureResult<int>(error);
 
             // Act
@@ -168,7 +168,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
 
             // Assert
             unitResult.IsFailure.Should().BeTrue();
-            unitResult.Error.Should().Be(error);
+            unitResult.ResultError.Should().Be(error);
         }
 
         [Fact]
@@ -189,7 +189,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
         public async Task ToUnitResultAsync_ShouldReturnFailureResultWithError_WhenInputResultIsFailure()
         {
             // Arrange
-            var error = Error.New("Test error");
+            var error = ResultError.New("Test error");
             var failureResult = Task.FromResult(TestHelper.CreateFailureResult<int>(error));
 
             // Act
@@ -197,7 +197,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
 
             // Assert
             unitResult.IsFailure.Should().BeTrue();
-            unitResult.Error.Should().Be(error);
+            unitResult.ResultError.Should().Be(error);
         }
     }
 }

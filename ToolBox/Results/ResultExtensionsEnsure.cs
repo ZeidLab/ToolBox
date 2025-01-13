@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 
 namespace ZeidLab.ToolBox.Results;
@@ -6,6 +7,7 @@ namespace ZeidLab.ToolBox.Results;
 /// <summary>
 /// provides extension methods for ensuring the <see cref="Result{TValue}"/> will pass the given predicate
 /// </summary>
+[SuppressMessage("Design", "CA1062:Validate arguments of public methods")]
 public static class ResultExtensionsEnsure
 {
     /// <summary>
@@ -19,12 +21,12 @@ public static class ResultExtensionsEnsure
     /// <typeparam name="TIn">The type of the value within the result.</typeparam>
     /// <param name="result">The result to check.</param>
     /// <param name="predicate">The predicate to evaluate.</param>
-    /// <param name="error">The error to include in the result when the predicate is false.</param>
+    /// <param name="resultError">The error to include in the result when the predicate is false.</param>
     /// <returns>The result of the predicate evaluation.</returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Result<TIn> Ensure<TIn>(this Result<TIn> result, Func<TIn, bool> predicate, Error error)
-        => result.IsFailure || predicate(result.Value) ? result : error;
+    public static Result<TIn> Ensure<TIn>(this Result<TIn> result, Func<TIn, bool> predicate, ResultError resultError)
+        => result.IsFailure || predicate(result.Value) ? result : resultError;
 
 
     /// <summary>
@@ -38,13 +40,13 @@ public static class ResultExtensionsEnsure
     /// <typeparam name="TIn">The type of the value within the result.</typeparam>
     /// <param name="self">The result to check.</param>
     /// <param name="predicate">The predicate to evaluate.</param>
-    /// <param name="error">The error to include in the result when the predicate is false.</param>
+    /// <param name="resultError">The error to include in the result when the predicate is false.</param>
     /// <returns>The result of the predicate evaluation.</returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<Result<TIn>> EnsureAsync<TIn>(this Task<Result<TIn>> self,
-        Func<TIn, bool> predicate, Error error)
-        => (await self.ConfigureAwait(false)).Ensure(predicate, error);
+        Func<TIn, bool> predicate, ResultError resultError)
+        => (await self.ConfigureAwait(false)).Ensure(predicate, resultError);
 
     /// <summary>
     /// Ensures that the value of a successful result satisfies a predicate.
@@ -57,14 +59,14 @@ public static class ResultExtensionsEnsure
     /// <typeparam name="TIn">The type of the value within the result.</typeparam>
     /// <param name="self">The result to check.</param>
     /// <param name="predicate">The predicate to evaluate.</param>
-    /// <param name="error">The error to include in the result when the predicate is false.</param>
+    /// <param name="resultError">The error to include in the result when the predicate is false.</param>
     /// <returns>The result of the predicate evaluation.</returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<Result<TIn>> EnsureAsync<TIn>(this Task<Result<TIn>> self,
-        Func<TIn, Task<bool>> predicate, Error error)
+        Func<TIn, Task<bool>> predicate, ResultError resultError)
     {
         var result = await self.ConfigureAwait(false);
-        return result.IsFailure || await predicate(result.Value).ConfigureAwait(false) ? result : error;
+        return result.IsFailure || await predicate(result.Value).ConfigureAwait(false) ? result : resultError;
     }
 }

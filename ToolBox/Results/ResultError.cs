@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ZeidLab.ToolBox.Common;
 
@@ -8,42 +9,42 @@ namespace ZeidLab.ToolBox.Results;
 /// Represents an error in a structured and immutable way, encapsulating details such as an error code,
 /// a human-readable name, a descriptive message, and an optional exception. This type is designed to
 /// be used in railway-oriented programming (ROP) paradigms, where operations are modeled as a series
-/// of steps that either succeed or fail. The <see cref="Error"/> type is typically used as part of a
+/// of steps that either succeed or fail. The <see cref="ResultError"/> type is typically used as part of a
 /// <see cref="Result{T}"/> type to represent the failure state of an operation.
-/// 
-/// The <see cref="Error"/> type provides factory methods for creating instances with validation,
+///
+/// The <see cref="ResultError"/> type provides factory methods for creating instances with validation,
 /// ensuring that all errors are constructed with valid data. It also supports implicit conversions
 /// from <see cref="string"/> and <see cref="Exception"/> to simplify error creation in common scenarios.
-/// 
+///
 /// Key Features:
-/// - Immutable and thread-safe: Once created, an <see cref="Error"/> instance cannot be modified.
+/// - Immutable and thread-safe: Once created, an <see cref="ResultError"/> instance cannot be modified.
 /// - Value semantics: As a <see><cref>record struct</cref></see> , it is lightweight and copied by value.
 /// - Serialization support: Marked with <see cref="SerializableAttribute"/> for use in logging,
 ///   transmission, or persistence scenarios.
 /// - Deconstruction: Allows easy extraction of error details using tuple deconstruction.
 /// - Default values: Provides default error codes and names for common use cases.
-/// 
+///
 /// Example Usage:
 /// <code>
 /// // Create an error with a custom message
 /// Error error1 = Error.New("An unexpected error occurred.");
-/// 
+///
 /// // Create an error from an exception
 /// Error error2 = new InvalidOperationException("Invalid operation");
-/// 
+///
 /// // Create an error with a custom code, name, and message
 /// Error error3 = Error.New(404, "NotFound", "The requested resource was not found.");
-/// 
+///
 /// // Deconstruct an error into its components
 /// var (code, name, message, exception) = error3;
 /// </code>
-/// 
+///
 /// This type is a fundamental building block for robust and predictable error handling in functional-style
 /// C# applications.
 /// </summary>
 [Serializable]
 [StructLayout(LayoutKind.Sequential)]
-public readonly record struct Error
+public readonly record struct ResultError
 {
     internal const string DefaultName = "DefaultErrorName";
     internal const int DefaultCode = 1;
@@ -63,13 +64,13 @@ public readonly record struct Error
 
 
     /// <summary>
-    /// Creates an instance of the <see cref="Error"/> struct.
+    /// Creates an instance of the <see cref="ResultError"/> struct.
     /// </summary>
     /// <param name="code">The error code.</param>
     /// <param name="name">The error name. It is a meaningful name instead of numbers and more readable.</param>
     /// <param name="message">The error message.</param>
     /// <param name="exception">The exception associated with this error, or <see langword="null"/> if there is no exception.</param>
-    internal Error(int code, string name, string message, Exception? exception = null)
+    internal ResultError(int code, string name, string message, Exception? exception = null)
     {
         Code = code;
         Name = name;
@@ -78,7 +79,7 @@ public readonly record struct Error
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Error"/> struct.
+    /// Initializes a new instance of the <see cref="ResultError"/> struct.
     /// </summary>
     /// <remarks>
     /// This constructor is not intended to be used directly. Instead, use the static factory methods
@@ -88,7 +89,7 @@ public readonly record struct Error
     [Obsolete(
         "Use factory methods like Error.New() instead. Any instance of public constructor will be considered empty.",
         true)]
-    public Error() => throw new InvalidOperationException("Use factory methods like Error.New() instead.");
+    public ResultError() => throw new InvalidOperationException("Use factory methods like Error.New() instead.");
 #pragma warning restore S1133 //Do not forget to remove this deprecated code someday
 
 
@@ -97,116 +98,116 @@ public readonly record struct Error
     /// </summary>
     /// <param name="exception"></param>
     /// <returns></returns>
-    public static implicit operator Error(Exception exception) => New(exception);
+    public static implicit operator ResultError(Exception exception) => New(exception);
 
     /// <summary>
     /// implicitly converts an error message to an error
     /// </summary>
     /// <param name="message"></param>
     /// <returns></returns>
-    public static implicit operator Error(string message) => New(message);
+    public static implicit operator ResultError(string message) => New(message);
 
     /// <summary>
-    /// Creates a new <see cref="Error"/> instance with the provided error message.
+    /// Creates a new <see cref="ResultError"/> instance with the provided error message.
     /// </summary>
     /// <param name="message">The error message.</param>
-    /// <returns>A new <see cref="Error"/> instance.</returns>
+    /// <returns>A new <see cref="ResultError"/> instance.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Error New(string message)
+    public static ResultError New(string message)
     {
         Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
-        return new Error(DefaultCode, DefaultName, message);
+        return new ResultError(DefaultCode, DefaultName, message);
     }
 
     /// <summary>
-    /// Creates a new <see cref="Error"/> instance with the provided exception.
+    /// Creates a new <see cref="ResultError"/> instance with the provided exception.
     /// </summary>
-    /// <param name="exception">The exception to create a new <see cref="Error"/> instance with.</param>
-    /// <returns>A new <see cref="Error"/> instance.</returns>
+    /// <param name="exception">The exception to create a new <see cref="ResultError"/> instance with.</param>
+    /// <returns>A new <see cref="ResultError"/> instance.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Error New(Exception exception)
+    public static ResultError New(Exception exception)
     {
         Guards.ThrowIfNull(exception, nameof(exception));
-        return new Error(exception.HResult, DefaultName, exception.Message, exception);
+        return new ResultError(exception.HResult, DefaultName, exception.Message, exception);
     }
 
     /// <summary>
-    /// Creates a new <see cref="Error"/> instance with the provided code and error message.
+    /// Creates a new <see cref="ResultError"/> instance with the provided code and error message.
     /// </summary>
     /// <param name="code">The error code. It should be greater than 0.</param>
     /// <param name="message">The error message. It should not be <see langword="null"/> or empty.</param>
-    /// <returns>A new <see cref="Error"/> instance.</returns>
+    /// <returns>A new <see cref="ResultError"/> instance.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Error New(int code, string message)
+    public static ResultError New(int code, string message)
     {
         Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
         Guards.ThrowIfNegativeOrZero(code, nameof(code));
-        return new Error(code, DefaultName, message);
+        return new ResultError(code, DefaultName, message);
     }
 
 
     /// <summary>
-    /// Creates a new <see cref="Error"/> instance with the provided error name and error message.
+    /// Creates a new <see cref="ResultError"/> instance with the provided error name and error message.
     /// </summary>
     /// <param name="name">The error name. It is a meaningful name instead of numbers and more readable. It should not be <see langword="null"/> or empty.</param>
     /// <param name="message">The error message. It should not be <see langword="null"/> or empty.</param>
-    /// <returns>A new <see cref="Error"/> instance.</returns>
+    /// <returns>A new <see cref="ResultError"/> instance.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Error New(string name, string message)
+    public static ResultError New(string name, string message)
     {
         Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
         Guards.ThrowIfNullOrWhiteSpace(name, nameof(name));
 
-        return new Error(DefaultCode, name, message);
+        return new ResultError(DefaultCode, name, message);
     }
 
 
     /// <summary>
-    /// Creates a new <see cref="Error"/> instance with the provided error name, error message, and exception.
+    /// Creates a new <see cref="ResultError"/> instance with the provided error name, error message, and exception.
     /// </summary>
     /// <param name="name">The error name. It is a meaningful name instead of numbers and more readable. It should not be <see langword="null"/> or empty.</param>
     /// <param name="message">The error message. It should not be <see langword="null"/> or empty.</param>
     /// <param name="exception">The exception associated with this error. It should not be <see langword="null"/>.</param>
-    /// <returns>A new <see cref="Error"/> instance.</returns>
+    /// <returns>A new <see cref="ResultError"/> instance.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Error New(string name, string message, Exception exception)
+    public static ResultError New(string name, string message, Exception exception)
     {
         Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
         Guards.ThrowIfNullOrWhiteSpace(name, nameof(name));
 
-        return new Error(DefaultCode, name, message, exception);
+        return new ResultError(DefaultCode, name, message, exception);
     }
 
     /// <summary>
-    /// Creates a new <see cref="Error"/> instance with the provided code, error message, and exception.
+    /// Creates a new <see cref="ResultError"/> instance with the provided code, error message, and exception.
     /// </summary>
     /// <param name="code">The code of the error. It should be greater than 0.</param>
     /// <param name="message">The error message. It should not be <see langword="null"/> or empty.</param>
     /// <param name="exception">The exception associated with this error. It should not be <see langword="null"/>.</param>
-    /// <returns>A new <see cref="Error"/> instance.</returns>
+    /// <returns>A new <see cref="ResultError"/> instance.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Error New(int code, string message, Exception exception)
+    public static ResultError New(int code, string message, Exception exception)
     {
         Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
         Guards.ThrowIfNegativeOrZero(code, nameof(code));
 
-        return new Error(code, DefaultName, message, exception);
+        return new ResultError(code, DefaultName, message, exception);
     }
 
 
     /// <summary>
-    /// Creates a new <see cref="Error"/> instance with the provided code, error message, and exception.
+    /// Creates a new <see cref="ResultError"/> instance with the provided code, error message, and exception.
     /// The code of the error is set to the HResult of the exception.
     /// </summary>
     /// <param name="message">The error message. It should not be <see langword="null"/> or empty.</param>
     /// <param name="exception">The exception associated with this error. It should not be <see langword="null"/>.</param>
-    /// <returns>A new <see cref="Error"/> instance.</returns>
+    /// <returns>A new <see cref="ResultError"/> instance.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Error New(string message, Exception exception)
+    public static ResultError New(string message, Exception exception)
     {
         Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
         Guards.ThrowIfNull(exception, nameof(exception));
-        return new Error(DefaultCode, DefaultName, message, exception);
+        return new ResultError(DefaultCode, DefaultName, message, exception);
     }
 
     /// <summary>

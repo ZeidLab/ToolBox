@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ZeidLab.ToolBox.Common;
@@ -11,7 +12,7 @@ namespace ZeidLab.ToolBox.Results;
 /// steps that either continue on the "happy path" (success) or diverge to an "error track" (failure).
 /// 
 /// The <see cref="Result{TValue}"/> type encapsulates either a successful value of type <typeparamref name="TValue"/>
-/// or an <see cref="Error"/> representing the failure. It provides a robust and predictable way to handle
+/// or an <see cref="ResultError"/> representing the failure. It provides a robust and predictable way to handle
 /// errors without relying on exceptions for control flow.
 /// 
 /// Key Features:
@@ -19,7 +20,7 @@ namespace ZeidLab.ToolBox.Results;
 /// - Value semantics: As a <see><cref>record struct</cref></see> , it is lightweight and copied by value.
 /// - Success/Failure states: The <see cref="IsSuccess"/> and <see cref="IsFailure"/> properties
 ///   clearly indicate the outcome of the operation.
-/// - Implicit conversions: Supports implicit conversions from <typeparamref name="TValue"/>, <see cref="Error"/>,
+/// - Implicit conversions: Supports implicit conversions from <typeparamref name="TValue"/>, <see cref="ResultError"/>,
 ///   and <see cref="Exception"/> to simplify usage.
 /// - Factory methods: Provides <see cref="Success(TValue)"/> and <see><cref>Failure(Error)</cref></see>
 /// methods
@@ -55,10 +56,12 @@ namespace ZeidLab.ToolBox.Results;
 /// <typeparam name="TValue">The type of the value returned by a successful operation.</typeparam>
 [Serializable]
 [StructLayout(LayoutKind.Sequential)]
+[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
+[SuppressMessage("Design", "CA1000:Do not declare static members on generic types")]
 public readonly record struct Result<TValue>
 {
     internal readonly TValue Value;
-    internal readonly Error Error;
+    internal readonly ResultError ResultError;
 
     /// <summary>
     /// Gets a value indicating whether the operation was successful.
@@ -75,10 +78,10 @@ public readonly record struct Result<TValue>
     /// </summary>
     public readonly bool IsFailure;
     
-    private Result(bool isSuccess, TValue value, Error error = default)
+    private Result(bool isSuccess, TValue value, ResultError resultError = default)
     {
         Value = value;
-        Error = error;
+        ResultError = resultError;
         IsSuccess = isSuccess;
         IsFailure = !isSuccess;
         IsDefault = Value.IsDefault();
@@ -90,7 +93,7 @@ public readonly record struct Result<TValue>
     /// </summary>
     /// <remarks>
     /// Use factory methods like <see cref="Success(TValue)"/>
-    /// or <see cref="Failure(Results.Error)"/> instead. Using public constructor will throw exception.
+    /// or <see cref="Failure(Results.ResultError)"/> instead. Using public constructor will throw exception.
     /// </remarks>
 #pragma warning disable S1133 // Do not forget to remove this deprecated code someday
     [Obsolete("Use factory methods like Result<TIn>.Success or Result<TIn>.Failure instead. Any instance of public constructor will be considered empty.",true)]
@@ -109,10 +112,10 @@ public readonly record struct Result<TValue>
     /// <summary>
     /// Implicitly converts an error to a failure of <see cref="Result{TValue}"/>
     /// </summary>
-    /// <param name="error">specified error</param>
+    /// <param name="resultError">specified error</param>
     /// <returns>returns an immutable record struct of <see cref="Result{TValue}"/> with error</returns>
     [Pure]
-    public static implicit operator Result<TValue>(Error error) => Failure(error);
+    public static implicit operator Result<TValue>(ResultError resultError) => Failure(resultError);
 
   
     /// <summary>
@@ -138,12 +141,12 @@ public readonly record struct Result<TValue>
     /// <summary>
     /// Returns a failed result with the specified error.
     /// </summary>
-    /// <param name="error">The error to include in the result.</param>
+    /// <param name="resultError">The error to include in the result.</param>
     /// <returns>A failed <see cref="Result{TValue}"/>.</returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #pragma warning disable CS8604 // Possible null reference argument.
-    public static Result<TValue> Failure(Error error) => new(false, default, error);
+    public static Result<TValue> Failure(ResultError resultError) => new(false, default, resultError);
 #pragma warning restore CS8604 // Possible null reference argument.
 }
 

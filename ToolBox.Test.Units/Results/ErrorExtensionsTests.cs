@@ -10,7 +10,7 @@ public class ErrorExtensionsTests
     {
         // Arrange
         var exception = new Exception("Test exception");
-        var error = new Error(1, "TestError", "Test message", exception);
+        var error = new ResultError(1, "TestError", "Test message", exception);
 
         // Act
         var result = error.TryGetException(out var actualException);
@@ -24,7 +24,7 @@ public class ErrorExtensionsTests
     public void TryGetException_WhenUnhandledExceptionIsNull_ShouldReturnFalseAndNull()
     {
         // Arrange
-        var error = new Error(1, "TestError", "Test message");
+        var error = new ResultError(1, "TestError", "Test message");
 
         // Act
         var result = error.TryGetException(out var actualException);
@@ -39,7 +39,7 @@ public class ErrorExtensionsTests
     {
         // Arrange
         var exception = new Exception("Test exception");
-        var error = new Error(1, "TestError", "Test message", exception);
+        var error = new ResultError(1, "TestError", "Test message", exception);
 
         // Act
         var result = error.TryGetException();
@@ -53,7 +53,7 @@ public class ErrorExtensionsTests
     public void TryGetException_WhenUnhandledExceptionIsNull_ShouldReturnNone()
     {
         // Arrange
-        var error = new Error(1, "TestError", "Test message");
+        var error = new ResultError(1, "TestError", "Test message");
 
         // Act
         var result = error.TryGetException();
@@ -66,7 +66,7 @@ public class ErrorExtensionsTests
     public void WithCode_WhenCodeIsPositive_ShouldReturnNewErrorWithUpdatedCode()
     {
         // Arrange
-        var originalError = new Error(1, "TestError", "Test message");
+        var originalError = new ResultError(1, "TestError", "Test message");
         var newCode = 2;
 
         // Act
@@ -83,7 +83,7 @@ public class ErrorExtensionsTests
     public void WithCode_WhenCodeIsZero_ShouldThrowArgumentOutOfRangeException()
     {
         // Arrange
-        var originalError = new Error(1, "TestError", "Test message");
+        var originalError = new ResultError(1, "TestError", "Test message");
         var newCode = 0;
 
         // Act
@@ -97,7 +97,7 @@ public class ErrorExtensionsTests
     public void WithCode_WhenCodeIsNegative_ShouldThrowArgumentOutOfRangeException()
     {
         // Arrange
-        var originalError = new Error(1, "TestError", "Test message");
+        var originalError = new ResultError(1, "TestError", "Test message");
         var newCode = -1;
 
         // Act
@@ -111,7 +111,7 @@ public class ErrorExtensionsTests
     public void WithMessage_WhenMessageIsValid_ShouldReturnNewErrorWithUpdatedMessage()
     {
         // Arrange
-        var originalError = new Error(1, "TestError", "Test message");
+        var originalError = new ResultError(1, "TestError", "Test message");
         var newMessage = "New message";
 
         // Act
@@ -128,7 +128,7 @@ public class ErrorExtensionsTests
     public void WithMessage_WhenMessageIsNull_ShouldThrowArgumentException()
     {
         // Arrange
-        var originalError = new Error(1, "TestError", "Test message");
+        var originalError = new ResultError(1, "TestError", "Test message");
         string newMessage = null!;
 
         // Act
@@ -142,7 +142,7 @@ public class ErrorExtensionsTests
     public void WithMessage_WhenMessageIsEmpty_ShouldThrowArgumentException()
     {
         // Arrange
-        var originalError = new Error(1, "TestError", "Test message");
+        var originalError = new ResultError(1, "TestError", "Test message");
         var newMessage = string.Empty;
 
         // Act
@@ -156,7 +156,7 @@ public class ErrorExtensionsTests
     public void WithName_WhenNameIsValid_ShouldReturnNewErrorWithUpdatedName()
     {
         // Arrange
-        var originalError = new Error(1, "TestError", "Test message");
+        var originalError = new ResultError(1, "TestError", "Test message");
         var newName = "NewErrorName";
 
         // Act
@@ -173,7 +173,7 @@ public class ErrorExtensionsTests
     public void WithName_WhenNameIsNull_ShouldThrowArgumentException()
     {
         // Arrange
-        var originalError = new Error(1, "TestError", "Test message");
+        var originalError = new ResultError(1, "TestError", "Test message");
         string newName = null!;
 
         // Act
@@ -187,7 +187,7 @@ public class ErrorExtensionsTests
     public void WithName_WhenNameIsEmpty_ShouldThrowArgumentException()
     {
         // Arrange
-        var originalError = new Error(1, "TestError", "Test message");
+        var originalError = new ResultError(1, "TestError", "Test message");
         var newName = string.Empty;
 
         // Act
@@ -201,7 +201,7 @@ public class ErrorExtensionsTests
     public void WithException_WhenExceptionIsValid_ShouldReturnNewErrorWithUpdatedException()
     {
         // Arrange
-        var originalError = new Error(1, "TestError", "Test message");
+        var originalError = new ResultError(1, "TestError", "Test message");
         var newException = new Exception("New exception");
 
         // Act
@@ -218,7 +218,7 @@ public class ErrorExtensionsTests
     public void WithException_WhenExceptionIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
-        var originalError = new Error(1, "TestError", "Test message");
+        var originalError = new ResultError(1, "TestError", "Test message");
         Exception newException = null!;
 
         // Act

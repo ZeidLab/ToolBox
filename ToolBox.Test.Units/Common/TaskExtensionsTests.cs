@@ -51,7 +51,7 @@ public class TaskExtensionsTests
         var exception = new Exception("Test exception");
 
         // Act
-        var task = exception.AsFailedTask<int>();
+        var task = exception.AsFailedTaskAsync<int>();
 
         // Assert
         task.IsFaulted.Should().BeTrue();
@@ -66,7 +66,7 @@ public class TaskExtensionsTests
         var value = 42;
 
         // Act
-        var task = value.AsTask();
+        var task = value.AsTaskAsync();
         await Task.WhenAll(task);
         // Assert
         task.IsCompletedSuccessfully().Should().BeTrue();
@@ -81,7 +81,7 @@ public class TaskExtensionsTests
         var nestedTask = Task.FromResult(innerTask);
 
         // Act
-        var result = await nestedTask.Flatten();
+        var result = await nestedTask.FlattenAsync();
 
         // Assert
         result.Should().Be(42);
@@ -95,7 +95,7 @@ public class TaskExtensionsTests
         var nestedTask = Task.FromResult(Task.FromResult(innerTask));
 
         // Act
-        var result = await nestedTask.Flatten();
+        var result = await nestedTask.FlattenAsync();
 
         // Assert
         result.Should().Be(42);
@@ -110,7 +110,7 @@ public class TaskExtensionsTests
         var nestedTask = Task.FromResult(faultedTask);
 
         // Act
-        Func<Task> act = async () => await nestedTask.Flatten();
+        Func<Task> act = async () => await nestedTask.FlattenAsync();
 
         // Assert
         await act.Should().ThrowAsync<Exception>().Where(ex => ex == exception);
@@ -125,7 +125,7 @@ public class TaskExtensionsTests
         var nestedTask = Task.FromResult(faultedTask);
 
         // Act
-        Func<Task> act = async () => await nestedTask.Flatten();
+        Func<Task> act = async () => await nestedTask.FlattenAsync();
 
         // Assert
         await act.Should().ThrowAsync<Exception>().Where(ex => ex == exception);

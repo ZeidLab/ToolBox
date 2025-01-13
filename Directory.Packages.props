@@ -1,6 +1,9 @@
 ﻿<Project>
   <ItemGroup>
+    <PackageVersion Include="AsyncMethodNameFixer" Version="2.3.0" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.14.0" />
+    <PackageVersion Include="ConfigureAwaitChecker.Analyzer" Version="5.0.0.1" />
+    <PackageVersion Include="ConfigureAwaitEnforcer" Version="2.0.0" />
     <PackageVersion Include="LanguageExt.Core" Version="4.4.9" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />

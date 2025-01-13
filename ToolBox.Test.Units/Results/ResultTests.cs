@@ -37,7 +37,7 @@ public class ResultTests
     public void Failure_ShouldReturnResultWithError_WhenErrorIsNotNull()
     {
         // Arrange
-        var error = Error.New("failure");
+        var error = ResultError.New("failure");
 
         // Act
         var result = Result<string>.Failure(error);
@@ -45,7 +45,7 @@ public class ResultTests
         // Assert
         result.IsSuccess.Should().BeFalse();
         result.Value.Should().BeNull();
-        result.Error.Should().Be(error);
+        result.ResultError.Should().Be(error);
     }
 
     [Fact]
@@ -67,7 +67,7 @@ public class ResultTests
     public void ImplicitOperator_ShouldReturnFailureResult_WhenErrorIsProvided()
     {
         // Arrange
-        var error = Error.New("failure");
+        var error = ResultError.New("failure");
 
         // Act
         Result<string> result = error;
@@ -75,7 +75,7 @@ public class ResultTests
         // Assert
         result.IsSuccess.Should().BeFalse();
         result.Value.Should().BeNull();
-        result.Error.Should().Be(error);
+        result.ResultError.Should().Be(error);
     }
 
     [Fact]
@@ -90,8 +90,8 @@ public class ResultTests
         // Assert
         result.IsSuccess.Should().BeFalse();
         result.Value.Should().BeNull();
-        result.Error.Should().NotBeNull();
-        result.Error.Message.Should().Be(exception.Message);
+        result.ResultError.Should().NotBeNull();
+        result.ResultError.Message.Should().Be(exception.Message);
     }
 
     [Fact]

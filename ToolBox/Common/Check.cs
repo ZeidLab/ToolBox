@@ -16,7 +16,9 @@ internal static class Check<TIn>
 #pragma warning restore S2743 // A static field in a generic type is not shared among instances of different close constructed types
     private static readonly bool IsNullable = Nullable.GetUnderlyingType(typeof(TIn)) is not null;
 #pragma warning disable S3963 // Initialize all 'static fields' inline and remove the 'static constructor'.
-    static Check() => IsReferenceType = !typeof(TIn).GetTypeInfo().IsValueType;
+#pragma warning disable CA1810
+	static Check() => IsReferenceType = !typeof(TIn).GetTypeInfo().IsValueType;
+#pragma warning restore CA1810
 #pragma warning restore S3963 // Initialize all 'static fields' inline and remove the 'static constructor'.
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

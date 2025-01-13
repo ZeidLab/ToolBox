@@ -13,15 +13,15 @@ public class ResultExtensionsMatchTests
     private static Result<T> CreateSuccessResult<T>(T value) => Result<T>.Success(value);
 
     // Helper function to create a failed Result<T> with an Error
-    private static Result<T> CreateFailureResult<T>(Error error) => Result<T>.Failure(error);
+    private static Result<T> CreateFailureResult<T>(ResultError resultError) => Result<T>.Failure(resultError);
 
     // Helper function to create a Try<int> with a failure
-    private static Try<int> CreateTryFuncWithFailure(Error error) =>
-        new Try<int>(() => CreateFailureResult<int>(error));
+    private static Try<int> CreateTryFuncWithFailure(ResultError resultError) =>
+        new Try<int>(() => CreateFailureResult<int>(resultError));
 
-    // Helper function to create a TryAsync<int> with a failure
-    private static TryAsync<int> CreateTryAsyncFuncWithFailure(Error error) =>
-        new TryAsync<int>(() => CreateFailureResult<int>(error).AsTask());
+    // Helper function to create a Try<int> with a failure
+    private static TryAsync<int> CreateTryAsyncFuncWithFailure(ResultError resultError) =>
+        new TryAsync<int>(() => CreateFailureResult<int>(resultError).AsTaskAsync());
 
     [Fact]
     public void Match_ShouldReturnSuccessResult_WhenInputResultIsSuccess()
@@ -44,7 +44,7 @@ public class ResultExtensionsMatchTests
     public void Match_ShouldReturnFailureResult_WhenInputResultIsFailure()
     {
         // Arrange
-        var error = Error.New("Test error");
+        var error = ResultError.New("Test error");
         var failureResult = CreateFailureResult<int>(error);
 
         // Act
@@ -54,7 +54,7 @@ public class ResultExtensionsMatchTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(error);
+        result.ResultError.Should().Be(error);
     }
 
     [Fact]
@@ -77,7 +77,7 @@ public class ResultExtensionsMatchTests
     public void Match_ShouldReturnFailureValue_WhenInputResultIsFailure()
     {
         // Arrange
-        var error = Error.New("Test error");
+        var error = ResultError.New("Test error");
         var failureResult = CreateFailureResult<int>(error);
 
         // Act
@@ -110,7 +110,7 @@ public class ResultExtensionsMatchTests
     public void Match_ShouldReturnFailureResult_WhenInputTryIsFailure()
     {
         // Arrange
-        var error = Error.New("Test error");
+        var error = ResultError.New("Test error");
         var tryFunc = CreateTryFuncWithFailure(error);
 
         // Act
@@ -120,7 +120,7 @@ public class ResultExtensionsMatchTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(error);
+        result.ResultError.Should().Be(error);
     }
 
     [Fact]
@@ -137,7 +137,7 @@ public class ResultExtensionsMatchTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Exception.Should().Be(exception);
+        result.ResultError.Exception.Should().Be(exception);
     }
 
     [Fact]
@@ -160,7 +160,7 @@ public class ResultExtensionsMatchTests
     public async Task MatchAsync_ShouldReturnFailureValue_WhenInputTaskResultIsFailure()
     {
         // Arrange
-        var error = Error.New("Test error");
+        var error = ResultError.New("Test error");
         var failureResult = Task.FromResult(CreateFailureResult<int>(error));
 
         // Act
@@ -193,7 +193,7 @@ public class ResultExtensionsMatchTests
     public async Task MatchAsync_ShouldReturnFailureResult_WhenInputTaskResultIsFailure()
     {
         // Arrange
-        var error = Error.New("Test error");
+        var error = ResultError.New("Test error");
         var failureResult = Task.FromResult(CreateFailureResult<int>(error));
 
         // Act
@@ -203,7 +203,7 @@ public class ResultExtensionsMatchTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(error);
+        result.ResultError.Should().Be(error);
     }
 
     [Fact]
@@ -211,7 +211,7 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var successValue = 42;
-        var tryAsyncFunc = new TryAsync<int>(() => CreateSuccessResult(successValue).AsTask());
+        var tryAsyncFunc = new TryAsync<int>(() => CreateSuccessResult(successValue).AsTaskAsync());
 
         // Act
         var result = await tryAsyncFunc
@@ -227,7 +227,7 @@ public class ResultExtensionsMatchTests
     public async Task MatchAsync_ShouldReturnFailureResult_WhenInputTryAsyncIsFailure()
     {
         // Arrange
-        var error = Error.New("Test error");
+        var error = ResultError.New("Test error");
         var tryAsyncFunc = CreateTryAsyncFuncWithFailure(error);
 
         // Act
@@ -237,7 +237,7 @@ public class ResultExtensionsMatchTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(error);
+        result.ResultError.Should().Be(error);
     }
 
     [Fact]
@@ -254,7 +254,7 @@ public class ResultExtensionsMatchTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Exception.Should().Be(exception);
+        result.ResultError.Exception.Should().Be(exception);
     }
 
     [Fact]
@@ -262,7 +262,7 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var successValue = 42;
-        var tryAsyncFunc = new TryAsync<int>(() => CreateSuccessResult(successValue).AsTask());
+        var tryAsyncFunc = new TryAsync<int>(() => CreateSuccessResult(successValue).AsTaskAsync());
 
         // Act
         var result = await tryAsyncFunc
@@ -277,7 +277,7 @@ public class ResultExtensionsMatchTests
     public async Task MatchAsync_ShouldReturnFailureValue_WhenInputTryAsyncIsFailureWithAsyncFuncs()
     {
         // Arrange
-        var error = Error.New("Test error");
+        var error = ResultError.New("Test error");
         var tryAsyncFunc = CreateTryAsyncFuncWithFailure(error);
 
         // Act
@@ -309,7 +309,7 @@ public class ResultExtensionsMatchTests
     public void Match_ShouldReturnFailureResult_WhenInputTryIsFailureWithValue()
     {
         // Arrange
-        var error = Error.New("Test error");
+        var error = ResultError.New("Test error");
         var tryFunc = CreateTryFuncWithFailure(error);
 
         // Act
@@ -342,7 +342,7 @@ public class ResultExtensionsMatchTests
     public async Task MatchAsync_ShouldReturnFailureResult_WhenInputTaskResultIsFailureWithAsyncFuncs()
     {
         // Arrange
-        var error = Error.New("Test error");
+        var error = ResultError.New("Test error");
         var failureResult = Task.FromResult(CreateFailureResult<int>(error));
 
         // Act
@@ -352,7 +352,7 @@ public class ResultExtensionsMatchTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(error);
+        result.ResultError.Should().Be(error);
     }
 
     [Fact]
@@ -360,7 +360,7 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var successValue = 42;
-        var tryAsyncFunc = new TryAsync<int>(() => CreateSuccessResult(successValue).AsTask());
+        var tryAsyncFunc = new TryAsync<int>(() => CreateSuccessResult(successValue).AsTaskAsync());
 
         // Act
         var result = await tryAsyncFunc
@@ -375,7 +375,7 @@ public class ResultExtensionsMatchTests
     public async Task MatchAsync_ShouldReturnFailureValue_WhenInputTryAsyncIsFailureWithValue()
     {
         // Arrange
-        var error = Error.New("Test error");
+        var error = ResultError.New("Test error");
         var tryAsyncFunc = CreateTryAsyncFuncWithFailure(error);
 
         // Act
@@ -392,7 +392,7 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var successValue = 42;
-        var tryAsyncFunc = new TryAsync<int>(() => CreateSuccessResult(successValue).AsTask());
+        var tryAsyncFunc = new TryAsync<int>(() => CreateSuccessResult(successValue).AsTaskAsync());
 
         // Act
         var result = await tryAsyncFunc
@@ -408,7 +408,7 @@ public class ResultExtensionsMatchTests
     public async Task MatchAsync_ShouldReturnFailureResult_WhenInputTryAsyncIsFailureWithAsyncFuncs()
     {
         // Arrange
-        var error = Error.New("Test error");
+        var error = ResultError.New("Test error");
         var tryAsyncFunc = CreateTryAsyncFuncWithFailure(error);
 
         // Act
@@ -418,6 +418,6 @@ public class ResultExtensionsMatchTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(error);
+        result.ResultError.Should().Be(error);
     }
 }
