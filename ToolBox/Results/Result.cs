@@ -84,6 +84,17 @@ public readonly record struct Result<TValue>
         IsDefault = Value.IsDefault();
     }
 
+    /// <summary>
+    /// This API supports the .NET Framework infrastructure and is not intended to be used directly from your code.
+    /// <returns>It will throw an <exception cref="InvalidOperationException"></exception></returns>
+    /// </summary>
+    /// <remarks>
+    /// Use factory methods like <see cref="Success(TValue)"/>
+    /// or <see cref="Failure(Results.Error)"/> instead. Using public constructor will throw exception.
+    /// </remarks>
+    [Obsolete("Use factory methods like Result<TIn>.Success or Result<TIn>.Failure instead. Any instance of public constructor will be considered empty.",true)]
+    public Result() => throw new InvalidOperationException("Use factory methods like Result<TIn>.Success or Result<TIn>.Failure instead.");
+
 
     /// <summary>
     /// Implicitly converts a value to a success of <see cref="Result{TValue}"/>.

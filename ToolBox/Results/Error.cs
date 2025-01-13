@@ -83,7 +83,7 @@ public readonly record struct Error
     /// This constructor is not intended to be used directly. Instead, use the static factory methods
     /// like <see cref="New(string)"/> or <see cref="New(System.Exception)"/>.
     /// </remarks>
-    [Obsolete("Use factory methods like Error.New() instead. Any instance of public constructor will be considered empty.")]
+    [Obsolete("Use factory methods like Error.New() instead. Any instance of public constructor will be considered empty.",true)]
     public Error() => throw new InvalidOperationException("Use factory methods like Error.New() instead.");
     
 
