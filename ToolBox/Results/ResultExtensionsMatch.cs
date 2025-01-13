@@ -25,7 +25,7 @@ public static class ResultExtensionsMatch
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<TOut> Match<TIn, TOut>(this Result<TIn> self, Func<TIn, Result<TOut>> success,
         Func<Error, Result<TOut>> failure)
-        => self.IsSuccess ? success(self.Value) : failure(self.Error.GetValueOrDefault());
+        => self.IsSuccess ? success(self.Value) : failure(self.Error);
 
     /// <summary>
     /// Matches the content of a <see cref="Result{TIn}"/> instance to either a successful or failed result.
@@ -40,7 +40,7 @@ public static class ResultExtensionsMatch
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TOut Match<TIn, TOut>(this Result<TIn> self, Func<TIn, TOut> success,
         Func<Error, TOut> failure)
-        => self.IsSuccess ? success(self.Value) : failure(self.Error.GetValueOrDefault());
+        => self.IsSuccess ? success(self.Value) : failure(self.Error);
 
     /// <summary>
     /// Matches the content of a <see cref="Try{TIn}"/> instance to either a successful or failed result.
@@ -188,7 +188,7 @@ public static class ResultExtensionsMatch
         var result = await self.Try().ConfigureAwait(false);
         return result.IsSuccess
             ? await success(result.Value).ConfigureAwait(false)
-            : await failure(result.Error.GetValueOrDefault()).ConfigureAwait(false);
+            : await failure(result.Error).ConfigureAwait(false);
     }
 
     /// <summary>

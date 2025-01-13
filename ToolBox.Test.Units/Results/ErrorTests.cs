@@ -24,18 +24,7 @@ public class ErrorTests
         error.Exception.Should().Be(exception);
     }
 
-    [Fact]
-    public void PublicConstructor_ShouldThrowInvalidOperationException()
-    {
-        // arrange && act
-#pragma warning disable CS0618 // Type or member is obsolete
-        // ReSharper disable once ObjectCreationAsStatement
-        Action act = () => new Error();
-#pragma warning restore CS0618 // Type or member is obsolete
 
-        // assert
-        act.Should().Throw<InvalidOperationException>();
-    }
     [Fact]
     public void New_WithMessage_ShouldCreateErrorWithDefaultCodeAndName()
     {

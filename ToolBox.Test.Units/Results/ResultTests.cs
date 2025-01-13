@@ -17,7 +17,7 @@ public class ResultTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(value);
-        result.Error.Should().BeNull();
+        
     }
 
     [Fact]
@@ -60,7 +60,7 @@ public class ResultTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(value);
-        result.Error.Should().BeNull();
+        
     }
 
     [Fact]
@@ -91,7 +91,7 @@ public class ResultTests
         result.IsSuccess.Should().BeFalse();
         result.Value.Should().BeNull();
         result.Error.Should().NotBeNull();
-        result.Error.GetValueOrDefault().Message.Should().Be(exception.Message);
+        result.Error.Message.Should().Be(exception.Message);
     }
 
     [Fact]
@@ -126,7 +126,7 @@ public class ResultTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be("success");
-        result.Error.Should().BeNull();
+        
     }
     
     [Fact]
@@ -141,7 +141,7 @@ public class ResultTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be("success");
-        result.Error.Should().BeNull();
+        
     }
 
    

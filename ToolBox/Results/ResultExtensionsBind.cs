@@ -26,7 +26,7 @@ public static class ResultExtensionsBind
         => self.IsSuccess
             ? func(self.Value)
             : Result<TOut>
-                .Failure(self.Error.GetValueOrDefault());
+                .Failure(self.Error);
 
     #endregion
 
@@ -47,7 +47,7 @@ public static class ResultExtensionsBind
         => self.IsSuccess
             ? func(self.Value)
             : Result<TOut>
-                .Failure(self.Error.GetValueOrDefault())
+                .Failure(self.Error)
                 .AsTask();
 
 
@@ -81,7 +81,7 @@ public static class ResultExtensionsBind
         var result = await self;
         return result.IsSuccess
             ? await func(result.Value).ConfigureAwait(false)
-            : Result<TOut>.Failure(result.Error.GetValueOrDefault());
+            : Result<TOut>.Failure(result.Error);
     }
 
     #endregion

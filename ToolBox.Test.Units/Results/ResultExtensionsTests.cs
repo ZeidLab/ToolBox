@@ -31,7 +31,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(value);
             result.IsFailure.Should().BeFalse();
-            result.Error.Should().BeNull();
+
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
             // Assert
             result.IsFailure.Should().BeTrue();
             result.Error.Should().NotBeNull();
-            result.Error.GetValueOrDefault().Exception.Should().Be(exception);
+            result.Error.Exception.Should().Be(exception);
             result.IsSuccess.Should().BeFalse();
             result.Value.Should().Be(default);
         }

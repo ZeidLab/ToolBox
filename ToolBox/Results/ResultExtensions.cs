@@ -112,7 +112,7 @@ public static class ResultExtensions
     public static Result<Unit> ToUnitResult<TIn>(this Result<TIn> self)
         => self.IsSuccess
             ? Result<Unit>.Success(Unit.Default)
-            : Result<Unit>.Failure(self.Error.GetValueOrDefault());
+            : Result<Unit>.Failure(self.Error);
 
     /// <summary>
     /// Converts a Result instance to a Result{Unit} instance which in fact is a void result containing possible error.
@@ -129,6 +129,6 @@ public static class ResultExtensions
         var result = await self;
         return result.IsSuccess
             ? Result<Unit>.Success(Unit.Default)
-            : Result<Unit>.Failure(result.Error.GetValueOrDefault());
+            : Result<Unit>.Failure(result.Error);
     }
 }

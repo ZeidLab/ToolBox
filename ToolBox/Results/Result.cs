@@ -58,7 +58,7 @@ namespace ZeidLab.ToolBox.Results;
 public readonly record struct Result<TValue>
 {
     internal readonly TValue Value;
-    internal readonly Error? Error;
+    internal readonly Error Error;
 
     /// <summary>
     /// Gets a value indicating whether the operation was successful.
@@ -75,7 +75,7 @@ public readonly record struct Result<TValue>
     /// </summary>
     public readonly bool IsFailure;
     
-    private Result(bool isSuccess, TValue value, Error? error = null)
+    private Result(bool isSuccess, TValue value, Error error = default)
     {
         Value = value;
         Error = error;

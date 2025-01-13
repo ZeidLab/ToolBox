@@ -35,7 +35,7 @@ public class ResultExtensionsJoinAsyncTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.GetValueOrDefault().Message.Should().Be(TestHelper.DefaultError.Message);
+        result.Error.Message.Should().Be(TestHelper.DefaultError.Message);
     }
 
     [Theory]
@@ -57,7 +57,7 @@ public class ResultExtensionsJoinAsyncTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.GetValueOrDefault().Message.Should().Be(TestHelper.DefaultError.Message);
+        result.Error.Message.Should().Be(TestHelper.DefaultError.Message);
     }
 
     [Theory]
@@ -80,7 +80,7 @@ public class ResultExtensionsJoinAsyncTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.GetValueOrDefault().Message.Should().Be(TestHelper.DefaultError.Message);
+        result.Error.Message.Should().Be(TestHelper.DefaultError.Message);
     }
 
     [Theory]
@@ -104,7 +104,7 @@ public class ResultExtensionsJoinAsyncTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.GetValueOrDefault().Message.Should().Be(TestHelper.DefaultError.Message);
+        result.Error.Message.Should().Be(TestHelper.DefaultError.Message);
     }
 
     [Theory]
@@ -129,7 +129,7 @@ public class ResultExtensionsJoinAsyncTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.GetValueOrDefault().Message.Should().Be(TestHelper.DefaultError.Message);
+        result.Error.Message.Should().Be(TestHelper.DefaultError.Message);
     }
 
     [Theory]
@@ -155,7 +155,7 @@ public class ResultExtensionsJoinAsyncTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.GetValueOrDefault().Message.Should().Be(TestHelper.DefaultError.Message);
+        result.Error.Message.Should().Be(TestHelper.DefaultError.Message);
     }
 
 
@@ -183,7 +183,7 @@ public class ResultExtensionsJoinAsyncTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.GetValueOrDefault().Message.Should().Be(TestHelper.DefaultError.Message);
+        result.Error.Message.Should().Be(TestHelper.DefaultError.Message);
     }
 
     [Theory]
@@ -211,7 +211,7 @@ public class ResultExtensionsJoinAsyncTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.GetValueOrDefault().Message.Should().Be(TestHelper.DefaultError.Message);
+        result.Error.Message.Should().Be(TestHelper.DefaultError.Message);
     }
 
     [Theory]
@@ -240,7 +240,7 @@ public class ResultExtensionsJoinAsyncTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.GetValueOrDefault().Message.Should().Be(TestHelper.DefaultError.Message);
+        result.Error.Message.Should().Be(TestHelper.DefaultError.Message);
     }
 
     #endregion

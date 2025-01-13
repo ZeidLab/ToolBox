@@ -12,8 +12,8 @@ public class ResultExtensionsTryTests
     {
         // Arrange
         var expectedValue = 42;
-        var tryDelegate = Substitute.For<Try<int>>();
-        tryDelegate.Invoke().Returns(Result<int>.Success(expectedValue));
+        var tryDelegate = new Try<int>(() => Result<int>.Success(expectedValue));
+    
 
         // Act
         var tryAsyncDelegate = tryDelegate.ToAsync();
@@ -29,9 +29,8 @@ public class ResultExtensionsTryTests
     {
         // Arrange
         var expectedValue = 42;
-        var tryDelegate = Substitute.For<Try<int>>();
-        tryDelegate.Invoke().Returns(Result<int>.Success(expectedValue));
-
+        var tryDelegate = new Try<int>(() => Result<int>.Success(expectedValue));
+ 
         // Act
         var result = tryDelegate.Try();
 
@@ -45,8 +44,8 @@ public class ResultExtensionsTryTests
     {
         // Arrange
         var exception = new Exception("Test exception");
-        var tryDelegate = Substitute.For<Try<int>>();
-        tryDelegate.Invoke().Throws(exception);
+        var tryDelegate = new Try<int>(() => throw exception);
+        
 
         // Act
         var result = tryDelegate.Try();
@@ -54,7 +53,7 @@ public class ResultExtensionsTryTests
         // Assert
         result.IsFailure.Should().BeTrue();
         result.Error.Should().NotBeNull();
-        result.Error.GetValueOrDefault().Exception.Should().Be(exception);
+        result.Error.Exception.Should().Be(exception);
     }
 
     
@@ -64,9 +63,8 @@ public class ResultExtensionsTryTests
     {
         // Arrange
         var expectedValue = 42;
-        var tryAsyncDelegate = Substitute.For<TryAsync<int>>();
-        tryAsyncDelegate.Invoke().Returns(Result<int>.Success(expectedValue));
-
+        var tryAsyncDelegate = new TryAsync<int>(() => Task.FromResult(Result<int>.Success(expectedValue)));
+  
         // Act
         var result = await tryAsyncDelegate.Try();
 
@@ -89,7 +87,7 @@ public class ResultExtensionsTryTests
         // Assert
         result.IsFailure.Should().BeTrue();
         result.Error.Should().NotBeNull();
-        result.Error.GetValueOrDefault().Exception.Should().Be(exception);
+        result.Error.Exception.Should().Be(exception);
     }
    
 }

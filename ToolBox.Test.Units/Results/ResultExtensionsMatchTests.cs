@@ -54,7 +54,7 @@ public class ResultExtensionsMatchTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.GetValueOrDefault().Should().Be(error);
+        result.Error.Should().Be(error);
     }
 
     [Fact]
@@ -120,7 +120,7 @@ public class ResultExtensionsMatchTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.GetValueOrDefault().Should().Be(error);
+        result.Error.Should().Be(error);
     }
 
     [Fact]
@@ -137,7 +137,7 @@ public class ResultExtensionsMatchTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.GetValueOrDefault().Exception.Should().Be(exception);
+        result.Error.Exception.Should().Be(exception);
     }
 
     [Fact]
@@ -203,7 +203,7 @@ public class ResultExtensionsMatchTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.GetValueOrDefault().Should().Be(error);
+        result.Error.Should().Be(error);
     }
 
     [Fact]
@@ -237,7 +237,7 @@ public class ResultExtensionsMatchTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.GetValueOrDefault().Should().Be(error);
+        result.Error.Should().Be(error);
     }
 
     [Fact]
@@ -254,7 +254,7 @@ public class ResultExtensionsMatchTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.GetValueOrDefault().Exception.Should().Be(exception);
+        result.Error.Exception.Should().Be(exception);
     }
 
     [Fact]
@@ -352,7 +352,7 @@ public class ResultExtensionsMatchTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.GetValueOrDefault().Should().Be(error);
+        result.Error.Should().Be(error);
     }
 
     [Fact]
@@ -418,6 +418,6 @@ public class ResultExtensionsMatchTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.GetValueOrDefault().Should().Be(error);
+        result.Error.Should().Be(error);
     }
 }
