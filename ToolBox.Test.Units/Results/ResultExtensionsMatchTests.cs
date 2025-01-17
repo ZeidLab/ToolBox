@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FluentAssertions;
+using NSubstitute;
 using Xunit;
 using ZeidLab.ToolBox.Common;
 using ZeidLab.ToolBox.Results;
@@ -420,4 +421,322 @@ public class ResultExtensionsMatchTests
         result.IsFailure.Should().BeTrue();
         result.ResultError.Should().Be(error);
     }
+
+     [Fact]
+        public void Match_ShouldInvokeSuccessAction_WhenResultIsSuccess()
+        {
+            // Arrange
+            var successValue = 42;
+            var successResult = TestHelper.CreateSuccessResult(successValue);
+            var successAction = Substitute.For<Action<int>>();
+            var failureAction = Substitute.For<Action<ResultError>>();
+
+            // Act
+            successResult.Match(successAction, failureAction);
+
+            // Assert
+            successAction.Received(1).Invoke(successValue);
+            failureAction.DidNotReceiveWithAnyArgs().Invoke(default);
+        }
+
+        [Fact]
+        public void Match_ShouldInvokeFailureAction_WhenResultIsFailure()
+        {
+            // Arrange
+            var error = ResultError.New("Test error");
+            var failureResult = TestHelper.CreateFailureResult<int>(error);
+            var successAction = Substitute.For<Action<int>>();
+            var failureAction = Substitute.For<Action<ResultError>>();
+
+            // Act
+            failureResult.Match(successAction, failureAction);
+
+            // Assert
+            failureAction.Received(1).Invoke(error);
+            successAction.DidNotReceiveWithAnyArgs().Invoke(default);
+        }
+
+        [Fact]
+        public void Match_ShouldInvokeSuccessFunc_WhenResultIsSuccess()
+        {
+            // Arrange
+            var successValue = 42;
+            var successResult = TestHelper.CreateSuccessResult(successValue);
+            var successFunc = Substitute.For<Func<int, string>>();
+            var failureFunc = Substitute.For<Func<ResultError, string>>();
+            successFunc.Invoke(successValue).Returns("Success");
+
+            // Act
+            var result = successResult.Match(successFunc, failureFunc);
+
+            // Assert
+            result.Should().Be("Success");
+            successFunc.Received(1).Invoke(successValue);
+            failureFunc.DidNotReceiveWithAnyArgs().Invoke(default);
+        }
+
+        [Fact]
+        public void Match_ShouldInvokeFailureFunc_WhenResultIsFailure()
+        {
+            // Arrange
+            var error = ResultError.New("Test error");
+            var failureResult = TestHelper.CreateFailureResult<int>(error);
+            var successFunc = Substitute.For<Func<int, string>>();
+            var failureFunc = Substitute.For<Func<ResultError, string>>();
+            failureFunc.Invoke(error).Returns("Failure");
+
+            // Act
+            var result = failureResult.Match(successFunc, failureFunc);
+
+            // Assert
+            result.Should().Be("Failure");
+            failureFunc.Received(1).Invoke(error);
+            successFunc.DidNotReceiveWithAnyArgs().Invoke(default);
+        }
+
+        [Fact]
+        public async Task MatchAsync_ShouldInvokeSuccessFunc_WhenTaskResultIsSuccess()
+        {
+            // Arrange
+            var successValue = 42;
+            var successResult = Task.FromResult(TestHelper.CreateSuccessResult(successValue));
+            var successFunc = Substitute.For<Func<int, Task<string>>>();
+            var failureFunc = Substitute.For<Func<ResultError, Task<string>>>();
+            successFunc.Invoke(successValue).Returns(Task.FromResult("Success"));
+
+            // Act
+            var result =await await successResult.MatchAsync(successFunc, failureFunc);
+
+            // Assert
+            result.Should().Be("Success");
+            await successFunc.Received(1).Invoke(successValue);
+            await failureFunc.DidNotReceiveWithAnyArgs().Invoke(default);
+        }
+
+        [Fact]
+        public async Task MatchAsync_ShouldInvokeFailureFunc_WhenTaskResultIsFailure()
+        {
+            // Arrange
+            var error = ResultError.New("Test error");
+            var failureResult = Task.FromResult(TestHelper.CreateFailureResult<int>(error));
+            var successFunc = Substitute.For<Func<int, string>>();
+            var failureFunc = Substitute.For<Func<ResultError, string>>();
+            failureFunc.Invoke(error).Returns("Failure");
+
+            // Act
+            var result = await failureResult.MatchAsync(successFunc, failureFunc);
+
+            // Assert
+            result.Should().Be("Failure");
+            failureFunc.Received(1).Invoke(error);
+            successFunc.DidNotReceiveWithAnyArgs().Invoke(default);
+        }
+
+        [Fact]
+        public async Task MatchAsync_ShouldInvokeSuccessAction_WhenTaskResultIsSuccess()
+        {
+            // Arrange
+            var successValue = 42;
+            var successResult = Task.FromResult(TestHelper.CreateSuccessResult(successValue));
+            var successAction = Substitute.For<Func<int, Task>>();
+            var failureAction = Substitute.For<Func<ResultError, Task>>();
+
+            // Act
+            await successResult.MatchAsync(successAction, failureAction);
+
+            // Assert
+            await successAction.Received(1).Invoke(successValue);
+            await failureAction.DidNotReceiveWithAnyArgs().Invoke(default);
+        }
+
+        [Fact]
+        public async Task MatchAsync_ShouldInvokeFailureAction_WhenTaskResultIsFailure()
+        {
+            // Arrange
+            var error = ResultError.New("Test error");
+            var failureResult = Task.FromResult(TestHelper.CreateFailureResult<int>(error));
+            var successAction = Substitute.For<Func<int, Task>>();
+            var failureAction = Substitute.For<Func<ResultError, Task>>();
+
+            // Act
+            await failureResult.MatchAsync(successAction, failureAction);
+
+            // Assert
+            await failureAction.Received(1).Invoke(error);
+            await successAction.DidNotReceiveWithAnyArgs().Invoke(default);
+        }
+
+        [Fact]
+        public async Task MatchAsync_ShouldInvokeSuccessFunc_WhenTryAsyncIsSuccess()
+        {
+            // Arrange
+            var successValue = 42;
+            var tryAsyncFunc = new TryAsync<int>(() => TestHelper.CreateSuccessResult(successValue).AsTaskAsync());
+            var successFunc = Substitute.For<Func<int, Task<string>>>();
+            var failureFunc = Substitute.For<Func<ResultError, Task<string>>>();
+            successFunc.Invoke(successValue).Returns(Task.FromResult("Success"));
+
+            // Act
+            var result = await tryAsyncFunc.MatchAsync(successFunc, failureFunc);
+
+            // Assert
+            result.Should().Be("Success");
+            await successFunc.Received(1).Invoke(successValue);
+            await failureFunc.DidNotReceiveWithAnyArgs().Invoke(default);
+        }
+
+        [Fact]
+        public async Task MatchAsync_ShouldInvokeFailureFunc_WhenTryAsyncIsFailure()
+        {
+            // Arrange
+            var error = ResultError.New("Test error");
+            var tryAsyncFunc = TestHelper.CreateTryAsyncFuncWithFailure<int>(error);
+            var successFunc = Substitute.For<Func<int, Task<string>>>();
+            var failureFunc = Substitute.For<Func<ResultError, Task<string>>>();
+            failureFunc.Invoke(error).Returns(Task.FromResult("Failure"));
+
+            // Act
+            var result = await tryAsyncFunc.MatchAsync(successFunc, failureFunc);
+
+            // Assert
+            result.Should().Be("Failure");
+            await failureFunc.Received(1).Invoke(error);
+            await successFunc.DidNotReceiveWithAnyArgs().Invoke(default);
+        }
+
+        [Fact]
+        public void Match_ShouldInvokeSuccessAction_WhenTryIsSuccess()
+        {
+            // Arrange
+            var successValue = 42;
+            var tryFunc = new Try<int>(() => TestHelper.CreateSuccessResult(successValue));
+            var successAction = Substitute.For<Action<int>>();
+            var failureAction = Substitute.For<Action<ResultError>>();
+
+            // Act
+            tryFunc.Match(successAction, failureAction);
+
+            // Assert
+            successAction.Received(1).Invoke(successValue);
+            failureAction.DidNotReceiveWithAnyArgs().Invoke(default);
+        }
+
+        [Fact]
+        public void Match_ShouldInvokeFailureAction_WhenTryIsFailure()
+        {
+            // Arrange
+            var error = ResultError.New("Test error");
+            var tryFunc = TestHelper.CreateTryFuncWithFailure<int>(error);
+            var successAction = Substitute.For<Action<int>>();
+            var failureAction = Substitute.For<Action<ResultError>>();
+
+            // Act
+            tryFunc.Match(successAction, failureAction);
+
+            // Assert
+            failureAction.Received(1).Invoke(error);
+            successAction.DidNotReceiveWithAnyArgs().Invoke(default);
+        }
+
+        [Fact]
+        public async Task MatchAsync_ShouldInvokeSuccessAction_WhenTryAsyncIsSuccess()
+        {
+            // Arrange
+            var successValue = 42;
+            var tryAsyncFunc = new TryAsync<int>(() => TestHelper.CreateSuccessResult(successValue).AsTaskAsync());
+            var successAction = Substitute.For<Action<int>>();
+            var failureAction = Substitute.For<Action<ResultError>>();
+
+            // Act
+            await tryAsyncFunc.MatchAsync(successAction, failureAction);
+
+            // Assert
+            successAction.Received(1).Invoke(successValue);
+            failureAction.DidNotReceiveWithAnyArgs().Invoke(default);
+        }
+
+        [Fact]
+        public async Task MatchAsync_ShouldInvokeFailureAction_WhenTryAsyncIsFailure()
+        {
+            // Arrange
+            var error = ResultError.New("Test error");
+            var tryAsyncFunc = TestHelper.CreateTryAsyncFuncWithFailure<int>(error);
+            var successAction = Substitute.For<Action<int>>();
+            var failureAction = Substitute.For<Action<ResultError>>();
+
+            // Act
+            await tryAsyncFunc.MatchAsync(successAction, failureAction);
+
+            // Assert
+            failureAction.Received(1).Invoke(error);
+            successAction.DidNotReceiveWithAnyArgs().Invoke(default);
+        }
+
+        [Fact]
+        public async Task MatchAsync_ShouldInvokeSuccessFunc_WhenResultIsSuccessWithAsyncFuncs()
+        {
+            // Arrange
+            var successValue = 42;
+            var successResult = TestHelper.CreateSuccessResult(successValue);
+            var successFunc = Substitute.For<Func<int, Task>>();
+            var failureFunc = Substitute.For<Func<ResultError, Task>>();
+
+            // Act
+            await successResult.MatchAsync(successFunc, failureFunc);
+
+            // Assert
+            await successFunc.Received(1).Invoke(successValue);
+            await failureFunc.DidNotReceiveWithAnyArgs().Invoke(default);
+        }
+
+        [Fact]
+        public async Task MatchAsync_ShouldInvokeFailureFunc_WhenResultIsFailureWithAsyncFuncs()
+        {
+            // Arrange
+            var error = ResultError.New("Test error");
+            var failureResult = TestHelper.CreateFailureResult<int>(error);
+            var successFunc = Substitute.For<Func<int, Task>>();
+            var failureFunc = Substitute.For<Func<ResultError, Task>>();
+
+            // Act
+            await failureResult.MatchAsync(successFunc, failureFunc);
+
+            // Assert
+            await failureFunc.Received(1).Invoke(error);
+            await successFunc.DidNotReceiveWithAnyArgs().Invoke(default);
+        }
+
+        [Fact]
+        public async Task MatchAsync_ShouldInvokeSuccessFunc_WhenTryIsSuccessWithAsyncFuncs()
+        {
+            // Arrange
+            var successValue = 42;
+            var tryFunc = new Try<int>(() => TestHelper.CreateSuccessResult(successValue));
+            var successFunc = Substitute.For<Func<int, Task>>();
+            var failureFunc = Substitute.For<Func<ResultError, Task>>();
+
+            // Act
+            await tryFunc.MatchAsync(successFunc, failureFunc);
+
+            // Assert
+            await successFunc.Received(1).Invoke(successValue);
+            await failureFunc.DidNotReceiveWithAnyArgs().Invoke(default);
+        }
+
+        [Fact]
+        public async Task MatchAsync_ShouldInvokeFailureFunc_WhenTryIsFailureWithAsyncFuncs()
+        {
+            // Arrange
+            var error = ResultError.New("Test error");
+            var tryFunc = TestHelper.CreateTryFuncWithFailure<int>(error);
+            var successFunc = Substitute.For<Func<int, Task>>();
+            var failureFunc = Substitute.For<Func<ResultError, Task>>();
+
+            // Act
+            await tryFunc.MatchAsync(successFunc, failureFunc);
+
+            // Assert
+            await failureFunc.Received(1).Invoke(error);
+            await successFunc.DidNotReceiveWithAnyArgs().Invoke(default);
+        }
 }
