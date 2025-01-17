@@ -6,6 +6,8 @@
 #myProjects Specifics
 .nupkg
 .repotomd
+ToolBox.xml
+*.sln.DotSettings
 
 # User-specific stuff
 .idea/**/workspace.xml
