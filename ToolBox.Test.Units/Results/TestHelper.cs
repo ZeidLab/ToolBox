@@ -29,4 +29,10 @@ internal static class TestHelper
 
     public static Try<TIn> CreateTryFuncWithFailure<TIn>(ResultError resultError)
 	    => () => CreateFailureResult<TIn>(resultError);
+
+    public static TryAsync<TIn> CreateTryAsyncFuncWithSuccess<TIn>(TIn successValue)
+	    => () => CreateSuccessResult<TIn>(successValue).AsTaskAsync();
+
+	public static Try<TIn> CreateTryFuncWithSuccess<TIn>(TIn successValue)
+		=> () => CreateSuccessResult<TIn>(successValue);
 }
