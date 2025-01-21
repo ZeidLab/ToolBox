@@ -10,31 +10,17 @@ namespace ZeidLab.ToolBox.Test.Units.Results;
 
 public class ResultExtensionsMatchTests
 {
-    // Helper function to create a successful Result<T>
-    private static Result<T> CreateSuccessResult<T>(T value) => Result<T>.Success(value);
-
-    // Helper function to create a failed Result<T> with an Error
-    private static Result<T> CreateFailureResult<T>(ResultError resultError) => Result<T>.Failure(resultError);
-
-    // Helper function to create a Try<int> with a failure
-    private static Try<int> CreateTryFuncWithFailure(ResultError resultError) =>
-        new Try<int>(() => CreateFailureResult<int>(resultError));
-
-    // Helper function to create a Try<int> with a failure
-    private static TryAsync<int> CreateTryAsyncFuncWithFailure(ResultError resultError) =>
-        new TryAsync<int>(() => CreateFailureResult<int>(resultError).AsTaskAsync());
-
     [Fact]
     public void Match_ShouldReturnSuccessResult_WhenInputResultIsSuccess()
     {
         // Arrange
         var successValue = 42;
-        var successResult = CreateSuccessResult(successValue);
+        var successResult = TestHelper.CreateSuccessResult(successValue);
 
         // Act
         var result = successResult
-            .Match(value => CreateSuccessResult(value.ToString()),
-                error => CreateFailureResult<string>(error));
+            .Match(value => TestHelper.CreateSuccessResult(value.ToString()),
+                error => TestHelper.CreateFailureResult<string>(error));
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -46,12 +32,12 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var error = ResultError.New("Test error");
-        var failureResult = CreateFailureResult<int>(error);
+        var failureResult = TestHelper.CreateFailureResult<int>(error);
 
         // Act
         var result = failureResult
-            .Match(value => CreateSuccessResult(value.ToString()),
-                err => CreateFailureResult<string>(err));
+            .Match(value => TestHelper.CreateSuccessResult(value.ToString()),
+                err => TestHelper.CreateFailureResult<string>(err));
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -63,7 +49,7 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var successValue = 42;
-        var successResult = CreateSuccessResult(successValue);
+        var successResult = TestHelper.CreateSuccessResult(successValue);
 
         // Act
         var result = successResult
@@ -79,7 +65,7 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var error = ResultError.New("Test error");
-        var failureResult = CreateFailureResult<int>(error);
+        var failureResult = TestHelper.CreateFailureResult<int>(error);
 
         // Act
         var result = failureResult
@@ -95,12 +81,12 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var successValue = 42;
-        var tryFunc = new Try<int>(() => CreateSuccessResult(successValue));
+        var tryFunc = new Try<int>(() => TestHelper.CreateSuccessResult(successValue));
 
         // Act
         var result = tryFunc
-            .Match(value => CreateSuccessResult(value.ToString()),
-                error => CreateFailureResult<string>(error));
+            .Match(value => TestHelper.CreateSuccessResult(value.ToString()),
+                error => TestHelper.CreateFailureResult<string>(error));
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -112,12 +98,12 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var error = ResultError.New("Test error");
-        var tryFunc = CreateTryFuncWithFailure(error);
+        var tryFunc = TestHelper.CreateTryFuncWithFailure<int>(error);
 
         // Act
         var result = tryFunc
-            .Match(value => CreateSuccessResult(value.ToString()),
-                err => CreateFailureResult<string>(err));
+            .Match(value => TestHelper.CreateSuccessResult(value.ToString()),
+                err => TestHelper.CreateFailureResult<string>(err));
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -133,8 +119,8 @@ public class ResultExtensionsMatchTests
 
         // Act
         var result = tryFunc
-            .Match(value => CreateSuccessResult(value.ToString()),
-                err => CreateFailureResult<string>(err));
+            .Match(value => TestHelper.CreateSuccessResult(value.ToString()),
+                err => TestHelper.CreateFailureResult<string>(err));
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -146,7 +132,7 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var successValue = 42;
-        var successResult = Task.FromResult(CreateSuccessResult(successValue));
+        var successResult = Task.FromResult(TestHelper.CreateSuccessResult(successValue));
 
         // Act
         var result = await successResult
@@ -162,7 +148,7 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var error = ResultError.New("Test error");
-        var failureResult = Task.FromResult(CreateFailureResult<int>(error));
+        var failureResult = Task.FromResult(TestHelper.CreateFailureResult<int>(error));
 
         // Act
         var result = await failureResult
@@ -178,12 +164,12 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var successValue = 42;
-        var successResult = Task.FromResult(CreateSuccessResult(successValue));
+        var successResult = Task.FromResult(TestHelper.CreateSuccessResult(successValue));
 
         // Act
         var result = await successResult
-            .MatchAsync(value => CreateSuccessResult(value.ToString()),
-                error => CreateFailureResult<string>(error));
+            .MatchAsync(value => TestHelper.CreateSuccessResult(value.ToString()),
+                error => TestHelper.CreateFailureResult<string>(error));
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -195,12 +181,12 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var error = ResultError.New("Test error");
-        var failureResult = Task.FromResult(CreateFailureResult<int>(error));
+        var failureResult = Task.FromResult(TestHelper.CreateFailureResult<int>(error));
 
         // Act
         var result = await failureResult
-            .MatchAsync(value => CreateSuccessResult(value.ToString()),
-                err => CreateFailureResult<string>(err));
+            .MatchAsync(value => TestHelper.CreateSuccessResult(value.ToString()),
+                err => TestHelper.CreateFailureResult<string>(err));
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -212,12 +198,12 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var successValue = 42;
-        var tryAsyncFunc = new TryAsync<int>(() => CreateSuccessResult(successValue).AsTaskAsync());
+        var tryAsyncFunc = new TryAsync<int>(() => TestHelper.CreateSuccessResult(successValue).AsTaskAsync());
 
         // Act
         var result = await tryAsyncFunc
-            .MatchAsync(value => CreateSuccessResult(value.ToString()),
-                error => CreateFailureResult<string>(error));
+            .MatchAsync(value => TestHelper.CreateSuccessResult(value.ToString()),
+                error => TestHelper.CreateFailureResult<string>(error));
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -229,12 +215,12 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var error = ResultError.New("Test error");
-        var tryAsyncFunc = CreateTryAsyncFuncWithFailure(error);
+        var tryAsyncFunc = TestHelper.CreateTryAsyncFuncWithFailure<int>(error);
 
         // Act
         var result = await tryAsyncFunc
-            .MatchAsync(value => CreateSuccessResult(value.ToString()),
-                err => CreateFailureResult<string>(err));
+            .MatchAsync(value => TestHelper.CreateSuccessResult(value.ToString()),
+                err => TestHelper.CreateFailureResult<string>(err));
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -250,8 +236,8 @@ public class ResultExtensionsMatchTests
 
         // Act
         var result = await tryAsyncFunc
-            .MatchAsync(value => CreateSuccessResult(value.ToString()),
-                err => CreateFailureResult<string>(err));
+            .MatchAsync(value => TestHelper.CreateSuccessResult(value.ToString()),
+                err => TestHelper.CreateFailureResult<string>(err));
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -263,7 +249,7 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var successValue = 42;
-        var tryAsyncFunc = new TryAsync<int>(() => CreateSuccessResult(successValue).AsTaskAsync());
+        var tryAsyncFunc = new TryAsync<int>(() => TestHelper.CreateSuccessResult(successValue).AsTaskAsync());
 
         // Act
         var result = await tryAsyncFunc
@@ -279,7 +265,7 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var error = ResultError.New("Test error");
-        var tryAsyncFunc = CreateTryAsyncFuncWithFailure(error);
+        var tryAsyncFunc = TestHelper.CreateTryAsyncFuncWithFailure<int>(error);
 
         // Act
         var result = await tryAsyncFunc
@@ -295,7 +281,7 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var successValue = 42;
-        var tryFunc = new Try<int>(() => CreateSuccessResult(successValue));
+        var tryFunc = new Try<int>(() => TestHelper.CreateSuccessResult(successValue));
 
         // Act
         var result = tryFunc
@@ -311,7 +297,7 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var error = ResultError.New("Test error");
-        var tryFunc = CreateTryFuncWithFailure(error);
+        var tryFunc = TestHelper.CreateTryFuncWithFailure<int>(error);
 
         // Act
         var result = tryFunc
@@ -327,12 +313,12 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var successValue = 42;
-        var successResult = Task.FromResult(CreateSuccessResult(successValue));
+        var successResult = Task.FromResult(TestHelper.CreateSuccessResult(successValue));
 
         // Act
         var result = await successResult
-            .MatchAsync(value => Task.FromResult(CreateSuccessResult(value.ToString())),
-                error => Task.FromResult(CreateFailureResult<string>(error)));
+            .MatchAsync(value => Task.FromResult(TestHelper.CreateSuccessResult(value.ToString())),
+                error => Task.FromResult(TestHelper.CreateFailureResult<string>(error)));
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -344,12 +330,12 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var error = ResultError.New("Test error");
-        var failureResult = Task.FromResult(CreateFailureResult<int>(error));
+        var failureResult = Task.FromResult(TestHelper.CreateFailureResult<int>(error));
 
         // Act
         var result = await failureResult
-            .MatchAsync(value => Task.FromResult(CreateSuccessResult(value.ToString())),
-                err => Task.FromResult(CreateFailureResult<string>(err)));
+            .MatchAsync(value => Task.FromResult(TestHelper.CreateSuccessResult(value.ToString())),
+                err => Task.FromResult(TestHelper.CreateFailureResult<string>(err)));
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -361,7 +347,7 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var successValue = 42;
-        var tryAsyncFunc = new TryAsync<int>(() => CreateSuccessResult(successValue).AsTaskAsync());
+        var tryAsyncFunc = new TryAsync<int>(() => TestHelper.CreateSuccessResult(successValue).AsTaskAsync());
 
         // Act
         var result = await tryAsyncFunc
@@ -377,7 +363,7 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var error = ResultError.New("Test error");
-        var tryAsyncFunc = CreateTryAsyncFuncWithFailure(error);
+        var tryAsyncFunc = TestHelper.CreateTryAsyncFuncWithFailure<int>(error);
 
         // Act
         var result = await tryAsyncFunc
@@ -393,12 +379,12 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var successValue = 42;
-        var tryAsyncFunc = new TryAsync<int>(() => CreateSuccessResult(successValue).AsTaskAsync());
+        var tryAsyncFunc = new TryAsync<int>(() => TestHelper.CreateSuccessResult(successValue).AsTaskAsync());
 
         // Act
         var result = await tryAsyncFunc
-            .MatchAsync(value => Task.FromResult(CreateSuccessResult(value.ToString())),
-                error => Task.FromResult(CreateFailureResult<string>(error)));
+            .MatchAsync(value => Task.FromResult(TestHelper.CreateSuccessResult(value.ToString())),
+                error => Task.FromResult(TestHelper.CreateFailureResult<string>(error)));
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -410,12 +396,12 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var error = ResultError.New("Test error");
-        var tryAsyncFunc = CreateTryAsyncFuncWithFailure(error);
+        var tryAsyncFunc = TestHelper.CreateTryAsyncFuncWithFailure<int>(error);
 
         // Act
         var result = await tryAsyncFunc
-            .MatchAsync(value => Task.FromResult(CreateSuccessResult(value.ToString())),
-                err => Task.FromResult(CreateFailureResult<string>(err)));
+            .MatchAsync(value => Task.FromResult(TestHelper.CreateSuccessResult(value.ToString())),
+                err => Task.FromResult(TestHelper.CreateFailureResult<string>(err)));
 
         // Assert
         result.IsFailure.Should().BeTrue();
