@@ -10,35 +10,35 @@ namespace ZeidLab.ToolBox.Results;
 /// Represents the result of an operation that may either succeed or fail. This type is a fundamental
 /// building block in railway-oriented programming (ROP), where operations are modeled as a series of
 /// steps that either continue on the "happy path" (success) or diverge to an "error track" (failure).
-/// 
+///
 /// The <see cref="Result{TValue}"/> type encapsulates either a successful value of type <typeparamref name="TValue"/>
-/// or an <see cref="ResultError"/> representing the failure. It provides a robust and predictable way to handle
+/// or an <see cref="Error"/> representing the failure. It provides a robust and predictable way to handle
 /// errors without relying on exceptions for control flow.
-/// 
+///
 /// Key Features:
 /// - Immutable and thread-safe: Once created, a <see cref="Result{TValue}"/> instance cannot be modified.
 /// - Value semantics: As a <see><cref>record struct</cref></see> , it is lightweight and copied by value.
 /// - Success/Failure states: The <see cref="IsSuccess"/> and <see cref="IsFailure"/> properties
 ///   clearly indicate the outcome of the operation.
-/// - Implicit conversions: Supports implicit conversions from <typeparamref name="TValue"/>, <see cref="ResultError"/>,
+/// - Implicit conversions: Supports implicit conversions from <typeparamref name="TValue"/>, <see cref="Error"/>,
 ///   and <see cref="Exception"/> to simplify usage.
 /// - Factory methods: Provides <see cref="Success(TValue)"/> and <see><cref>Failure(Error)</cref></see>
 /// methods
 ///   for creating instances with validation.
 /// - Default value detection: The <see cref="IsDefault"/> property indicates whether the <see cref="Value"/>
 ///   is the default value for <typeparamref name="TValue"/>.
-/// 
+///
 /// Example Usage:
 /// <code>
 /// // Successful result
 /// Result&lt;int&gt; successResult = Result&lt;int&gt;.Success(42);
-/// 
+///
 /// // Failed result with an error message
 /// Result&lt;int&gt; failureResult = Result&lt;int&gt;.Failure(Error.New("Operation failed."));
-/// 
+///
 /// // Failed result from an exception
 /// Result&lt;int&gt; exceptionResult = new InvalidOperationException("Invalid operation");
-/// 
+///
 /// // Check the result state
 /// if (successResult.IsSuccess)
 /// {
@@ -49,7 +49,7 @@ namespace ZeidLab.ToolBox.Results;
 ///     Console.WriteLine($"Failure: {successResult.Error.Message}");
 /// }
 /// </code>
-/// 
+///
 /// This type is designed to promote explicit and predictable error handling, making it easier to reason
 /// about the flow of operations in functional-style C# applications.
 /// </summary>
@@ -61,7 +61,7 @@ namespace ZeidLab.ToolBox.Results;
 public readonly record struct Result<TValue>
 {
     internal readonly TValue Value;
-    internal readonly ResultError ResultError;
+    internal readonly ResultError Error;
 
     /// <summary>
     /// Gets a value indicating whether the operation was successful.
@@ -77,11 +77,11 @@ public readonly record struct Result<TValue>
     /// Gets a value indicating whether the operation failed.
     /// </summary>
     public readonly bool IsFailure;
-    
-    private Result(bool isSuccess, TValue value, ResultError resultError = default)
+
+    private Result(bool isSuccess, TValue value, ResultError error = default)
     {
         Value = value;
-        ResultError = resultError;
+        Error = error;
         IsSuccess = isSuccess;
         IsFailure = !isSuccess;
         IsDefault = Value.IsDefault();
@@ -117,7 +117,7 @@ public readonly record struct Result<TValue>
     [Pure]
     public static implicit operator Result<TValue>(ResultError resultError) => Failure(resultError);
 
-  
+
     /// <summary>
     /// Implicitly converts an exception to a failure of <see cref="Result{TValue}"/>
     /// </summary>

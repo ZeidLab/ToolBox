@@ -58,7 +58,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.ResultError.Should().Be(error);
+            result.Error.Should().Be(error);
             result.IsSuccess.Should().BeFalse();
             result.Value.Should().Be(default);
         }
@@ -74,8 +74,8 @@ namespace ZeidLab.ToolBox.Test.Units.Results
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.ResultError.Should().NotBeNull();
-            result.ResultError.Exception.Should().Be(exception);
+            result.Error.Should().NotBeNull();
+            result.Error.Exception.Should().Be(exception);
             result.IsSuccess.Should().BeFalse();
             result.Value.Should().Be(default);
         }
@@ -168,7 +168,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
 
             // Assert
             unitResult.IsFailure.Should().BeTrue();
-            unitResult.ResultError.Should().Be(error);
+            unitResult.Error.Should().Be(error);
         }
 
         [Fact]
@@ -197,7 +197,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
 
             // Assert
             unitResult.IsFailure.Should().BeTrue();
-            unitResult.ResultError.Should().Be(error);
+            unitResult.Error.Should().Be(error);
         }
 
         // Helper function to create a successful Try<TIn>

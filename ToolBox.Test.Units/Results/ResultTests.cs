@@ -45,7 +45,7 @@ public class ResultTests
         // Assert
         result.IsSuccess.Should().BeFalse();
         result.Value.Should().BeNull();
-        result.ResultError.Should().Be(error);
+        result.Error.Should().Be(error);
     }
 
     [Fact]
@@ -75,7 +75,7 @@ public class ResultTests
         // Assert
         result.IsSuccess.Should().BeFalse();
         result.Value.Should().BeNull();
-        result.ResultError.Should().Be(error);
+        result.Error.Should().Be(error);
     }
 
     [Fact]
@@ -90,8 +90,8 @@ public class ResultTests
         // Assert
         result.IsSuccess.Should().BeFalse();
         result.Value.Should().BeNull();
-        result.ResultError.Should().NotBeNull();
-        result.ResultError.Message.Should().Be(exception.Message);
+        result.Error.Should().NotBeNull();
+        result.Error.Message.Should().Be(exception.Message);
     }
 
     [Fact]

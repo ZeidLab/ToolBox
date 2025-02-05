@@ -32,7 +32,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Should().Be(TestHelper.DefaultResultError);
+        result.Error.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -62,7 +62,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Should().Be(TestHelper.DefaultResultError);
+        result.Error.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -92,7 +92,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Should().Be(TestHelper.DefaultResultError);
+        result.Error.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -122,7 +122,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Should().Be(TestHelper.DefaultResultError);
+        result.Error.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -152,7 +152,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Should().Be(TestHelper.DefaultResultError);
+        result.Error.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -182,7 +182,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Should().Be(TestHelper.DefaultResultError);
+        result.Error.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -212,7 +212,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Should().Be(TestHelper.DefaultResultError);
+        result.Error.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -242,7 +242,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Should().Be(TestHelper.DefaultResultError);
+        result.Error.Should().Be(TestHelper.DefaultResultError);
     }
         
     [Fact]
@@ -272,7 +272,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Should().Be(TestHelper.DefaultResultError);
+        result.Error.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -302,7 +302,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Should().Be(TestHelper.DefaultResultError);
+        result.Error.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -332,7 +332,7 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Should().Be(TestHelper.DefaultResultError);
+        result.Error.Should().Be(TestHelper.DefaultResultError);
     }
 
     [Fact]
@@ -362,6 +362,6 @@ public class ResultExtensionsBindTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Should().Be(TestHelper.DefaultResultError);
+        result.Error.Should().Be(TestHelper.DefaultResultError);
     }
 }

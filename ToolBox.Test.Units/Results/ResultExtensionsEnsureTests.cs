@@ -18,7 +18,7 @@ public class ResultExtensionsEnsureTests
 
         // Assert
         ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.ResultError.Should().Be(error);
+        ensuredResult.Error.Should().Be(error);
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public class ResultExtensionsEnsureTests
 
         // Assert
         ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.ResultError.Should().Be(error);
+        ensuredResult.Error.Should().Be(error);
     }
 
     [Fact]
@@ -65,7 +65,7 @@ public class ResultExtensionsEnsureTests
 
         // Assert
         ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.ResultError.Should().Be(error);
+        ensuredResult.Error.Should().Be(error);
     }
 
     [Fact]
@@ -96,7 +96,7 @@ public class ResultExtensionsEnsureTests
 
         // Assert
         ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.ResultError.Should().Be(error);
+        ensuredResult.Error.Should().Be(error);
     }
 
     [Fact]
@@ -112,7 +112,7 @@ public class ResultExtensionsEnsureTests
 
         // Assert
         ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.ResultError.Should().Be(error);
+        ensuredResult.Error.Should().Be(error);
     }
 
     [Fact]
@@ -144,6 +144,6 @@ public class ResultExtensionsEnsureTests
 
         // Assert
         ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.ResultError.Should().Be(error);
+        ensuredResult.Error.Should().Be(error);
     }
 }

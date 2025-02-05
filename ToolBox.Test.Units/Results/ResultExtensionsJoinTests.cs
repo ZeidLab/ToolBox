@@ -35,7 +35,7 @@ public class ResultExtensionsJoinTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Message.Should().Be(TestHelper.DefaultResultError.Message);
+        result.Error.Message.Should().Be(TestHelper.DefaultResultError.Message);
     }
 
     [Theory]
@@ -57,7 +57,7 @@ public class ResultExtensionsJoinTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Message.Should().Be(TestHelper.DefaultResultError.Message);
+        result.Error.Message.Should().Be(TestHelper.DefaultResultError.Message);
     }
 
     [Theory]
@@ -80,7 +80,7 @@ public class ResultExtensionsJoinTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Message.Should().Be(TestHelper.DefaultResultError.Message);
+        result.Error.Message.Should().Be(TestHelper.DefaultResultError.Message);
     }
 
     [Theory]
@@ -104,7 +104,7 @@ public class ResultExtensionsJoinTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Message.Should().Be(TestHelper.DefaultResultError.Message);
+        result.Error.Message.Should().Be(TestHelper.DefaultResultError.Message);
     }
 
     [Theory]
@@ -129,7 +129,7 @@ public class ResultExtensionsJoinTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Message.Should().Be(TestHelper.DefaultResultError.Message);
+        result.Error.Message.Should().Be(TestHelper.DefaultResultError.Message);
     }
 
     [Theory]
@@ -155,7 +155,7 @@ public class ResultExtensionsJoinTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Message.Should().Be(TestHelper.DefaultResultError.Message);
+        result.Error.Message.Should().Be(TestHelper.DefaultResultError.Message);
     }
 
 
@@ -183,7 +183,7 @@ public class ResultExtensionsJoinTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Message.Should().Be(TestHelper.DefaultResultError.Message);
+        result.Error.Message.Should().Be(TestHelper.DefaultResultError.Message);
     }
 
     [Theory]
@@ -211,7 +211,7 @@ public class ResultExtensionsJoinTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Message.Should().Be(TestHelper.DefaultResultError.Message);
+        result.Error.Message.Should().Be(TestHelper.DefaultResultError.Message);
     }
 
     [Theory]
@@ -240,7 +240,7 @@ public class ResultExtensionsJoinTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.ResultError.Message.Should().Be(TestHelper.DefaultResultError.Message);
+        result.Error.Message.Should().Be(TestHelper.DefaultResultError.Message);
     }
 
     #endregion

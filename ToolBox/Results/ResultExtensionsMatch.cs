@@ -27,7 +27,7 @@ public static class ResultExtensionsMatch
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static Result<TOut> Match<TIn, TOut>(this Result<TIn> self, Func<TIn, Result<TOut>> success,
 		Func<ResultError, Result<TOut>> failure)
-		=> self.IsSuccess ? success(self.Value) : failure(self.ResultError);
+		=> self.IsSuccess ? success(self.Value) : failure(self.Error);
 
 	/// <summary>
 	/// Matches the content of a <see cref="Result{TIn}"/> instance to either a successful or failed result.
@@ -42,7 +42,7 @@ public static class ResultExtensionsMatch
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static TOut Match<TIn, TOut>(this Result<TIn> self, Func<TIn, TOut> success,
 		Func<ResultError, TOut> failure)
-		=> self.IsSuccess ? success(self.Value) : failure(self.ResultError);
+		=> self.IsSuccess ? success(self.Value) : failure(self.Error);
 
 	/// <summary>
 	/// Matches the content of a <see cref="Try{TIn}"/> instance to either a successful or failed result.
@@ -87,7 +87,7 @@ public static class ResultExtensionsMatch
 		if (self.IsSuccess)
 			success(self.Value);
 		else
-			failure(self.ResultError);
+			failure(self.Error);
 	}
 
 
@@ -105,7 +105,7 @@ public static class ResultExtensionsMatch
 		if (result.IsSuccess)
 			success(result.Value);
 		else
-			failure(result.ResultError);
+			failure(result.Error);
 	}
 
 	#endregion
@@ -225,7 +225,7 @@ public static class ResultExtensionsMatch
 		var result = await self.TryAsync().ConfigureAwait(false);
 		return result.IsSuccess
 			? await success(result.Value).ConfigureAwait(false)
-			: await failure(result.ResultError).ConfigureAwait(false);
+			: await failure(result.Error).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -261,7 +261,7 @@ public static class ResultExtensionsMatch
 		if (result.IsSuccess)
 			success(result.Value);
 		else
-			failure(result.ResultError);
+			failure(result.Error);
 	}
 
 	/// <summary>
@@ -279,7 +279,7 @@ public static class ResultExtensionsMatch
 		if (result.IsSuccess)
 			success(result.Value);
 		else
-			failure(result.ResultError);
+			failure(result.Error);
 	}
 
 
@@ -298,7 +298,7 @@ public static class ResultExtensionsMatch
 		if (self.IsSuccess)
 			await success(self.Value).ConfigureAwait(false);
 		else
-			await failure(self.ResultError).ConfigureAwait(false);
+			await failure(self.Error).ConfigureAwait(false);
 	}
 
 
@@ -318,7 +318,7 @@ public static class ResultExtensionsMatch
 		if (result.IsSuccess)
 			await success(result.Value).ConfigureAwait(false);
 		else
-			await failure(result.ResultError).ConfigureAwait(false);
+			await failure(result.Error).ConfigureAwait(false);
 	}
 
 
@@ -339,7 +339,7 @@ public static class ResultExtensionsMatch
 		if (result.IsSuccess)
 			await success(result.Value).ConfigureAwait(false);
 		else
-			await failure(result.ResultError).ConfigureAwait(false);
+			await failure(result.Error).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -358,7 +358,7 @@ public static class ResultExtensionsMatch
 		if (result.IsSuccess)
 			await success(result.Value).ConfigureAwait(false);
 		else
-			await failure(result.ResultError).ConfigureAwait(false);
+			await failure(result.Error).ConfigureAwait(false);
 	}
 
 	#endregion
