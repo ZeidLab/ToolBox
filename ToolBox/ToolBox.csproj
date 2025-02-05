@@ -5,7 +5,7 @@
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-        <TargetFramework>netstandard2.1</TargetFramework>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net9.0;net7.0;net6.0</TargetFrameworks>
         <!-- Versioning -->
         <VersionBase>1.0.0-preview</VersionBase>
         <BuildNumber>$([System.DateTime]::Now.ToString("yyMMddHHmmss"))</BuildNumber>
@@ -39,7 +39,8 @@
 
         <!-- Source Link Support -->
         <IncludeSymbols>true</IncludeSymbols> <!-- Include symbols in the package -->
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat> <!-- Use the snupkg format for symbols -->
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <TargetFramework /> <!-- Use the snupkg format for symbols -->
 
     </PropertyGroup>
 
