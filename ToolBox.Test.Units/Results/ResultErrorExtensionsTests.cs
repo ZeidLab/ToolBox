@@ -46,7 +46,7 @@ public class ResultErrorExtensionsTests
 
         // Assert
         result.IsSome.Should().BeTrue();
-        result.Content.Should().Be(exception);
+        result.Value.Should().Be(exception);
     }
 
     [Fact]

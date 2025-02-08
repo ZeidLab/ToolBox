@@ -93,7 +93,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
             // Assert
             maybe.IsSome.Should().BeTrue();
             maybe.IsNone.Should().BeFalse();
-            maybe.Content.Should().Be(value);
+            maybe.Value.Should().Be(value);
         }
 
         [Fact]
@@ -109,7 +109,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
             // Assert
             maybe.IsNone.Should().BeTrue();
             maybe.IsSome.Should().BeFalse();
-            maybe.Content.Should().Be(default);
+            maybe.Value.Should().Be(default);
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
             // Assert
             maybe.IsSome.Should().BeTrue();
             maybe.IsNone.Should().BeFalse();
-            maybe.Content.Should().Be(value);
+            maybe.Value.Should().Be(value);
         }
 
 
@@ -231,7 +231,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
             // Assert
             maybe.IsSome.Should().BeTrue();
             maybe.IsNone.Should().BeFalse();
-            maybe.Content.Should().Be(value);
+            maybe.Value.Should().Be(value);
         }
 
         [Fact]
@@ -246,7 +246,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
             // Assert
             maybe.IsSome.Should().BeFalse();
             maybe.IsNone.Should().BeTrue();
-            maybe.Content.Should().Be(default);
+            maybe.Value.Should().Be(default);
         }
 
         [Fact]
@@ -262,7 +262,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
             // Assert
             maybe.IsSome.Should().BeTrue();
             maybe.IsNone.Should().BeFalse();
-            maybe.Content.Should().Be(value);
+            maybe.Value.Should().Be(value);
         }
 
         [Fact]
@@ -277,7 +277,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
             // Assert
             maybe.IsSome.Should().BeFalse();
             maybe.IsNone.Should().BeTrue();
-            maybe.Content.Should().Be(default);
+            maybe.Value.Should().Be(default);
         }
 
         [Fact]
@@ -293,7 +293,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
             // Assert
             maybe.IsSome.Should().BeTrue();
             maybe.IsNone.Should().BeFalse();
-            maybe.Content.Should().Be(value);
+            maybe.Value.Should().Be(value);
         }
 
         [Fact]
@@ -308,7 +308,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
             // Assert
             maybe.IsSome.Should().BeFalse();
             maybe.IsNone.Should().BeTrue();
-            maybe.Content.Should().Be(default);
+            maybe.Value.Should().Be(default);
         }
     }
 }

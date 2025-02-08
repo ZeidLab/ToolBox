@@ -17,7 +17,7 @@ public class MaybeExtensionsTests
 
         // Assert
         maybe.IsNull.Should().BeFalse();
-        maybe.Content.Should().Be(value);
+        maybe.Value.Should().Be(value);
     }
 
     [Fact]
@@ -45,7 +45,7 @@ public class MaybeExtensionsTests
 
         // Assert
         result.IsNull.Should().BeFalse();
-        result.Content.Should().Be("42");
+        result.Value.Should().Be("42");
     }
 
     [Fact]
@@ -224,8 +224,8 @@ public class MaybeExtensionsTests
 
             // Assert
             result.Should().HaveCount(2);
-            result[0].Content.Should().Be(10);
-            result[1].Content.Should().Be(42);
+            result[0].Value.Should().Be(10);
+            result[1].Value.Should().Be(42);
         }
 
         [Fact]

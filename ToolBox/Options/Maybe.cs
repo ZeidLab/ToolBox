@@ -16,13 +16,13 @@ public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
     /// <summary>
     /// keeping the value of the maybe, it can be null or default either
     /// </summary>
-    internal readonly TIn? Content;
-    
+    internal readonly TIn? Value;
+
     /// <summary>
     /// Setting flag if the value is null
     /// </summary>
     internal readonly bool IsNull;
-    
+
     /// <summary>
     /// Indicates whether the contained value is the default value of its type.
     /// </summary>
@@ -34,12 +34,12 @@ public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
     /// Initializes a new instance of the <see cref="Maybe{TIn}"/> struct with the specified content.
     /// This constructor is intended for internal use.
     /// </summary>
-    /// <param name="content">The content of the maybe.</param>
-    private Maybe(TIn? content)
+    /// <param name="value">The content of the maybe.</param>
+    private Maybe(TIn? value)
     {
-        Content = content;
+        Value = value;
         IsNull = false;
-        IsDefault = content.IsDefault();
+        IsDefault = value.IsDefault();
     }
 
     /// <summary>
@@ -49,7 +49,7 @@ public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
     {
         IsNull = true;
         IsDefault = true;
-        Content = default;
+        Value = default;
     }
 
     /// <summary>
@@ -110,7 +110,7 @@ public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
 
         // Compare content
 #pragma warning disable CS8604 // Possible null reference argument.
-        return Comparer<TIn>.Default.Compare(Content, other.Content);
+        return Comparer<TIn>.Default.Compare(Value, other.Value);
 #pragma warning restore CS8604 // Possible null reference argument.
     }
 
