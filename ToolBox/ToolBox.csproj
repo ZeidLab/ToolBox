@@ -17,7 +17,7 @@
         <PackageVersion>$(Version)</PackageVersion>
         <Title>ZeidLab ToolBox</Title> <!-- A friendly title for your package -->
         <Product>ToolBox</Product> <!-- The product name -->
-        <Description>A toolbox library for adding Railway-Oriented Programming, and Functional Programming in c# by using Result{T} and Maybe{T} extension methods.</Description>
+        <Description>A library for adding Railway-Oriented Programming, and Functional Programming in c# by using Result{T} and Maybe{T} extension methods.</Description>
         <PackageProjectUrl>https://github.com/ZeidLab/ToolBox</PackageProjectUrl>
         <RepositoryUrl>https://github.com/ZeidLab/ToolBox</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -50,17 +50,17 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
- 
+
         <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
         <PackageReference Include="SonarAnalyzer.CSharp">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
-   
+
     <ItemGroup>
         <!-- Include ReadMe.md in the package -->
         <None Include="ReadMe.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
-    
+
 </Project>
