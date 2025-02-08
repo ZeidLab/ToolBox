@@ -2,29 +2,30 @@
 
 **ZeidLab.ToolBox** is a versatile and robust utility library designed to simplify common programming tasks, enhance
 error handling, and promote functional programming paradigms in C#. It provides a collection of tools and extensions
-that streamline operations such as null checks, error handling, task management, and railway-oriented programming (ROP).
+that streamline operations such as null checks, error handling, task management, and railway-oriented programming (ROP) sometimes known as "Result Pattern".
 
 ## Features
 
-* > **Unit Type:** A type representing the absence of a meaningful value, useful in functional programming.
+* **Unit Type:** A type representing the absence of a meaningful value, useful in functional programming.
 
-* > **Maybe Type:** A monadic type for handling optional values, similar to Option in functional languages.
+* **Maybe Type:** A monadic type for handling optional values, similar to Option in functional languages.
 
-* > **Result Type:** A robust error-handling type for railway-oriented programming, allowing chaining of operations with explicit success and failure states.
+* **Result Type:** A robust error-handling type for railway-oriented programming, allowing chaining of operations with explicit success and failure states.
 
-* > **Error Handling:** Structured error handling with ResultError,supporting error codes, messages, and exceptions.
+* **Error Handling:** Structured error handling with ResultError,supporting error codes, messages, and exceptions.
 
-* > **Asynchronous Support:** Comprehensive support for asynchronous operations with Result types.
+* **Asynchronous Support:** Comprehensive support for asynchronous operations with Result types.
 
-I have learned a lot from [LanguageExt](https://github.com/louthy/language-ext) library and I suggest you to check it out. However, this library is more compact and easy to use version of that library with a lot of examples and how to use tutorials.
+Inspired by [LanguageExt](https://github.com/louthy/language-ext), this library offers a more compact and user-friendly alternative with extensive examples and tutorials.
 
 ## Table Of Contents
 
 [TableOfContents]:#table-of-contents
 
 - [How to install?](#installation)
-- [What is `Maybe<T>`?](#what-is-maybe-type)
-  - [Nomadic Option or `Maybe<T>`](#1---nomadic-option-or-option-type--or-maybet)
+- [Types included in this library](#types-included-in-this-library)
+- [What is `Maybe<T>`?](#what-is-maybet-type)
+  - [Why Use `Maybe<T>` Instead of Nullable?](#why-use-maybet-instead-of-nullable)
 - [Contribution](#contribution)
 - [License](#license)
 
@@ -39,28 +40,31 @@ dotnet add package ZeidLab.ToolBox
 
 [^ Back To Top][TableOfContents]
 
-## What is Maybe Type?
+## Types included in this library
 
-The concepts such as - the "Nomadic Option"  and using `Option<T>` or `Maybe<T>` instead of primitive types like `int?` - are rooted in functional programming paradigms and best practices for writing robust, maintainable code. Following sections are few explanations of these concepts based on established programming principles and best practices in C#. In this library the optional nomad type is `Maybe<T>`
-### 1 - Nomadic Option (or Option Type , or `Maybe<T>`)
+* **Unit:** A type representing the absence of a meaningful value, useful in functional programming.
+* **`Maybe<T>`:** A type representing the presence or absence of a value explicitly, avoiding the pitfalls of `null`.
+* **`Result<T>`:** A type representing the success or failure of an operation, allowing for chaining of operations with explicit success and failure states.
+* **`ResultError`:** A type representing a structured error, supporting error codes, messages, and exceptions.
 
-The "Nomadic Option" is not a standard term in C# or programming literature, but it likely refers to the Option type (or Maybe type in functional programming). The Option type is a functional programming construct used to represent the presence or absence of a value, without resorting to null. In this library it is `Maybe<T>`.
 
-#### Why is it important?
+## What is `Maybe<T>` Type?
 
-* > It forces developers to explicitly handle the absence of a value, reducing the risk of NullReferenceException.
-* > It makes the code more expressive and self-documenting by clearly indicating that a value might be missing.
-* > It aligns with functional programming principles, promoting immutability and reducing side effects.
+The concepts such as - the "Optional Nomad"  and using `Option<T>` or `Maybe<T>` instead of primitive nullable types like `int?` - are rooted in functional programming paradigms and best practices for writing robust, maintainable code, and  It represents the presence or absence of a value explicitly, avoiding the pitfalls of `null`.
 
-#### Why Returning null is Not a Good Idea?
-Returning `null` in C# (or any language) can lead to several issues:
-* > **Null Reference Exceptions:** If the caller forgets to check for `null`, it can result in runtime crashes.
+### Why Use `Maybe<T>` Instead of Nullable?
 
-* > **Ambiguity:** `null` can mean different things—missing data, an error, or an uninitialized value. This ambiguity makes code harder to understand and maintain.
+Here are some disadvantages of Using Nullable:
+- **Null Reference Exceptions:** Forgetting to check for `null` can cause runtime crashes.
+- **Ambiguity:** `null` can signify missing data, errors, or uninitialized values, making code harder to understand.
+- **Poor Readability:** Excessive `null` checks clutter code and reduce readability.
+- **Violates Functional Principles:** `null` contradicts functional programming's emphasis on explicitness and immutability.
 
-* > **Poor Readability:** Code littered with `null` checks `(if (x != null))` becomes cluttered and harder to read.
-
-* > **Violates Functional Principles:** Functional programming encourages avoiding `null` in favor of explicit types like `Maybe<T>`.
+Here are some advantages of Using `Maybe<T>`:
+- **Explicit Handling of Missing Values:** Forces developers to handle the absence of a value explicitly.
+- **Avoids Magic Numbers:** Eliminates the need for special values (e.g., `-1`) to represent missing data which is error-prone and unclear.
+- **Type Safety:** Ensures compile-time handling of absent values, reducing runtime errors.
+- **Functional Composition:** Supports operations like `Map` and `Bind`, enabling chaining without `null` concerns.
 
 [^ Back To Top][TableOfContents]
 
