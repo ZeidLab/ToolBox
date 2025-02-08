@@ -1,4 +1,4 @@
-﻿﻿using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 
 // ReSharper disable once CheckNamespace
