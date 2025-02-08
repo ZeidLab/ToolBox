@@ -34,14 +34,14 @@ public class MaybeExtensionsTests
     }
 
     [Fact]
-    public void Map_GivenSomeValue_MapsToNewValue()
+    public void Bind_GivenSomeValue_ReturnsNewValue()
     {
         // Arrange
         Maybe<int> maybe = Maybe<int>.Some(42);
-        Func<int, string> mapper = x => x.ToString();
+        Func<int, Maybe<string>> mapper = x => x.ToString().ToSome();
 
         // Act
-        Maybe<string> result = maybe.Map(mapper);
+        Maybe<string> result = maybe.Bind(mapper);
 
         // Assert
         result.IsNull.Should().BeFalse();
@@ -49,19 +49,20 @@ public class MaybeExtensionsTests
     }
 
     [Fact]
-    public void Map_GivenNone_ReturnsNone()
+    public void Bind_GivenNone_ReturnsNone()
     {
         // Arrange
         Maybe<int> maybe = Maybe<int>.None();
-        Func<int, string> mapper = x => x.ToString();
+        Func<int, Maybe<string>> mapper = x => x.ToString().ToSome();
+
 
         // Act
-        Maybe<string> result = maybe.Map(mapper);
+        Maybe<string> result = maybe.Bind(mapper);
 
         // Assert
         result.IsNull.Should().BeTrue();
     }
-    
+
     [Fact]
     public void Reduce_GivenSomeValue_ReturnsValue()
     {
@@ -163,7 +164,7 @@ public class MaybeExtensionsTests
         result.Should().Be(maybe);
         action.DidNotReceiveWithAnyArgs();
     }
-    
+
     [Fact]
         public void If_WhenMaybeIsSomeAndPredicateIsTrue_ShouldReturnTrue()
         {
@@ -279,7 +280,7 @@ public class MaybeExtensionsTests
             };
 
             // Act
-            var result = maybeList.ToEnumerable().ToList();
+            var result = maybeList.Flatten().ToList();
 
             // Assert
             result.Should().HaveCount(2);
@@ -299,7 +300,7 @@ public class MaybeExtensionsTests
             };
 
             // Act
-            var result = maybeList.ToEnumerable().ToList();
+            var result = maybeList.Flatten().ToList();
 
             // Assert
             result.Should().BeEmpty();
@@ -318,7 +319,7 @@ public class MaybeExtensionsTests
             var substitute = 42;
 
             // Act
-            var result = maybeList.ToEnumerable(substitute).ToList();
+            var result = maybeList.Flatten(substitute).ToList();
 
             // Assert
             result.Should().HaveCount(3);
@@ -340,7 +341,7 @@ public class MaybeExtensionsTests
             Func<int> substitute = () => 42;
 
             // Act
-            var result = maybeList.ToEnumerable(substitute).ToList();
+            var result = maybeList.Flatten(substitute).ToList();
 
             // Assert
             result.Should().HaveCount(3);
