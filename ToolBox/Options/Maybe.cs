@@ -1,6 +1,4 @@
-﻿
-using System.Diagnostics.CodeAnalysis;
-// ReSharper disable once CheckNamespace
+﻿using System.Diagnostics.CodeAnalysis;
 using ZeidLab.ToolBox.Common;
 
 namespace ZeidLab.ToolBox.Options;
@@ -13,164 +11,170 @@ namespace ZeidLab.ToolBox.Options;
 [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
 public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
 {
-    /// <summary>
-    /// keeping the value of the maybe, it can be null or default either
-    /// </summary>
-    internal readonly TIn? Value;
+	/// <summary>
+	/// keeping the value of the maybe, it can be null or default either
+	/// </summary>
+	internal readonly TIn? Value;
 
-    /// <summary>
-    /// Setting flag if the value is null
-    /// </summary>
-    internal readonly bool IsNull;
+	/// <summary>
+	/// Setting flag if the value is null
+	/// </summary>
+	internal readonly bool IsNull;
 
-    /// <summary>
-    /// Indicates whether the contained value is the default value of its type.
-    /// </summary>
+	/// <summary>
+	/// Indicates whether the contained value is the default value of its type.
+	/// </summary>
 #pragma warning disable CA1051
-    public readonly bool IsDefault;
+	public readonly bool IsDefault;
 #pragma warning restore CA1051
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Maybe{TIn}"/> struct with the specified content.
-    /// This constructor is intended for internal use.
-    /// </summary>
-    /// <param name="value">The content of the maybe.</param>
-    private Maybe(TIn? value)
-    {
-        Value = value;
-        IsNull = false;
-        IsDefault = value.IsDefault();
-    }
+	/// <summary>
+	/// Initializes a new instance of the <see cref="Maybe{TIn}"/> struct with the specified content.
+	/// This constructor is intended for internal use.
+	/// </summary>
+	/// <param name="value">The content of the maybe.</param>
+	private Maybe(TIn value)
+	{
+		Value = value;
+		IsNull = false;
+		IsDefault = value.IsDefault();
+	}
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Maybe{TIn}"/> struct representing the 'None' state.
-    /// </summary>
-    public Maybe()
-    {
-        IsNull = true;
-        IsDefault = true;
-        Value = default;
-    }
+	/// <summary>
+	/// Initializes a new instance of the <see cref="Maybe{TIn}"/> struct representing the 'None' state.
+	/// </summary>
+	public Maybe()
+	{
+		IsNull = true;
+		IsDefault = true;
+		Value = default;
+	}
 
-    /// <summary>
-    /// Indicates whether the maybe contains a value.
-    /// </summary>
-    public bool IsSome => !IsNull;
+	/// <summary>
+	/// Indicates whether the maybe contains a value.
+	/// </summary>
+	public bool IsSome => !IsNull;
 
-    /// <summary>
-    /// Indicates whether the maybe is in the 'None' state.
-    /// </summary>
-    public bool IsNone => IsNull;
+	/// <summary>
+	/// Indicates whether the maybe is in the 'None' state.
+	/// </summary>
+	public bool IsNone => IsNull;
 
 
-    /// <summary>
-    /// Creates a new <see cref="Maybe{TIn}"/> containing the specified value.
-    /// this is not going to automatically convert null or default to none.
-    /// </summary>
-    /// <param name="value">The non-null value to contain, and You should not pass default as value either.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is null.</exception>
-    /// <returns>A new <see cref="Maybe{TIn}"/> containing the specified value.</returns>
+	/// <summary>
+	/// Creates a new <see cref="Maybe{TIn}"/> containing the specified value.
+	/// this is not going to automatically convert null or default to none.
+	/// </summary>
+	/// <param name="value">The non-null value to contain, and You should not pass default as value either.</param>
+	/// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is null.</exception>
+	/// <returns>A new <see cref="Maybe{TIn}"/> containing the specified value.</returns>
 #pragma warning disable CA1000
-    public static Maybe<TIn> Some(TIn value)
+	public static Maybe<TIn> Some(TIn value)
 #pragma warning restore CA1000
-    {
-        if (value.IsNull())
-            throw new ArgumentNullException(nameof(value));
-        return new Maybe<TIn>(value);
-    }
+	{
+		if (value.IsNull())
+			throw new ArgumentNullException(nameof(value));
+		return new Maybe<TIn>(value);
+	}
 
-    /// <summary>
-    /// Creates a new <see cref="Maybe{TIn}"/> in the 'None' state.
-    /// </summary>
-    /// <returns>A new <see cref="Maybe{TIn}"/> in the 'None' state.</returns>
+	/// <summary>
+	/// Creates a new <see cref="Maybe{TIn}"/> in the 'None' state.
+	/// </summary>
+	/// <returns>A new <see cref="Maybe{TIn}"/> in the 'None' state.</returns>
 #pragma warning disable CA1000
-    public static Maybe<TIn> None() => new();
+	public static Maybe<TIn> None() => new();
 #pragma warning restore CA1000
 
-    /// <summary>
-    /// Implicitly converts a value of type <typeparamref name="TIn"/> to a <see cref="Maybe{TIn}"/> containing that value.
-    /// </summary>
-    /// <param name="value">The value to contain.</param>
-    /// <returns>A <see cref="Maybe{TIn}"/> containing the specified value.</returns>
-    public static implicit operator Maybe<TIn>(TIn value) => Some(value);
+	/// <summary>
+	/// Implicitly converts a value of type <typeparamref name="TIn"/> to a <see cref="Maybe{TIn}"/> containing that value.
+	/// </summary>
+	/// <param name="value">The value to contain.</param>
+	/// <returns>A <see cref="Maybe{TIn}"/> containing the specified value.</returns>
+	public static implicit operator Maybe<TIn>(TIn? value)
+		=> value.IsNull() ? None() : Some(value!);
 
-    /// <summary>
-    /// Compares this instance with another <see cref="Maybe{TIn}"/> instance.
-    /// </summary>
-    /// <param name="other">The other instance to compare with.</param>
-    /// <returns>
-    /// A value indicating the relative order of this instance and <paramref name="other"/>.
-    /// </returns>
-    public int CompareTo(Maybe<TIn> other)
-    {
-        // Handle null states
-        if (IsNull && other.IsNull) return 0;
-        if (IsNull) return -1;
-        if (other.IsNull) return 1;
 
-        // Compare content
+	/// <summary>
+	/// Compares this instance with another <see cref="Maybe{TIn}"/> instance.
+	/// </summary>
+	/// <param name="other">The other instance to compare with.</param>
+	/// <returns>
+	/// A value indicating the relative order of this instance and <paramref name="other"/>.
+	/// </returns>
+	public int CompareTo(Maybe<TIn> other)
+	{
+		return (IsNull, other.IsNull) switch
+		{
+			// Handle null states
+			(true, true) => 0,
+			(true, false) => -1,
+			(false, true) => 1,
+			// handle non-null states
 #pragma warning disable CS8604 // Possible null reference argument.
-        return Comparer<TIn>.Default.Compare(Value, other.Value);
+			(false, false) => Comparer<TIn>.Default.Compare(Value, other.Value)
 #pragma warning restore CS8604 // Possible null reference argument.
-    }
+		};
+	}
 
-    /// <summary>
-    /// Compares this instance with another object.
-    /// </summary>
-    /// <param name="obj">The object to compare with.</param>
-    /// <returns>
-    /// A value indicating the relative order of this instance and <paramref name="obj"/>.
-    /// </returns>
-    /// <exception cref="ArgumentException">Thrown if <paramref name="obj"/> is not of type <see cref="Maybe{TIn}"/>.</exception>
-    public int CompareTo(object? obj)
-    {
-        if (obj is null) return 1;
-        if (obj is Maybe<TIn> other)
-            return CompareTo(other);
-        throw new ArgumentException($"Object must be of type {typeof(Maybe<TIn>)}");
-    }
+	/// <summary>
+	/// Compares this instance with another object.
+	/// </summary>
+	/// <param name="obj">The object to compare with.</param>
+	/// <returns>
+	/// A value indicating the relative order of this instance and <paramref name="obj"/>.
+	/// </returns>
+	/// <exception cref="ArgumentException">Thrown if <paramref name="obj"/> is not of type <see cref="Maybe{TIn}"/>.</exception>
+	public int CompareTo(object? obj)
+	{
+		return obj switch
+		{
+			null => 1,
+			Maybe<TIn> other => CompareTo(other),
+			_ => throw new ArgumentException($"Object must be of type {typeof(Maybe<TIn>)}")
+		};
+	}
 
-    /// <summary>
-    /// Determines whether the left <see cref="Maybe{TIn}"/> is less than the right <see cref="Maybe{TIn}"/>.
-    /// </summary>
-    /// <param name="left">The left <see cref="Maybe{TIn}"/> to compare.</param>
-    /// <param name="right">The right <see cref="Maybe{TIn}"/> to compare.</param>
-    /// <returns><see langword="true"/> if the left <see cref="Maybe{TIn}"/> is less than the right <see cref="Maybe{TIn}"/>, otherwise <see langword="false"/>.</returns>
-    public static bool operator <(Maybe<TIn> left, Maybe<TIn> right)
-    {
-        return left.CompareTo(right) < 0;
-    }
+	/// <summary>
+	/// Determines whether the left <see cref="Maybe{TIn}"/> is less than the right <see cref="Maybe{TIn}"/>.
+	/// </summary>
+	/// <param name="left">The left <see cref="Maybe{TIn}"/> to compare.</param>
+	/// <param name="right">The right <see cref="Maybe{TIn}"/> to compare.</param>
+	/// <returns><see langword="true"/> if the left <see cref="Maybe{TIn}"/> is less than the right <see cref="Maybe{TIn}"/>, otherwise <see langword="false"/>.</returns>
+	public static bool operator <(Maybe<TIn> left, Maybe<TIn> right)
+	{
+		return left.CompareTo(right) < 0;
+	}
 
-    /// <summary>
-    /// Determines whether the left <see cref="Maybe{TIn}"/> is less than or equal to the right <see cref="Maybe{TIn}"/>.
-    /// </summary>
-    /// <param name="left">The left <see cref="Maybe{TIn}"/> to compare.</param>
-    /// <param name="right">The right <see cref="Maybe{TIn}"/> to compare.</param>
-    /// <returns><see langword="true"/> if the left <see cref="Maybe{TIn}"/> is less than or equal to the right <see cref="Maybe{TIn}"/>, otherwise <see langword="false"/>.</returns>
-    public static bool operator <=(Maybe<TIn> left, Maybe<TIn> right)
-    {
-        return left.CompareTo(right) <= 0;
-    }
+	/// <summary>
+	/// Determines whether the left <see cref="Maybe{TIn}"/> is less than or equal to the right <see cref="Maybe{TIn}"/>.
+	/// </summary>
+	/// <param name="left">The left <see cref="Maybe{TIn}"/> to compare.</param>
+	/// <param name="right">The right <see cref="Maybe{TIn}"/> to compare.</param>
+	/// <returns><see langword="true"/> if the left <see cref="Maybe{TIn}"/> is less than or equal to the right <see cref="Maybe{TIn}"/>, otherwise <see langword="false"/>.</returns>
+	public static bool operator <=(Maybe<TIn> left, Maybe<TIn> right)
+	{
+		return left.CompareTo(right) <= 0;
+	}
 
-    /// <summary>
-    /// Determines whether the left <see cref="Maybe{TIn}"/> is greater than the right <see cref="Maybe{TIn}"/>.
-    /// </summary>
-    /// <param name="left">The left <see cref="Maybe{TIn}"/> to compare.</param>
-    /// <param name="right">The right <see cref="Maybe{TIn}"/> to compare.</param>
-    /// <returns><see langword="true"/> if the left <see cref="Maybe{TIn}"/> is greater than the right <see cref="Maybe{TIn}"/>, otherwise <see langword="false"/>.</returns>
-    public static bool operator >(Maybe<TIn> left, Maybe<TIn> right)
-    {
-        return left.CompareTo(right) > 0;
-    }
+	/// <summary>
+	/// Determines whether the left <see cref="Maybe{TIn}"/> is greater than the right <see cref="Maybe{TIn}"/>.
+	/// </summary>
+	/// <param name="left">The left <see cref="Maybe{TIn}"/> to compare.</param>
+	/// <param name="right">The right <see cref="Maybe{TIn}"/> to compare.</param>
+	/// <returns><see langword="true"/> if the left <see cref="Maybe{TIn}"/> is greater than the right <see cref="Maybe{TIn}"/>, otherwise <see langword="false"/>.</returns>
+	public static bool operator >(Maybe<TIn> left, Maybe<TIn> right)
+	{
+		return left.CompareTo(right) > 0;
+	}
 
-    /// <summary>
-    /// Determines whether the left <see cref="Maybe{TIn}"/> is greater than or equal to the right <see cref="Maybe{TIn}"/>.
-    /// </summary>
-    /// <param name="left">The left <see cref="Maybe{TIn}"/> to compare.</param>
-    /// <param name="right">The right <see cref="Maybe{TIn}"/> to compare.</param>
-    /// <returns><see langword="true"/> if the left <see cref="Maybe{TIn}"/> is greater than or equal to the right <see cref="Maybe{TIn}"/>, otherwise <see langword="false"/>.</returns>
-    public static bool operator >=(Maybe<TIn> left, Maybe<TIn> right)
-    {
-        return left.CompareTo(right) >= 0;
-    }
+	/// <summary>
+	/// Determines whether the left <see cref="Maybe{TIn}"/> is greater than or equal to the right <see cref="Maybe{TIn}"/>.
+	/// </summary>
+	/// <param name="left">The left <see cref="Maybe{TIn}"/> to compare.</param>
+	/// <param name="right">The right <see cref="Maybe{TIn}"/> to compare.</param>
+	/// <returns><see langword="true"/> if the left <see cref="Maybe{TIn}"/> is greater than or equal to the right <see cref="Maybe{TIn}"/>, otherwise <see langword="false"/>.</returns>
+	public static bool operator >=(Maybe<TIn> left, Maybe<TIn> right)
+	{
+		return left.CompareTo(right) >= 0;
+	}
 }
