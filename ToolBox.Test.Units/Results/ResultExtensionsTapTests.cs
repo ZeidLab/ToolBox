@@ -235,6 +235,54 @@ public class ResultExtensionsTapTests
 
     #endregion
 
+    #region TryAsync Action Tap Tests
+
+    [Fact]
+    public async Task Given_SuccessfulTryAsync_When_TapAsyncWithAction_Then_ExecutesActionAndReturnsSuccessResult()
+    {
+        // Arrange
+        var tryAsyncResult = TestHelper.CreateTryAsyncFuncWithSuccess(42);
+        var action = Substitute.For<Action<int>>();
+
+        // Act
+        var result = await tryAsyncResult.TapAsync(action);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().Be(42);
+        action.Received(1).Invoke(42);
+    }
+
+    [Fact]
+    public async Task Given_FailedTryAsync_When_TapAsyncWithAction_Then_DoesNotExecuteActionAndReturnsFailureResult()
+    {
+        // Arrange
+        var tryAsyncResult = TestHelper.CreateTryAsyncFuncWithFailure<int>(TestHelper.DefaultResultError);
+        var action = Substitute.For<Action<int>>();
+
+        // Act
+        var result = await tryAsyncResult.TapAsync(action);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        action.DidNotReceiveWithAnyArgs().Invoke(default);
+    }
+
+    [Fact]
+    public void Given_NullAction_When_TryAsyncTapAsyncWithAction_Then_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var tryAsyncResult = TestHelper.CreateTryAsyncFuncWithSuccess(42);
+
+        // Act
+        Func<Task> act = () => tryAsyncResult.TapAsync((Action<int>)null);
+
+        // Assert
+        act.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    #endregion
+
     #region TryAsync Tap Tests
 
     [Fact]
