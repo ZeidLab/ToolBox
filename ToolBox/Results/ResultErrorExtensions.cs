@@ -5,14 +5,15 @@ using ZeidLab.ToolBox.Options;
 namespace ZeidLab.ToolBox.Results;
 
 /// <summary>
-/// an extension class for <see cref="ResultError"/>
+/// Extension methods for <see cref="ResultError"/> to provide additional functionality
+/// and fluent API operations.
 /// </summary>
 public static class ResultErrorExtensions
 {
     /// <summary>
     /// Tries to get the exception associated with this error.
     /// </summary>
-    /// <param name="self"></param>
+    /// <param name="self">The error instance.</param>
     /// <param name="exception">The exception associated with this error, or <c>null</c> if there is no exception.</param>
     /// <returns>
     /// <see langword="true"/> if there is an exception associated with this error;
@@ -34,8 +35,7 @@ public static class ResultErrorExtensions
     /// </returns>
     public static Maybe<Exception> TryGetException(this ResultError self)
     {
-        return self.Exception is {} exception ? exception.ToSome(): Maybe.None<Exception>();
-
+        return self.Exception is {} exception ? exception.ToSome() : Maybe.None<Exception>();
     }
 
     /// <summary>
@@ -44,7 +44,7 @@ public static class ResultErrorExtensions
     /// <param name="self">The original error instance.</param>
     /// <param name="code">The new error code. It must be greater than 0.</param>
     /// <returns>A new <see cref="ResultError"/> instance with the updated code.</returns>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="code"/> is negative.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="code"/> is negative or zero.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ResultError WithCode(this ResultError self, int code)
     {
@@ -53,12 +53,22 @@ public static class ResultErrorExtensions
     }
 
     /// <summary>
+    /// Creates a new <see cref="ResultError"/> instance with the specified error code.
+    /// </summary>
+    /// <param name="self">The original error instance.</param>
+    /// <param name="code">The new error code from the <see cref="ResultErrorCode"/> enum.</param>
+    /// <returns>A new <see cref="ResultError"/> instance with the updated code.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ResultError WithCode(this ResultError self, ResultErrorCode code)
+    {
+        return new ResultError((int)code, self.Name, self.Message, self.Exception);
+    }
+
+    /// <summary>
     /// Creates a new <see cref="ResultError"/> instance with the specified error message.
     /// </summary>
     /// <param name="self">The original error instance.</param>
-    /// <param name="message">The new error message.
-    /// It must be non-empty and non-null.
-    /// </param>
+    /// <param name="message">The new error message. It must be non-empty and non-null.</param>
     /// <returns>A new <see cref="ResultError"/> instance with the updated message.</returns>
     /// <exception cref="ArgumentException"><paramref name="message"/> is null or empty.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -72,10 +82,7 @@ public static class ResultErrorExtensions
     /// Creates a new <see cref="ResultError"/> instance with the specified error name.
     /// </summary>
     /// <param name="self">The original error instance.</param>
-    /// <param name="name">The new error name.
-    /// It is a meaningful name instead of numbers and more readable.
-    /// It must be non-empty and non-null.
-    /// </param>
+    /// <param name="name">The new error name. It must be non-empty and non-null.</param>
     /// <returns>A new <see cref="ResultError"/> instance with the updated name.</returns>
     /// <exception cref="ArgumentException"><paramref name="name"/> is null or empty.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -89,9 +96,7 @@ public static class ResultErrorExtensions
     /// Creates a new <see cref="ResultError"/> instance with the specified exception.
     /// </summary>
     /// <param name="self">The original error instance.</param>
-    /// <param name="exception">The exception to associate with the new error instance.
-    /// It must be non-null.
-    /// </param>
+    /// <param name="exception">The exception to associate with the new error instance. It must be non-null.</param>
     /// <returns>A new <see cref="ResultError"/> instance with the updated exception.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="exception"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -99,5 +104,50 @@ public static class ResultErrorExtensions
     {
         Guards.ThrowIfNull(exception, nameof(exception));
         return new ResultError(self.Code, self.Name, self.Message, exception);
+    }
+
+    /// <summary>
+    /// Determines if the error is of a specific error code.
+    /// </summary>
+    /// <param name="self">The error instance.</param>
+    /// <param name="code">The error code to check against.</param>
+    /// <returns>True if the error's code matches the specified code; otherwise, false.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsErrorCode(this ResultError self, ResultErrorCode code)
+    {
+        return self.Code == (int)code;
+    }
+
+    /// <summary>
+    /// Determines if the error represents a validation error.
+    /// </summary>
+    /// <param name="self">The error instance.</param>
+    /// <returns>True if the error is a validation error; otherwise, false.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsValidationError(this ResultError self)
+    {
+        return self.IsErrorCode(ResultErrorCode.Validation);
+    }
+
+    /// <summary>
+    /// Determines if the error represents a not found error.
+    /// </summary>
+    /// <param name="self">The error instance.</param>
+    /// <returns>True if the error is a not found error; otherwise, false.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNotFoundError(this ResultError self)
+    {
+        return self.IsErrorCode(ResultErrorCode.NotFound);
+    }
+
+    /// <summary>
+    /// Determines if the error represents an internal error.
+    /// </summary>
+    /// <param name="self">The error instance.</param>
+    /// <returns>True if the error is an internal error; otherwise, false.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsInternalError(this ResultError self)
+    {
+        return self.IsErrorCode(ResultErrorCode.Internal);
     }
 }
