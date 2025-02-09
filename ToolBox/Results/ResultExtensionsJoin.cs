@@ -26,9 +26,9 @@ public static class ResultExtensionsJoin
         Func<TIn1, TIn2, Result<TOut>> func)
     {
         if (result1.IsFailure)
-            return Result<TOut>.Failure(result1.Error);
+            return Result.Failure<TOut>(result1.Error);
         if (result2.IsFailure)
-            return Result<TOut>.Failure(result2.Error);
+            return Result.Failure<TOut>(result2.Error);
 
         return func(result1.Value, result2.Value);
     }
@@ -49,11 +49,11 @@ public static class ResultExtensionsJoin
         Result<TIn3> result3, Func<TIn1, TIn2, TIn3, Result<TOut>> func)
     {
         if (result1.IsFailure)
-            return Result<TOut>.Failure(result1.Error);
+            return Result.Failure<TOut>(result1.Error);
         if (result2.IsFailure)
-            return Result<TOut>.Failure(result2.Error);
+            return Result.Failure<TOut>(result2.Error);
         if (result3.IsFailure)
-            return Result<TOut>.Failure(result3.Error);
+            return Result.Failure<TOut>(result3.Error);
 
         return func(result1.Value, result2.Value, result3.Value);
     }
@@ -76,13 +76,13 @@ public static class ResultExtensionsJoin
         Result<TIn3> result3, Result<TIn4> result4, Func<TIn1, TIn2, TIn3, TIn4, Result<TOut>> func)
     {
         if (result1.IsFailure)
-            return Result<TOut>.Failure(result1.Error);
+            return Result.Failure<TOut>(result1.Error);
         if (result2.IsFailure)
-            return Result<TOut>.Failure(result2.Error);
+            return Result.Failure<TOut>(result2.Error);
         if (result3.IsFailure)
-            return Result<TOut>.Failure(result3.Error);
+            return Result.Failure<TOut>(result3.Error);
         if (result4.IsFailure)
-            return Result<TOut>.Failure(result4.Error);
+            return Result.Failure<TOut>(result4.Error);
 
         return func(result1.Value, result2.Value, result3.Value, result4.Value);
     }
@@ -108,15 +108,15 @@ public static class ResultExtensionsJoin
         Func<TIn1, TIn2, TIn3, TIn4, TIn5, Result<TOut>> func)
     {
         if (result1.IsFailure)
-            return Result<TOut>.Failure(result1.Error);
+            return Result.Failure<TOut>(result1.Error);
         if (result2.IsFailure)
-            return Result<TOut>.Failure(result2.Error);
+            return Result.Failure<TOut>(result2.Error);
         if (result3.IsFailure)
-            return Result<TOut>.Failure(result3.Error);
+            return Result.Failure<TOut>(result3.Error);
         if (result4.IsFailure)
-            return Result<TOut>.Failure(result4.Error);
+            return Result.Failure<TOut>(result4.Error);
         if (result5.IsFailure)
-            return Result<TOut>.Failure(result5.Error);
+            return Result.Failure<TOut>(result5.Error);
 
         return func(result1.Value, result2.Value, result3.Value, result4.Value, result5.Value);
     }
@@ -144,17 +144,17 @@ public static class ResultExtensionsJoin
         Func<TIn1, TIn2, TIn3, TIn4, TIn5, TIn6, Result<TOut>> func)
     {
         if (result1.IsFailure)
-            return Result<TOut>.Failure(result1.Error);
+            return Result.Failure<TOut>(result1.Error);
         if (result2.IsFailure)
-            return Result<TOut>.Failure(result2.Error);
+            return Result.Failure<TOut>(result2.Error);
         if (result3.IsFailure)
-            return Result<TOut>.Failure(result3.Error);
+            return Result.Failure<TOut>(result3.Error);
         if (result4.IsFailure)
-            return Result<TOut>.Failure(result4.Error);
+            return Result.Failure<TOut>(result4.Error);
         if (result5.IsFailure)
-            return Result<TOut>.Failure(result5.Error);
+            return Result.Failure<TOut>(result5.Error);
         if (result6.IsFailure)
-            return Result<TOut>.Failure(result6.Error);
+            return Result.Failure<TOut>(result6.Error);
 
         return func(result1.Value, result2.Value, result3.Value, result4.Value, result5.Value, result6.Value);
     }
@@ -184,19 +184,19 @@ public static class ResultExtensionsJoin
         Result<TIn7> result7, Func<TIn1, TIn2, TIn3, TIn4, TIn5, TIn6, TIn7, Result<TOut>> func)
     {
         if (result1.IsFailure)
-            return Result<TOut>.Failure(result1.Error);
+            return Result.Failure<TOut>(result1.Error);
         if (result2.IsFailure)
-            return Result<TOut>.Failure(result2.Error);
+            return Result.Failure<TOut>(result2.Error);
         if (result3.IsFailure)
-            return Result<TOut>.Failure(result3.Error);
+            return Result.Failure<TOut>(result3.Error);
         if (result4.IsFailure)
-            return Result<TOut>.Failure(result4.Error);
+            return Result.Failure<TOut>(result4.Error);
         if (result5.IsFailure)
-            return Result<TOut>.Failure(result5.Error);
+            return Result.Failure<TOut>(result5.Error);
         if (result6.IsFailure)
-            return Result<TOut>.Failure(result6.Error);
+            return Result.Failure<TOut>(result6.Error);
         if (result7.IsFailure)
-            return Result<TOut>.Failure(result7.Error);
+            return Result.Failure<TOut>(result7.Error);
 
         return func(result1.Value, result2.Value, result3.Value, result4.Value, result5.Value, result6.Value,
             result7.Value);
@@ -230,21 +230,21 @@ public static class ResultExtensionsJoin
         Func<TIn1, TIn2, TIn3, TIn4, TIn5, TIn6, TIn7, TIn8, Result<TOut>> func)
     {
         if (result1.IsFailure)
-            return Result<TOut>.Failure(result1.Error);
+            return Result.Failure<TOut>(result1.Error);
         if (result2.IsFailure)
-            return Result<TOut>.Failure(result2.Error);
+            return Result.Failure<TOut>(result2.Error);
         if (result3.IsFailure)
-            return Result<TOut>.Failure(result3.Error);
+            return Result.Failure<TOut>(result3.Error);
         if (result4.IsFailure)
-            return Result<TOut>.Failure(result4.Error);
+            return Result.Failure<TOut>(result4.Error);
         if (result5.IsFailure)
-            return Result<TOut>.Failure(result5.Error);
+            return Result.Failure<TOut>(result5.Error);
         if (result6.IsFailure)
-            return Result<TOut>.Failure(result6.Error);
+            return Result.Failure<TOut>(result6.Error);
         if (result7.IsFailure)
-            return Result<TOut>.Failure(result7.Error);
+            return Result.Failure<TOut>(result7.Error);
         if (result8.IsFailure)
-            return Result<TOut>.Failure(result8.Error);
+            return Result.Failure<TOut>(result8.Error);
 
         return func(result1.Value, result2.Value, result3.Value, result4.Value, result5.Value, result6.Value,
             result7.Value, result8.Value);
@@ -280,23 +280,23 @@ public static class ResultExtensionsJoin
         Func<TIn1, TIn2, TIn3, TIn4, TIn5, TIn6, TIn7, TIn8, TIn9, Result<TOut>> func)
     {
         if (result1.IsFailure)
-            return Result<TOut>.Failure(result1.Error);
+            return Result.Failure<TOut>(result1.Error);
         if (result2.IsFailure)
-            return Result<TOut>.Failure(result2.Error);
+            return Result.Failure<TOut>(result2.Error);
         if (result3.IsFailure)
-            return Result<TOut>.Failure(result3.Error);
+            return Result.Failure<TOut>(result3.Error);
         if (result4.IsFailure)
-            return Result<TOut>.Failure(result4.Error);
+            return Result.Failure<TOut>(result4.Error);
         if (result5.IsFailure)
-            return Result<TOut>.Failure(result5.Error);
+            return Result.Failure<TOut>(result5.Error);
         if (result6.IsFailure)
-            return Result<TOut>.Failure(result6.Error);
+            return Result.Failure<TOut>(result6.Error);
         if (result7.IsFailure)
-            return Result<TOut>.Failure(result7.Error);
+            return Result.Failure<TOut>(result7.Error);
         if (result8.IsFailure)
-            return Result<TOut>.Failure(result8.Error);
+            return Result.Failure<TOut>(result8.Error);
         if (result9.IsFailure)
-            return Result<TOut>.Failure(result9.Error);
+            return Result.Failure<TOut>(result9.Error);
 
         return func(result1.Value, result2.Value, result3.Value, result4.Value, result5.Value, result6.Value,
             result7.Value, result8.Value, result9.Value);
@@ -334,25 +334,25 @@ public static class ResultExtensionsJoin
         Result<TIn10> result10, Func<TIn1, TIn2, TIn3, TIn4, TIn5, TIn6, TIn7, TIn8, TIn9, TIn10, Result<TOut>> func)
     {
         if (result1.IsFailure)
-            return Result<TOut>.Failure(result1.Error);
+            return Result.Failure<TOut>(result1.Error);
         if (result2.IsFailure)
-            return Result<TOut>.Failure(result2.Error);
+            return Result.Failure<TOut>(result2.Error);
         if (result3.IsFailure)
-            return Result<TOut>.Failure(result3.Error);
+            return Result.Failure<TOut>(result3.Error);
         if (result4.IsFailure)
-            return Result<TOut>.Failure(result4.Error);
+            return Result.Failure<TOut>(result4.Error);
         if (result5.IsFailure)
-            return Result<TOut>.Failure(result5.Error);
+            return Result.Failure<TOut>(result5.Error);
         if (result6.IsFailure)
-            return Result<TOut>.Failure(result6.Error);
+            return Result.Failure<TOut>(result6.Error);
         if (result7.IsFailure)
-            return Result<TOut>.Failure(result7.Error);
+            return Result.Failure<TOut>(result7.Error);
         if (result8.IsFailure)
-            return Result<TOut>.Failure(result8.Error);
+            return Result.Failure<TOut>(result8.Error);
         if (result9.IsFailure)
-            return Result<TOut>.Failure(result9.Error);
+            return Result.Failure<TOut>(result9.Error);
         if (result10.IsFailure)
-            return Result<TOut>.Failure(result10.Error);
+            return Result.Failure<TOut>(result10.Error);
 
         return func(result1.Value, result2.Value, result3.Value, result4.Value, result5.Value, result6.Value,
             result7.Value, result8.Value, result9.Value, result10.Value);
@@ -378,9 +378,9 @@ public static class ResultExtensionsJoin
     {
         await Task.WhenAll(result1, result2).ConfigureAwait(false);
         if (result1.Result.IsFailure)
-            return Result<TOut>.Failure(result1.Result.Error);
+            return Result.Failure<TOut>(result1.Result.Error);
         if (result2.Result.IsFailure)
-            return Result<TOut>.Failure(result2.Result.Error);
+            return Result.Failure<TOut>(result2.Result.Error);
 
         return func(result1.Result.Value, result2.Result.Value);
     }
@@ -403,11 +403,11 @@ public static class ResultExtensionsJoin
     {
         await Task.WhenAll(result1, result2, result3).ConfigureAwait(false);
         if (result1.Result.IsFailure)
-            return Result<TOut>.Failure(result1.Result.Error);
+            return Result.Failure<TOut>(result1.Result.Error);
         if (result2.Result.IsFailure)
-            return Result<TOut>.Failure(result2.Result.Error);
+            return Result.Failure<TOut>(result2.Result.Error);
         if (result3.Result.IsFailure)
-            return Result<TOut>.Failure(result3.Result.Error);
+            return Result.Failure<TOut>(result3.Result.Error);
 
         return func(result1.Result.Value, result2.Result.Value, result3.Result.Value);
     }
@@ -433,13 +433,13 @@ public static class ResultExtensionsJoin
     {
         await Task.WhenAll(result1, result2, result3, result4).ConfigureAwait(false);
         if (result1.Result.IsFailure)
-            return Result<TOut>.Failure(result1.Result.Error);
+            return Result.Failure<TOut>(result1.Result.Error);
         if (result2.Result.IsFailure)
-            return Result<TOut>.Failure(result2.Result.Error);
+            return Result.Failure<TOut>(result2.Result.Error);
         if (result3.Result.IsFailure)
-            return Result<TOut>.Failure(result3.Result.Error);
+            return Result.Failure<TOut>(result3.Result.Error);
         if (result4.Result.IsFailure)
-            return Result<TOut>.Failure(result4.Result.Error);
+            return Result.Failure<TOut>(result4.Result.Error);
 
         return func(result1.Result.Value, result2.Result.Value, result3.Result.Value, result4.Result.Value);
     }
@@ -467,15 +467,15 @@ public static class ResultExtensionsJoin
     {
         await Task.WhenAll(result1, result2, result3, result4, result5).ConfigureAwait(false);
         if (result1.Result.IsFailure)
-            return Result<TOut>.Failure(result1.Result.Error);
+            return Result.Failure<TOut>(result1.Result.Error);
         if (result2.Result.IsFailure)
-            return Result<TOut>.Failure(result2.Result.Error);
+            return Result.Failure<TOut>(result2.Result.Error);
         if (result3.Result.IsFailure)
-            return Result<TOut>.Failure(result3.Result.Error);
+            return Result.Failure<TOut>(result3.Result.Error);
         if (result4.Result.IsFailure)
-            return Result<TOut>.Failure(result4.Result.Error);
+            return Result.Failure<TOut>(result4.Result.Error);
         if (result5.Result.IsFailure)
-            return Result<TOut>.Failure(result5.Result.Error);
+            return Result.Failure<TOut>(result5.Result.Error);
 
         return func(result1.Result.Value, result2.Result.Value, result3.Result.Value, result4.Result.Value,
             result5.Result.Value);
@@ -506,17 +506,17 @@ public static class ResultExtensionsJoin
     {
         await Task.WhenAll(result1, result2, result3, result4, result5, result6).ConfigureAwait(false);
         if (result1.Result.IsFailure)
-            return Result<TOut>.Failure(result1.Result.Error);
+            return Result.Failure<TOut>(result1.Result.Error);
         if (result2.Result.IsFailure)
-            return Result<TOut>.Failure(result2.Result.Error);
+            return Result.Failure<TOut>(result2.Result.Error);
         if (result3.Result.IsFailure)
-            return Result<TOut>.Failure(result3.Result.Error);
+            return Result.Failure<TOut>(result3.Result.Error);
         if (result4.Result.IsFailure)
-            return Result<TOut>.Failure(result4.Result.Error);
+            return Result.Failure<TOut>(result4.Result.Error);
         if (result5.Result.IsFailure)
-            return Result<TOut>.Failure(result5.Result.Error);
+            return Result.Failure<TOut>(result5.Result.Error);
         if (result6.Result.IsFailure)
-            return Result<TOut>.Failure(result6.Result.Error);
+            return Result.Failure<TOut>(result6.Result.Error);
 
         return func(result1.Result.Value, result2.Result.Value, result3.Result.Value, result4.Result.Value,
             result5.Result.Value, result6.Result.Value);
@@ -552,19 +552,19 @@ public static class ResultExtensionsJoin
     {
         await Task.WhenAll(result1, result2, result3, result4, result5, result6, result7).ConfigureAwait(false);
         if (result1.Result.IsFailure)
-            return Result<TOut>.Failure(result1.Result.Error);
+            return Result.Failure<TOut>(result1.Result.Error);
         if (result2.Result.IsFailure)
-            return Result<TOut>.Failure(result2.Result.Error);
+            return Result.Failure<TOut>(result2.Result.Error);
         if (result3.Result.IsFailure)
-            return Result<TOut>.Failure(result3.Result.Error);
+            return Result.Failure<TOut>(result3.Result.Error);
         if (result4.Result.IsFailure)
-            return Result<TOut>.Failure(result4.Result.Error);
+            return Result.Failure<TOut>(result4.Result.Error);
         if (result5.Result.IsFailure)
-            return Result<TOut>.Failure(result5.Result.Error);
+            return Result.Failure<TOut>(result5.Result.Error);
         if (result6.Result.IsFailure)
-            return Result<TOut>.Failure(result6.Result.Error);
+            return Result.Failure<TOut>(result6.Result.Error);
         if (result7.Result.IsFailure)
-            return Result<TOut>.Failure(result7.Result.Error);
+            return Result.Failure<TOut>(result7.Result.Error);
 
         return func(result1.Result.Value, result2.Result.Value, result3.Result.Value, result4.Result.Value,
             result5.Result.Value, result6.Result.Value, result7.Result.Value);
@@ -603,21 +603,21 @@ public static class ResultExtensionsJoin
         await Task.WhenAll(result1, result2, result3, result4, result5, result6, result7, result8)
             .ConfigureAwait(false);
         if (result1.Result.IsFailure)
-            return Result<TOut>.Failure(result1.Result.Error);
+            return Result.Failure<TOut>(result1.Result.Error);
         if (result2.Result.IsFailure)
-            return Result<TOut>.Failure(result2.Result.Error);
+            return Result.Failure<TOut>(result2.Result.Error);
         if (result3.Result.IsFailure)
-            return Result<TOut>.Failure(result3.Result.Error);
+            return Result.Failure<TOut>(result3.Result.Error);
         if (result4.Result.IsFailure)
-            return Result<TOut>.Failure(result4.Result.Error);
+            return Result.Failure<TOut>(result4.Result.Error);
         if (result5.Result.IsFailure)
-            return Result<TOut>.Failure(result5.Result.Error);
+            return Result.Failure<TOut>(result5.Result.Error);
         if (result6.Result.IsFailure)
-            return Result<TOut>.Failure(result6.Result.Error);
+            return Result.Failure<TOut>(result6.Result.Error);
         if (result7.Result.IsFailure)
-            return Result<TOut>.Failure(result7.Result.Error);
+            return Result.Failure<TOut>(result7.Result.Error);
         if (result8.Result.IsFailure)
-            return Result<TOut>.Failure(result8.Result.Error);
+            return Result.Failure<TOut>(result8.Result.Error);
 
         return func(result1.Result.Value, result2.Result.Value, result3.Result.Value, result4.Result.Value,
             result5.Result.Value, result6.Result.Value, result7.Result.Value, result8.Result.Value);
@@ -659,23 +659,23 @@ public static class ResultExtensionsJoin
         await Task.WhenAll(result1, result2, result3, result4, result5, result6, result7, result8, result9)
             .ConfigureAwait(false);
         if (result1.Result.IsFailure)
-            return Result<TOut>.Failure(result1.Result.Error);
+            return Result.Failure<TOut>(result1.Result.Error);
         if (result2.Result.IsFailure)
-            return Result<TOut>.Failure(result2.Result.Error);
+            return Result.Failure<TOut>(result2.Result.Error);
         if (result3.Result.IsFailure)
-            return Result<TOut>.Failure(result3.Result.Error);
+            return Result.Failure<TOut>(result3.Result.Error);
         if (result4.Result.IsFailure)
-            return Result<TOut>.Failure(result4.Result.Error);
+            return Result.Failure<TOut>(result4.Result.Error);
         if (result5.Result.IsFailure)
-            return Result<TOut>.Failure(result5.Result.Error);
+            return Result.Failure<TOut>(result5.Result.Error);
         if (result6.Result.IsFailure)
-            return Result<TOut>.Failure(result6.Result.Error);
+            return Result.Failure<TOut>(result6.Result.Error);
         if (result7.Result.IsFailure)
-            return Result<TOut>.Failure(result7.Result.Error);
+            return Result.Failure<TOut>(result7.Result.Error);
         if (result8.Result.IsFailure)
-            return Result<TOut>.Failure(result8.Result.Error);
+            return Result.Failure<TOut>(result8.Result.Error);
         if (result9.Result.IsFailure)
-            return Result<TOut>.Failure(result9.Result.Error);
+            return Result.Failure<TOut>(result9.Result.Error);
 
         return func(result1.Result.Value, result2.Result.Value, result3.Result.Value, result4.Result.Value,
             result5.Result.Value, result6.Result.Value, result7.Result.Value, result8.Result.Value,
@@ -722,25 +722,25 @@ public static class ResultExtensionsJoin
             .ConfigureAwait(false);
 
         if (result1.Result.IsFailure)
-            return Result<TOut>.Failure(result1.Result.Error);
+            return Result.Failure<TOut>(result1.Result.Error);
         if (result2.Result.IsFailure)
-            return Result<TOut>.Failure(result2.Result.Error);
+            return Result.Failure<TOut>(result2.Result.Error);
         if (result3.Result.IsFailure)
-            return Result<TOut>.Failure(result3.Result.Error);
+            return Result.Failure<TOut>(result3.Result.Error);
         if (result4.Result.IsFailure)
-            return Result<TOut>.Failure(result4.Result.Error);
+            return Result.Failure<TOut>(result4.Result.Error);
         if (result5.Result.IsFailure)
-            return Result<TOut>.Failure(result5.Result.Error);
+            return Result.Failure<TOut>(result5.Result.Error);
         if (result6.Result.IsFailure)
-            return Result<TOut>.Failure(result6.Result.Error);
+            return Result.Failure<TOut>(result6.Result.Error);
         if (result7.Result.IsFailure)
-            return Result<TOut>.Failure(result7.Result.Error);
+            return Result.Failure<TOut>(result7.Result.Error);
         if (result8.Result.IsFailure)
-            return Result<TOut>.Failure(result8.Result.Error);
+            return Result.Failure<TOut>(result8.Result.Error);
         if (result9.Result.IsFailure)
-            return Result<TOut>.Failure(result9.Result.Error);
+            return Result.Failure<TOut>(result9.Result.Error);
         if (result10.Result.IsFailure)
-            return Result<TOut>.Failure(result10.Result.Error);
+            return Result.Failure<TOut>(result10.Result.Error);
 
         return func(result1.Result.Value, result2.Result.Value, result3.Result.Value, result4.Result.Value,
             result5.Result.Value, result6.Result.Value, result7.Result.Value, result8.Result.Value,

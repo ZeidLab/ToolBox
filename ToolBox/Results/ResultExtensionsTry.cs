@@ -70,7 +70,7 @@ public static class ResultExtensionsTry
         }
         catch (Exception ex)
         {
-            return Result<TIn>.Failure(ex);
+            return Result.Failure<TIn>(ex);
         }
     }
 
@@ -92,7 +92,7 @@ public static class ResultExtensionsTry
         }
         catch (Exception ex)
         {
-            return Result<TIn>.Failure(ex);
+            return Result.Failure<TIn>(ex);
         }
     }
 }

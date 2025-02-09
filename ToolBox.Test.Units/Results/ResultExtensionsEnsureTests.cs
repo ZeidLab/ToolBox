@@ -10,7 +10,7 @@ public class ResultExtensionsEnsureTests
     {
         // Arrange
         var error = ResultError.New("Test error");
-        var result = Result<int>.Failure(error);
+        var result = Result.Failure<int>(error);
         Func<int, bool> predicate = x => x > 0;
 
         // Act
@@ -25,7 +25,7 @@ public class ResultExtensionsEnsureTests
     public void Ensure_WhenResultIsSuccessAndPredicateIsTrue_ShouldReturnOriginalResult()
     {
         // Arrange
-        var result = Result<int>.Success(42);
+        var result = Result.Success(42);
         Func<int, bool> predicate = x => x > 0;
 
         // Act
@@ -40,7 +40,7 @@ public class ResultExtensionsEnsureTests
     public void Ensure_WhenResultIsSuccessAndPredicateIsFalse_ShouldReturnFailedResultWithProvidedError()
     {
         // Arrange
-        var result = Result<int>.Success(42);
+        var result = Result.Success(42);
         var error = ResultError.New("Predicate failed");
         Func<int, bool> predicate = x => x < 0;
 
@@ -57,7 +57,7 @@ public class ResultExtensionsEnsureTests
     {
         // Arrange
         var error = ResultError.New("Test error");
-        var result = Task.FromResult(Result<int>.Failure(error));
+        var result = Task.FromResult(Result.Failure<int>(error));
         Func<int, bool> predicate = x => x > 0;
 
         // Act
@@ -72,7 +72,7 @@ public class ResultExtensionsEnsureTests
     public async Task EnsureAsync_WhenResultIsSuccessAndPredicateIsTrue_ShouldReturnOriginalResult()
     {
         // Arrange
-        var result = Task.FromResult(Result<int>.Success(42));
+        var result = Task.FromResult(Result.Success(42));
         Func<int, bool> predicate = x => x > 0;
 
         // Act
@@ -87,7 +87,7 @@ public class ResultExtensionsEnsureTests
     public async Task EnsureAsync_WhenResultIsSuccessAndPredicateIsFalse_ShouldReturnFailedResultWithProvidedError()
     {
         // Arrange
-        var result = Task.FromResult(Result<int>.Success(42));
+        var result = Task.FromResult(Result.Success(42));
         var error = ResultError.New("Predicate failed");
         Func<int, bool> predicate = x => x < 0;
 
@@ -104,7 +104,7 @@ public class ResultExtensionsEnsureTests
     {
         // Arrange
         var error = ResultError.New("Test error");
-        var result = Task.FromResult(Result<int>.Failure(error));
+        var result = Task.FromResult(Result.Failure<int>(error));
         Func<int, Task<bool>> predicate = x => Task.FromResult(x > 0);
 
         // Act
@@ -119,7 +119,7 @@ public class ResultExtensionsEnsureTests
     public async Task EnsureAsync_WithAsyncPredicate_WhenResultIsSuccessAndPredicateIsTrue_ShouldReturnOriginalResult()
     {
         // Arrange
-        var result = Task.FromResult(Result<int>.Success(42));
+        var result = Task.FromResult(Result.Success(42));
         Func<int, Task<bool>> predicate = x => Task.FromResult(x > 0);
 
         // Act
@@ -135,7 +135,7 @@ public class ResultExtensionsEnsureTests
         EnsureAsync_WithAsyncPredicate_WhenResultIsSuccessAndPredicateIsFalse_ShouldReturnFailedResultWithProvidedError()
     {
         // Arrange
-        var result = Task.FromResult(Result<int>.Success(42));
+        var result = Task.FromResult(Result.Success(42));
         var error = ResultError.New("Predicate failed");
         Func<int, Task<bool>> predicate = x => Task.FromResult(x < 0);
 

@@ -17,13 +17,13 @@ public static class ResultExtensions
     /// <typeparam name="TIn">The type of the value to be wrapped in the Result.</typeparam>
     /// <param name="self">The value to convert into a successful Result.</param>
     /// <returns>
-    /// A new instance of <see cref="Result{TIn}"/> in a success state containing 
+    /// A new instance of <see cref="Result{TIn}"/> in a success state containing
     /// the provided value of type <typeparamref name="TIn"/>.
     /// </returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<TIn> ToSuccess<TIn>(this TIn self)
-        => Result<TIn>.Success(self);
+        => Result.Success(self);
 
     /// <summary>
     /// Creates a failed <see cref="Result{TIn}"/> instance containing the provided error.
@@ -31,13 +31,13 @@ public static class ResultExtensions
     /// <typeparam name="TIn">The type that would have been contained in a successful result.</typeparam>
     /// <param name="self">The error to be wrapped in the failed Result.</param>
     /// <returns>
-    /// A new instance of <see cref="Result{TIn}"/> in a failure state containing 
+    /// A new instance of <see cref="Result{TIn}"/> in a failure state containing
     /// the provided <see cref="ResultError"/>.
     /// </returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<TIn> ToFailure<TIn>(this ResultError self)
-        => Result<TIn>.Failure(self);
+        => Result.Failure<TIn>(self);
 
     /// <summary>
     /// Creates a failed <see cref="Result{TIn}"/> instance from the provided exception.
@@ -45,13 +45,13 @@ public static class ResultExtensions
     /// <typeparam name="TIn">The type that would have been contained in a successful result.</typeparam>
     /// <param name="self">The exception to be converted into a ResultError and wrapped in the failed Result.</param>
     /// <returns>
-    /// A new instance of <see cref="Result{TIn}"/> in a failure state containing 
+    /// A new instance of <see cref="Result{TIn}"/> in a failure state containing
     /// a <see cref="ResultError"/> created from the provided <see cref="Exception"/>.
     /// </returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<TIn> ToFailure<TIn>(this Exception self)
-        => Result<TIn>.Failure(ResultError.New(self));
+        => Result.Failure<TIn>(ResultError.New(self));
 
     /// <summary>
     /// Converts a <see cref="Result{TIn}"/> to a <see cref="Maybe{TIn}"/> instance.
@@ -147,8 +147,8 @@ public static class ResultExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<Unit> ToUnitResult<TIn>(this Result<TIn> self)
         => self.IsSuccess
-            ? Result<Unit>.Success(Unit.Default)
-            : Result<Unit>.Failure(self.Error);
+            ? Result.Success(Unit.Default)
+            : Result.Failure<Unit>(self.Error);
 
     /// <summary>
     /// Asynchronously converts a <see cref="Result{TIn}"/> to a <see cref="Result{Unit}"/> instance.
@@ -170,7 +170,7 @@ public static class ResultExtensions
         var result = await self.ConfigureAwait(false);
 #pragma warning restore CA1062
         return result.IsSuccess
-            ? Result<Unit>.Success(Unit.Default)
-            : Result<Unit>.Failure(result.Error);
+            ? Result.Success(Unit.Default)
+            : Result.Failure<Unit>(result.Error);
     }
 }

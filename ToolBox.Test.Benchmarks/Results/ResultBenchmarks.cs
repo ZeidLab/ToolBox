@@ -24,7 +24,7 @@ public class ResultBenchmarks
     public List<ToolBox.Results.Result<int>> ToolBoxResultSuccessWithAlloc()
     {
         return _testParams
-            .Select( x => ZeidLab.ToolBox.Results.Result<int>.Success(x))
+            .Select( x => ZeidLab.ToolBox.Results.Result.Success(x))
             .ToList();
     }
 
@@ -33,7 +33,7 @@ public class ResultBenchmarks
     {
         foreach (var t in _testParams)
         {
-            _ = ZeidLab.ToolBox.Results.Result<int>.Success(t);
+            _ = ZeidLab.ToolBox.Results.Result.Success(t);
         }
     }
 

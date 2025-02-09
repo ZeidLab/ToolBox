@@ -207,10 +207,10 @@ namespace ZeidLab.ToolBox.Test.Units.Results
         private Try<T> CreateFailedTry<T>() => () => throw new Exception("Test exception");
 
         // Helper function to create a successful Result<TIn>
-        private Result<T> CreateSuccessfulResult<T>(T value) => Result<T>.Success(value);
+        private Result<T> CreateSuccessfulResult<T>(T value) => Result.Success(value);
 
         // Helper function to create a failed Result<TIn>
-        private Result<T> CreateFailedResult<T>() => Result<T>.Failure(new Exception("Test exception"));
+        private Result<T> CreateFailedResult<T>() => Result.Failure<T>(new Exception("Test exception"));
 
         // Helper function to create a successful TryAsync<TIn>
         private TryAsync<T> CreateSuccessfulTryAsync<T>(T value) => async () => value;

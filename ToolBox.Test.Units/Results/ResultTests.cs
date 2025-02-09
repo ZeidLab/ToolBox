@@ -12,12 +12,12 @@ public class ResultTests
         var value = "success";
 
         // Act
-        var result = Result<string>.Success(value);
+        var result = Result.Success(value);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(value);
-        
+
     }
 
     [Fact]
@@ -27,7 +27,7 @@ public class ResultTests
         string value = null!;
 
         // Act
-        Action act = () => Result<string>.Success(value);
+        Action act = () => Result.Success(value);
 
         // Assert
         act.Should().Throw<ArgumentNullException>();
@@ -40,7 +40,7 @@ public class ResultTests
         var error = ResultError.New("failure");
 
         // Act
-        var result = Result<string>.Failure(error);
+        var result = Result.Failure<string>(error);
 
         // Assert
         result.IsSuccess.Should().BeFalse();
@@ -60,7 +60,7 @@ public class ResultTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(value);
-        
+
     }
 
     [Fact]
@@ -98,7 +98,7 @@ public class ResultTests
     public void IsDefault_ShouldReturnTrue_WhenValueIsDefault()
     {
         // Arrange
-        var result = Result<int>.Success(0);
+        var result = Result.Success(0);
 
         // Act & Assert
         result.IsDefault.Should().BeTrue();
@@ -108,7 +108,7 @@ public class ResultTests
     public void IsDefault_ShouldReturnFalse_WhenValueIsNotDefault()
     {
         // Arrange
-        var result = Result<int>.Success(42);
+        var result = Result.Success(42);
 
         // Act & Assert
         result.IsDefault.Should().BeFalse();
@@ -118,7 +118,7 @@ public class ResultTests
     public void TryDelegate_ShouldReturnSuccessResult_WhenDelegateDoesNotThrow()
     {
         // Arrange
-        var tryDelegate = new Try<string>(() => Result<string>.Success("success"));
+        var tryDelegate = new Try<string>(() => Result.Success("success"));
 
         // Act
         var result = tryDelegate();
@@ -126,14 +126,14 @@ public class ResultTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be("success");
-        
+
     }
-    
+
     [Fact]
     public async Task TryAsyncDelegate_ShouldReturnSuccessResult_WhenDelegateDoesNotThrow()
     {
         // Arrange
-        var tryAsyncDelegate = new TryAsync<string>(() => Task.FromResult(Result<string>.Success("success")));
+        var tryAsyncDelegate = new TryAsync<string>(() => Task.FromResult(Result.Success("success")));
 
         // Act
         var result = await tryAsyncDelegate();
@@ -141,8 +141,8 @@ public class ResultTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be("success");
-        
+
     }
 
-   
+
 }

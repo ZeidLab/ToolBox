@@ -7,8 +7,8 @@ namespace ZeidLab.ToolBox.Test.Units.Results
     public class ResultExtensionsTapTests
     {
         // Helper methods
-        private static Result<T> CreateSuccessResult<T>(T value) => Result<T>.Success(value);
-        private static Result<T> CreateFailureResult<T>(ResultError error) => Result<T>.Failure(error);
+        private static Result<T> CreateSuccessResult<T>(T value) => Result.Success(value);
+        private static Result<T> CreateFailureResult<T>(ResultError error) => Result.Failure<T>(error);
 
         // Tests for Tap (synchronous)
         [Fact]

@@ -6,8 +6,8 @@ namespace ZeidLab.ToolBox.Test.Units.Results;
 internal static class TestHelper
 {
     public static readonly ResultError DefaultResultError = ResultError.New("Error");
-    public static Result<T> CreateSuccessResult<T>(T value) => Result<T>.Success(value);
-    public static Result<T> CreateFailureResult<T>(ResultError resultError) => Result<T>.Failure(resultError);
+    public static Result<T> CreateSuccessResult<T>(T value) => Result.Success(value);
+    public static Result<T> CreateFailureResult<T>(ResultError resultError) => Result.Failure<T>(resultError);
 
     public static IEnumerable<Result<T>> CreateResults<T>(int count ,T value, int? failPosition = null )
         => failPosition is null ?

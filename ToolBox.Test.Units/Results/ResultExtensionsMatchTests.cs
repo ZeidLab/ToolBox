@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NSubstitute;
@@ -8,6 +9,7 @@ using ZeidLab.ToolBox.Test.Units.Results;
 
 namespace ZeidLab.ToolBox.Tests.Results
 {
+    [SuppressMessage("ReSharper", "ConvertToLocalFunction")]
     public class ResultExtensionsMatchTests
     {
         [Fact]
@@ -15,7 +17,7 @@ namespace ZeidLab.ToolBox.Tests.Results
         {
             // Arrange
             var successResult = TestHelper.CreateSuccessResult(42);
-            Func<int, Result<string>> successFunc = value => Result<string>.Success(value.ToString());
+            Func<int, Result<string>> successFunc = value => Result.Success(value.ToString());
             Func<ResultError, Result<string>> failureFunc = _ => throw new InvalidOperationException("Should not be called");
 
             // Act
@@ -32,7 +34,7 @@ namespace ZeidLab.ToolBox.Tests.Results
             // Arrange
             var failureResult = TestHelper.CreateFailureResult<int>(TestHelper.DefaultResultError);
             Func<int, Result<string>> successFunc = _ => throw new InvalidOperationException("Should not be called");
-            Func<ResultError, Result<string>> failureFunc = error => Result<string>.Failure(error);
+            Func<ResultError, Result<string>> failureFunc = error => Result.Failure<string>(error);
 
             // Act
             var result = failureResult.Match(successFunc, failureFunc);
@@ -77,7 +79,7 @@ namespace ZeidLab.ToolBox.Tests.Results
         {
             // Arrange
             var trySuccess = TestHelper.CreateTryFuncWithSuccess(42);
-            Func<int, Result<string>> successFunc = value => Result<string>.Success(value.ToString());
+            Func<int, Result<string>> successFunc = value => Result.Success(value.ToString());
             Func<ResultError, Result<string>> failureFunc = _ => throw new InvalidOperationException("Should not be called");
 
             // Act
@@ -94,7 +96,7 @@ namespace ZeidLab.ToolBox.Tests.Results
             // Arrange
             var tryFailure = TestHelper.CreateTryFuncWithFailure<int>(TestHelper.DefaultResultError);
             Func<int, Result<string>> successFunc = _ => throw new InvalidOperationException("Should not be called");
-            Func<ResultError, Result<string>> failureFunc = error => Result<string>.Failure(error);
+            Func<ResultError, Result<string>> failureFunc = error => Result.Failure<string>(error);
 
             // Act
             var result = tryFailure.Match(successFunc, failureFunc);

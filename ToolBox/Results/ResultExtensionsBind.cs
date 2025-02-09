@@ -21,7 +21,7 @@ public static class ResultExtensionsBind
     public static Result<TOut> Bind<TIn, TOut>(this Result<TIn> self, Func<TIn, Result<TOut>> func)
         => self.IsSuccess
             ? func(self.Value)
-            : Result<TOut>.Failure(self.Error);
+            : Result.Failure<TOut>(self.Error);
 
     /// <summary>
     /// Binds the value of a successful <see cref="Try{TIn}"/> to a new result by applying the specified function.
@@ -51,7 +51,7 @@ public static class ResultExtensionsBind
     public static Task<Result<TOut>> BindAsync<TIn, TOut>(this Result<TIn> self, Func<TIn, Task<Result<TOut>>> func)
         => self.IsSuccess
             ? func(self.Value)
-            : Result<TOut>.Failure(self.Error).AsTaskAsync();
+            : Result.Failure<TOut>(self.Error).AsTaskAsync();
 
     /// <summary>
     /// Binds the value of a successful result to a new result by applying the specified function.
@@ -71,7 +71,7 @@ public static class ResultExtensionsBind
         var result = await self.ConfigureAwait(false);
         return result.IsSuccess
             ? await func(result.Value).ConfigureAwait(false)
-            : Result<TOut>.Failure(result.Error);
+            : Result.Failure<TOut>(result.Error);
     }
 
     /// <summary>

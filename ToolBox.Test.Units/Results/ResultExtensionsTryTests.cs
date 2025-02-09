@@ -12,7 +12,7 @@ public class ResultExtensionsTryTests
     {
         // Arrange
         var expectedValue = 42;
-        var tryDelegate = new Try<int>(() => Result<int>.Success(expectedValue));
+        var tryDelegate = new Try<int>(() => Result.Success(expectedValue));
 
 
         // Act
@@ -29,7 +29,7 @@ public class ResultExtensionsTryTests
     {
         // Arrange
         var expectedValue = 42;
-        var tryDelegate = new Try<int>(() => Result<int>.Success(expectedValue));
+        var tryDelegate = new Try<int>(() => Result.Success(expectedValue));
 
         // Act
         var result = tryDelegate.Try();
@@ -63,7 +63,7 @@ public class ResultExtensionsTryTests
     {
         // Arrange
         var expectedValue = 42;
-        var tryAsyncDelegate = new TryAsync<int>(() => Task.FromResult(Result<int>.Success(expectedValue)));
+        var tryAsyncDelegate = new TryAsync<int>(() => Task.FromResult(Result.Success(expectedValue)));
 
         // Act
         var result = await tryAsyncDelegate.TryAsync();
