@@ -7,7 +7,7 @@ namespace ZeidLab.ToolBox.Test.Units.Options;
 public class MaybeExtensionsTests
 {
     [Fact]
-    public void ToSome_GivenNonNullValue_ReturnsSomeWithValue()
+    public void ToSome_WhenCalledWithNonNullValue_ShouldReturnSomeWithValue()
     {
         // Arrange
         int value = 42;
@@ -21,7 +21,18 @@ public class MaybeExtensionsTests
     }
 
     [Fact]
-    public void ToNone_GivenNonNullValue_ReturnsNone()
+    public void ToSome_WhenCalledWithNullValue_ShouldThrowArgumentNullException()
+    {
+        // Arrange
+        string? nullValue = null;
+
+        // Act & Assert
+        var act = () => nullValue!.ToSome();
+        act.Should().Throw<ArgumentNullException>();
+    }
+
+    [Fact]
+    public void ToNone_WhenCalledWithValue_ShouldReturnNone()
     {
         // Arrange
         int value = 42;
@@ -34,14 +45,14 @@ public class MaybeExtensionsTests
     }
 
     [Fact]
-    public void Bind_GivenSomeValue_ReturnsNewValue()
+    public void Bind_WhenMaybeIsSome_ShouldReturnMappedValue()
     {
         // Arrange
-        Maybe<int> maybe = Maybe<int>.Some(42);
+        var maybe = Maybe<int>.Some(42);
         Func<int, Maybe<string>> mapper = x => x.ToString().ToSome();
 
         // Act
-        Maybe<string> result = maybe.Bind(mapper);
+        var result = maybe.Bind(mapper);
 
         // Assert
         result.IsNull.Should().BeFalse();
@@ -49,71 +60,132 @@ public class MaybeExtensionsTests
     }
 
     [Fact]
-    public void Bind_GivenNone_ReturnsNone()
+    public void Bind_WhenMaybeIsNone_ShouldReturnNone()
     {
         // Arrange
-        Maybe<int> maybe = Maybe<int>.None();
+        var maybe = Maybe<int>.None();
         Func<int, Maybe<string>> mapper = x => x.ToString().ToSome();
 
-
         // Act
-        Maybe<string> result = maybe.Bind(mapper);
+        var result = maybe.Bind(mapper);
 
         // Assert
         result.IsNull.Should().BeTrue();
     }
 
     [Fact]
-    public void Reduce_GivenSomeValue_ReturnsValue()
+    public void Map_WhenMaybeIsSome_ShouldApplySomeFunction()
     {
         // Arrange
-        Maybe<int> maybe = Maybe<int>.Some(42);
+        var maybe = Maybe<int>.Some(42);
+        Func<int, string> some = x => x.ToString();
+        Func<string> none = () => "none";
+
+        // Act
+        var result = maybe.Map(some, none);
+
+        // Assert
+        result.Should().Be("42");
+    }
+
+    [Fact]
+    public void Map_WhenMaybeIsNone_ShouldApplyNoneFunction()
+    {
+        // Arrange
+        var maybe = Maybe<int>.None();
+        Func<int, string> some = x => x.ToString();
+        Func<string> none = () => "none";
+
+        // Act
+        var result = maybe.Map(some, none);
+
+        // Assert
+        result.Should().Be("none");
+    }
+
+    [Fact]
+    public void Match_WhenMaybeIsSome_ShouldApplySomeFunction()
+    {
+        // Arrange
+        var maybe = Maybe<int>.Some(42);
+        Func<int, Maybe<string>> some = x => x.ToString().ToSome();
+        Func<Maybe<string>> none = () => "none".ToSome();
+
+        // Act
+        var result = maybe.Match(some, none);
+
+        // Assert
+        result.IsNull.Should().BeFalse();
+        result.Value.Should().Be("42");
+    }
+
+    [Fact]
+    public void Match_WhenMaybeIsNone_ShouldApplyNoneFunction()
+    {
+        // Arrange
+        var maybe = Maybe<int>.None();
+        Func<int, Maybe<string>> some = x => x.ToString().ToSome();
+        Func<Maybe<string>> none = () => "none".ToSome();
+
+        // Act
+        var result = maybe.Match(some, none);
+
+        // Assert
+        result.IsNull.Should().BeFalse();
+        result.Value.Should().Be("none");
+    }
+
+    [Fact]
+    public void Reduce_WhenMaybeIsSome_ShouldReturnValue()
+    {
+        // Arrange
+        var maybe = Maybe<int>.Some(42);
         int substitute = 0;
 
         // Act
-        int result = maybe.Reduce(substitute);
+        var result = maybe.Reduce(substitute);
 
         // Assert
         result.Should().Be(42);
     }
 
     [Fact]
-    public void Reduce_GivenNone_ReturnsSubstituteValue()
+    public void Reduce_WhenMaybeIsNone_ShouldReturnSubstituteValue()
     {
         // Arrange
-        Maybe<int> maybe = Maybe<int>.None();
+        var maybe = Maybe<int>.None();
         int substitute = 42;
 
         // Act
-        int result = maybe.Reduce(substitute);
+        var result = maybe.Reduce(substitute);
 
         // Assert
         result.Should().Be(42);
     }
 
     [Fact]
-    public void Reduce_GivenNoneAndSubstituteFunction_ReturnsFunctionResult()
+    public void Reduce_WhenMaybeIsNoneAndSubstituteFunctionProvided_ShouldReturnFunctionResult()
     {
         // Arrange
-        Maybe<int> maybe = Maybe<int>.None();
+        var maybe = Maybe<int>.None();
         Func<int> substitute = () => 42;
 
         // Act
-        int result = maybe.Reduce(substitute);
+        var result = maybe.Reduce(substitute);
 
         // Assert
         result.Should().Be(42);
     }
 
     [Fact]
-    public void DoIfSome_GivenSomeValue_ExecutesAction()
+    public void DoIfSome_WhenMaybeIsSome_ShouldExecuteAction()
     {
         // Arrange
-        Maybe<int> maybe = Maybe<int>.Some(42);
-        Action<int> action = Substitute.For<Action<int>>();
+        var maybe = Maybe<int>.Some(42);
+        var action = Substitute.For<Action<int>>();
 
         // Act
-        Maybe<int> result = maybe.DoIfSome(action);
+        var result = maybe.DoIfSome(action);
 
         // Assert
         result.Should().Be(maybe);
@@ -121,14 +193,14 @@ public class MaybeExtensionsTests
     }
 
     [Fact]
-    public void DoIfSome_GivenNone_DoesNotExecuteAction()
+    public void DoIfSome_WhenMaybeIsNone_ShouldNotExecuteAction()
     {
         // Arrange
-        Maybe<int> maybe = Maybe<int>.None();
-        Action<int> action = Substitute.For<Action<int>>();
+        var maybe = Maybe<int>.None();
+        var action = Substitute.For<Action<int>>();
 
         // Act
-        Maybe<int> result = maybe.DoIfSome(action);
+        var result = maybe.DoIfSome(action);
 
         // Assert
         result.Should().Be(maybe);
@@ -136,14 +208,14 @@ public class MaybeExtensionsTests
     }
 
     [Fact]
-    public void DoIfNone_GivenNone_ExecutesAction()
+    public void DoIfNone_WhenMaybeIsNone_ShouldExecuteAction()
     {
         // Arrange
-        Maybe<int> maybe = Maybe<int>.None();
-        Action action = Substitute.For<Action>();
+        var maybe = Maybe<int>.None();
+        var action = Substitute.For<Action>();
 
         // Act
-        Maybe<int> result = maybe.DoIfNone(action);
+        var result = maybe.DoIfNone(action);
 
         // Assert
         result.Should().Be(maybe);
@@ -151,14 +223,14 @@ public class MaybeExtensionsTests
     }
 
     [Fact]
-    public void DoIfNone_GivenSome_DoesNotExecuteAction()
+    public void DoIfNone_WhenMaybeIsSome_ShouldNotExecuteAction()
     {
         // Arrange
-        Maybe<int> maybe = Maybe<int>.Some(42);
-        Action action = Substitute.For<Action>();
+        var maybe = Maybe<int>.Some(42);
+        var action = Substitute.For<Action>();
 
         // Act
-        Maybe<int> result = maybe.DoIfNone(action);
+        var result = maybe.DoIfNone(action);
 
         // Assert
         result.Should().Be(maybe);
@@ -166,187 +238,229 @@ public class MaybeExtensionsTests
     }
 
     [Fact]
-        public void If_WhenMaybeIsSomeAndPredicateIsTrue_ShouldReturnTrue()
+    public void If_WhenMaybeIsSomeAndPredicateIsTrue_ShouldReturnTrue()
+    {
+        // Arrange
+        var maybe = Maybe<int>.Some(42);
+        Func<int, bool> predicate = x => x > 0;
+
+        // Act
+        var result = maybe.If(predicate);
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void If_WhenMaybeIsSomeAndPredicateIsFalse_ShouldReturnFalse()
+    {
+        // Arrange
+        var maybe = Maybe<int>.Some(42);
+        Func<int, bool> predicate = x => x < 0;
+
+        // Act
+        var result = maybe.If(predicate);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Fact]
+    public void If_WhenMaybeIsNone_ShouldReturnFalse()
+    {
+        // Arrange
+        var maybe = Maybe<int>.None();
+        Func<int, bool> predicate = x => x > 0;
+
+        // Act
+        var result = maybe.If(predicate);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Filter_WhenMaybeIsSomeAndPredicateIsTrue_ShouldReturnSome()
+    {
+        // Arrange
+        var maybe = Maybe<int>.Some(42);
+        Func<int, bool> predicate = x => x > 0;
+
+        // Act
+        var result = maybe.Filter(predicate);
+
+        // Assert
+        result.IsNull.Should().BeFalse();
+        result.Value.Should().Be(42);
+    }
+
+    [Fact]
+    public void Filter_WhenMaybeIsSomeAndPredicateIsFalse_ShouldReturnNone()
+    {
+        // Arrange
+        var maybe = Maybe<int>.Some(42);
+        Func<int, bool> predicate = x => x < 0;
+
+        // Act
+        var result = maybe.Filter(predicate);
+
+        // Assert
+        result.IsNull.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Filter_WhenMaybeIsNone_ShouldReturnNone()
+    {
+        // Arrange
+        var maybe = Maybe<int>.None();
+        Func<int, bool> predicate = x => x > 0;
+
+        // Act
+        var result = maybe.Filter(predicate);
+
+        // Assert
+        result.IsNull.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Where_WhenMaybeIsSomeAndPredicateIsTrue_ShouldReturnFilteredSequence()
+    {
+        // Arrange
+        var maybeList = new List<Maybe<int>> 
+        { 
+            Maybe<int>.Some(2),
+            Maybe<int>.Some(10),
+            Maybe<int>.None(),
+            Maybe<int>.Some(42)
+        };
+        Func<int, bool> predicate = x => x > 5;
+
+        // Act
+        var result = maybeList.Where(predicate).ToList();
+
+        // Assert
+        result.Should().HaveCount(2);
+        result[0].Value.Should().Be(10);
+        result[1].Value.Should().Be(42);
+    }
+
+    [Fact]
+    public void Where_WhenMaybeIsSomeAndPredicateIsFalse_ShouldReturnEmptySequence()
+    {
+        // Arrange
+        var maybeList = new List<Maybe<int>>
         {
-            // Arrange
-            var maybe = Maybe<int>.Some(42);
-            Func<int, bool> predicate = x => x > 0;
+            Maybe<int>.Some(2),
+            Maybe<int>.Some(4),
+            Maybe<int>.None(),
+            Maybe<int>.Some(6)
+        };
+        Func<int, bool> predicate = x => x > 10;
 
-            // Act
-            var result = maybe.If(predicate);
+        // Act
+        var result = maybeList.Where(predicate).ToList();
 
-            // Assert
-            result.Should().BeTrue();
-        }
+        // Assert
+        result.Should().BeEmpty();
+    }
 
-        [Fact]
-        public void If_WhenMaybeIsSomeAndPredicateIsFalse_ShouldReturnFalse()
+    [Fact]
+    public void Flatten_WhenSequenceContainsSomeValues_ShouldReturnAllSomeValues()
+    {
+        // Arrange
+        var maybeList = new List<Maybe<int>>
         {
-            // Arrange
-            var maybe = Maybe<int>.Some(42);
-            Func<int, bool> predicate = x => x < 0;
+            Maybe<int>.Some(1),
+            Maybe<int>.None(),
+            Maybe<int>.Some(3)
+        };
 
-            // Act
-            var result = maybe.If(predicate);
+        // Act
+        var result = maybeList.Flatten().ToList();
 
-            // Assert
-            result.Should().BeFalse();
-        }
+        // Assert
+        result.Should().BeEquivalentTo(new[] { 1, 3 });
+    }
 
-        [Fact]
-        public void If_WhenMaybeIsNone_ShouldReturnFalse()
+    [Fact]
+    public void Flatten_WhenSequenceContainsOnlyNone_ShouldReturnEmptySequence()
+    {
+        // Arrange
+        var maybeList = new List<Maybe<int>>
         {
-            // Arrange
-            var maybe = Maybe<int>.None();
-            Func<int, bool> predicate = x => x > 0;
+            Maybe<int>.None(),
+            Maybe<int>.None(),
+            Maybe<int>.None()
+        };
 
-            // Act
-            var result = maybe.If(predicate);
+        // Act
+        var result = maybeList.Flatten().ToList();
 
-            // Assert
-            result.Should().BeFalse();
-        }
+        // Assert
+        result.Should().BeEmpty();
+    }
 
-        [Fact]
-        public void Where_WhenMaybeIsSomeAndPredicateIsTrue_ShouldReturnFilteredSequence()
+    [Fact]
+    public void Flatten_WhenSubstituteValueProvided_ShouldReplaceNoneWithSubstitute()
+    {
+        // Arrange
+        var maybeList = new List<Maybe<int>>
         {
-            // Arrange
-            var maybeList = new List<Maybe<int>>
-            {
-                Maybe<int>.Some(2),
-                Maybe<int>.Some(10),
-                Maybe<int>.None(),
-                Maybe<int>.Some(42)
-            };
-            Func<int, bool> predicate = x => x > 5;
+            Maybe<int>.Some(1),
+            Maybe<int>.None(),
+            Maybe<int>.Some(3)
+        };
+        var substitute = 42;
 
-            // Act
-            var result = maybeList.Where(predicate).ToList();
+        // Act
+        var result = maybeList.Flatten(substitute).ToList();
 
-            // Assert
-            result.Should().HaveCount(2);
-            result[0].Value.Should().Be(10);
-            result[1].Value.Should().Be(42);
-        }
+        // Assert
+        result.Should().BeEquivalentTo(new[] { 1, 42, 3 });
+    }
 
-        [Fact]
-        public void Where_WhenMaybeIsSomeAndPredicateIsFalse_ShouldReturnEmptySequence()
+    [Fact]
+    public void Flatten_WhenSubstituteFunctionProvided_ShouldReplaceNoneWithFunctionResult()
+    {
+        // Arrange
+        var maybeList = new List<Maybe<int>>
         {
-            // Arrange
-            var maybeList = new List<Maybe<int>>
-            {
-                Maybe<int>.Some(2),
-                Maybe<int>.Some(4),
-                Maybe<int>.None(),
-                Maybe<int>.Some(6)
-            };
-            Func<int, bool> predicate = x => x > 10;
+            Maybe<int>.Some(1),
+            Maybe<int>.None(),
+            Maybe<int>.Some(3)
+        };
+        Func<int> substitute = () => 42;
 
-            // Act
-            var result = maybeList.Where(predicate).ToList();
+        // Act
+        var result = maybeList.Flatten(substitute).ToList();
 
-            // Assert
-            result.Should().BeEmpty();
-        }
+        // Assert
+        result.Should().BeEquivalentTo(new[] { 1, 42, 3 });
+    }
 
-        [Fact]
-        public void Where_WhenMaybeIsNone_ShouldReturnEmptySequence()
-        {
-            // Arrange
-            var maybeList = new List<Maybe<int>>
-            {
-                Maybe<int>.None(),
-                Maybe<int>.None(),
-                Maybe<int>.None()
-            };
-            Func<int, bool> predicate = x => x > 0;
+    [Fact]
+    public void ValueOrThrow_WhenMaybeIsSome_ShouldReturnValue()
+    {
+        // Arrange
+        var maybe = Maybe<int>.Some(42);
 
-            // Act
-            var result = maybeList.Where(predicate).ToList();
+        // Act
+        var result = maybe.ValueOrThrow();
 
-            // Assert
-            result.Should().BeEmpty();
-        }
+        // Assert
+        result.Should().Be(42);
+    }
 
-        [Fact]
-        public void ToEnumerable_WhenMaybeIsSome_ShouldReturnSequenceOfContent()
-        {
-            // Arrange
-            var maybeList = new List<Maybe<int>>
-            {
-                Maybe<int>.Some(1),
-                Maybe<int>.None(),
-                Maybe<int>.Some(3)
-            };
+    [Fact]
+    public void ValueOrThrow_WhenMaybeIsNone_ShouldThrowInvalidOperationException()
+    {
+        // Arrange
+        var maybe = Maybe<int>.None();
 
-            // Act
-            var result = maybeList.Flatten().ToList();
+        // Act
+        var act = () => maybe.ValueOrThrow();
 
-            // Assert
-            result.Should().HaveCount(2);
-            result[0].Should().Be(1);
-            result[1].Should().Be(3);
-        }
-
-        [Fact]
-        public void ToEnumerable_WhenMaybeIsNone_ShouldReturnEmptySequence()
-        {
-            // Arrange
-            var maybeList = new List<Maybe<int>>
-            {
-                Maybe<int>.None(),
-                Maybe<int>.None(),
-                Maybe<int>.None()
-            };
-
-            // Act
-            var result = maybeList.Flatten().ToList();
-
-            // Assert
-            result.Should().BeEmpty();
-        }
-
-        [Fact]
-        public void ToEnumerable_WhenMaybeIsSomeAndSubstituteIsProvided_ShouldReturnSequenceWithSubstituteForNone()
-        {
-            // Arrange
-            var maybeList = new List<Maybe<int>>
-            {
-                Maybe<int>.Some(1),
-                Maybe<int>.None(),
-                Maybe<int>.Some(3)
-            };
-            var substitute = 42;
-
-            // Act
-            var result = maybeList.Flatten(substitute).ToList();
-
-            // Assert
-            result.Should().HaveCount(3);
-            result[0].Should().Be(1);
-            result[1].Should().Be(substitute);
-            result[2].Should().Be(3);
-        }
-
-        [Fact]
-        public void ToEnumerable_WhenMaybeIsSomeAndSubstituteFunctionIsProvided_ShouldReturnSequenceWithSubstituteForNone()
-        {
-            // Arrange
-            var maybeList = new List<Maybe<int>>
-            {
-                Maybe<int>.Some(1),
-                Maybe<int>.None(),
-                Maybe<int>.Some(3)
-            };
-            Func<int> substitute = () => 42;
-
-            // Act
-            var result = maybeList.Flatten(substitute).ToList();
-
-            // Assert
-            result.Should().HaveCount(3);
-            result[0].Should().Be(1);
-            result[1].Should().Be(42);
-            result[2].Should().Be(3);
-        }
+        // Assert
+        act.Should().Throw<InvalidOperationException>();
+    }
 }
