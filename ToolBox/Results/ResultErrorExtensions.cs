@@ -30,11 +30,11 @@ public static class ResultErrorExtensions
     /// <param name="self">The original error instance.</param>
     /// <returns>
     /// A <see cref="Maybe{T}"/> that contains the exception associated with this
-    /// error, or <see cref="Maybe{T}.None"/> if there is no exception.
+    /// error, or <see cref="Maybe.None{T}"/> if there is no exception.
     /// </returns>
     public static Maybe<Exception> TryGetException(this ResultError self)
     {
-        return self.Exception is {} exception ? exception.ToSome(): Maybe<Exception>.None();
+        return self.Exception is {} exception ? exception.ToSome(): Maybe.None<Exception>();
 
     }
 

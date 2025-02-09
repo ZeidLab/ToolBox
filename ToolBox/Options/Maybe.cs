@@ -33,7 +33,7 @@ public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
 	/// This constructor is intended for internal use.
 	/// </summary>
 	/// <param name="value">The content of the maybe.</param>
-	private Maybe(TIn value)
+	internal Maybe(TIn value)
 	{
 		Value = value;
 		IsNull = false;
@@ -61,29 +61,7 @@ public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
 	public bool IsNone => IsNull;
 
 
-	/// <summary>
-	/// Creates a new <see cref="Maybe{TIn}"/> containing the specified value.
-	/// this is not going to automatically convert null or default to none.
-	/// </summary>
-	/// <param name="value">The non-null value to contain, and You should not pass default as value either.</param>
-	/// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is null.</exception>
-	/// <returns>A new <see cref="Maybe{TIn}"/> containing the specified value.</returns>
-#pragma warning disable CA1000
-	public static Maybe<TIn> Some(TIn value)
-#pragma warning restore CA1000
-	{
-		if (value.IsNull())
-			throw new ArgumentNullException(nameof(value));
-		return new Maybe<TIn>(value);
-	}
 
-	/// <summary>
-	/// Creates a new <see cref="Maybe{TIn}"/> in the 'None' state.
-	/// </summary>
-	/// <returns>A new <see cref="Maybe{TIn}"/> in the 'None' state.</returns>
-#pragma warning disable CA1000
-	public static Maybe<TIn> None() => new();
-#pragma warning restore CA1000
 
 	/// <summary>
 	/// Implicitly converts a value of type <typeparamref name="TIn"/> to a <see cref="Maybe{TIn}"/> containing that value.
@@ -91,7 +69,7 @@ public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
 	/// <param name="value">The value to contain.</param>
 	/// <returns>A <see cref="Maybe{TIn}"/> containing the specified value.</returns>
 	public static implicit operator Maybe<TIn>(TIn? value)
-		=> value.IsNull() ? None() : Some(value!);
+		=> value.IsNull() ? new Maybe<TIn>()  : new Maybe<TIn>(value!) ;
 
 
 	/// <summary>
@@ -177,4 +155,31 @@ public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
 	{
 		return left.CompareTo(right) >= 0;
 	}
+}
+
+
+/// <summary>
+/// Provides factory methods for creating Maybe instances.
+/// </summary>
+public static class Maybe
+{
+	/// <summary>
+	/// Creates a new Maybe containing the specified value.
+	/// </summary>
+	/// <typeparam name="T">The type of the value.</typeparam>
+	/// <param name="value">The non-null value to contain.</param>
+	/// <returns>A new Maybe containing the specified value.</returns>
+	/// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is null.</exception>
+	public static Maybe<T> Some<T>(T value)
+	{
+		Guards.ThrowIfNull(value  , nameof(value));
+		return new Maybe<T>(value);
+	}
+
+	/// <summary>
+	/// Creates a new Maybe in the None state.
+	/// </summary>
+	/// <typeparam name="T">The type of the Maybe.</typeparam>
+	/// <returns>A new Maybe in the None state.</returns>
+	public static Maybe<T> None<T>() => new();
 }

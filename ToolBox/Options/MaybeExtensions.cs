@@ -24,7 +24,7 @@ public static class MaybeExtensions
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static Maybe<TIn> ToSome<TIn>(this TIn self) where TIn : notnull
-		=> Maybe<TIn>.Some(self);
+		=> Maybe.Some(self);
 
 	/// <summary>
 	/// Creates a <see cref="Maybe{TIn}"/> instance in the None state, regardless of the input value.
@@ -48,7 +48,7 @@ public static class MaybeExtensions
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static Maybe<TIn> ToNone<TIn>(this TIn? self)
-		=> Maybe<TIn>.None();
+		=> Maybe.None<TIn>();
 
 	/// <summary>
 	/// Maps the content of a <see cref="Maybe{TIn}"/> instance to a new <see cref="Maybe{TOut}"/> instance
@@ -72,7 +72,7 @@ public static class MaybeExtensions
 		where TIn : notnull =>
 #pragma warning disable CS8604 // Possible null reference argument.
 #pragma warning disable CA1062
-		!self.IsNull ? map(self.Value) : Maybe<TOut>.None();
+		!self.IsNull ? map(self.Value) : Maybe.None<TOut>();
 #pragma warning restore CA1062
 #pragma warning restore CS8604 // Possible null reference argument.
 
@@ -182,7 +182,7 @@ public static class MaybeExtensions
 	/// The predicate to evaluate. It takes a value of type <typeparamref name="TIn"/> and returns a <see cref="bool"/>.
 	/// </param>
 	/// <returns>
-	/// <see langword="true"/> if the <see cref="Maybe{TIn}"/> instance is not <see cref="Maybe{TIn}.None"/>
+	/// <see langword="true"/> if the <see cref="Maybe{TIn}"/> instance is not <see cref="Maybe.None{TIn}"/>
 	/// and its content satisfies the <paramref name="predicate"/>; otherwise, <see langword="false"/>.
 	/// </returns>
 	[Pure]
@@ -231,7 +231,7 @@ public static class MaybeExtensions
 	public static Maybe<TIn> Filter<TIn>(this Maybe<TIn> self, Func<TIn, bool> predicate)
 #pragma warning disable CS8604 // Possible null reference argument.
 #pragma warning disable CA1062
-		where TIn : notnull => !self.IsNull && predicate(self.Value) ? Maybe<TIn>.Some(self.Value) : Maybe<TIn>.None();
+		where TIn : notnull => !self.IsNull && predicate(self.Value) ? Maybe.Some(self.Value) : Maybe.None<TIn>();
 #pragma warning restore CA1062
 #pragma warning restore CS8604 // Possible null reference argument.
 
@@ -261,14 +261,14 @@ public static class MaybeExtensions
 
 	/// <summary>
 	/// Converts a sequence of <see cref="Maybe{TIn}"/> instances to an <see cref="IEnumerable{TIn}"/> of their content,
-	/// replacing <see cref="Maybe{TIn}.None"/> instances with a specified substitute value.
+	/// replacing <see cref="Maybe.None{TIn}"/> instances with a specified substitute value.
 	/// </summary>
 	/// <typeparam name="TIn">The type of the content within the <see cref="Maybe{TIn}"/> instances.</typeparam>
 	/// <param name="self">The sequence of <see cref="Maybe{TIn}"/> instances to convert.</param>
-	/// <param name="substitute">The substitute value to use for <see cref="Maybe{TIn}.None"/> instances.</param>
+	/// <param name="substitute">The substitute value to use for <see cref="Maybe.None{TIn}"/> instances.</param>
 	/// <returns>
 	/// An <see cref="IEnumerable{TIn}"/> of the content of the <see cref="Maybe{TIn}"/> instances,
-	/// with <see cref="Maybe{TIn}.None"/> instances replaced by the substitute value.
+	/// with <see cref="Maybe.None{TIn}"/> instances replaced by the substitute value.
 	/// </returns>
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -277,14 +277,14 @@ public static class MaybeExtensions
 
 	/// <summary>
 	/// Converts a sequence of <see cref="Maybe{TIn}"/> instances to an <see cref="IEnumerable{TIn}"/> of their content,
-	/// using a substitute function for <see cref="Maybe{TIn}.None"/> instances.
+	/// using a substitute function for <see cref="Maybe.None{TIn}"/> instances.
 	/// </summary>
 	/// <typeparam name="TIn">The type of the content within the <see cref="Maybe{TIn}"/> instances.</typeparam>
 	/// <param name="self">The sequence of <see cref="Maybe{TIn}"/> instances to convert.</param>
-	/// <param name="substitute">The function <see cref="Func{TIn}"/> to provide a substitute value for <see cref="Maybe{TIn}.None"/> instances.</param>
+	/// <param name="substitute">The function <see cref="Func{TIn}"/> to provide a substitute value for <see cref="Maybe.None{TIn}"/> instances.</param>
 	/// <returns>
 	/// An <see cref="IEnumerable{TIn}"/> of the content of the <see cref="Maybe{TIn}"/> instances,
-	/// replacing <see cref="Maybe{TIn}.None"/> instances with the result of the substitute function.
+	/// replacing <see cref="Maybe.None{TIn}"/> instances with the result of the substitute function.
 	/// </returns>
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -296,10 +296,10 @@ public static class MaybeExtensions
 	/// </summary>
 	/// <typeparam name="TIn">The type of the content of the <see cref="Maybe{TIn}"/> instance.</typeparam>
 	/// <param name="self">The <see cref="Maybe{TIn}"/> instance to reduce.</param>
-	/// <param name="substitute">The default value to use if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe{TIn}.None"/>.</param>
+	/// <param name="substitute">The default value to use if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe.None{TIn}"/>.</param>
 	/// <returns>
-	/// The content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe{TIn}.Some"/>,
-	/// or the default value if it is <see cref="Maybe{TIn}.None"/>.
+	/// The content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe.Some{TIn}"/>,
+	/// or the default value if it is <see cref="Maybe.None{TIn}"/>.
 	/// </returns>
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -314,10 +314,10 @@ public static class MaybeExtensions
 	/// </summary>
 	/// <typeparam name="TIn">The type of the content of the <see cref="Maybe{TIn}"/> instance.</typeparam>
 	/// <param name="self">The <see cref="Maybe{TIn}"/> instance to reduce.</param>
-	/// <param name="substitute">The function to use if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe{TIn}.None"/>.</param>
+	/// <param name="substitute">The function to use if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe.None{TIn}"/>.</param>
 	/// <returns>
-	/// The content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe{TIn}.Some"/>,
-	/// or the result of the provided function if it is <see cref="Maybe{TIn}.None"/>.
+	/// The content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe.Some{TIn}"/>,
+	/// or the result of the provided function if it is <see cref="Maybe.None{TIn}"/>.
 	/// </returns>
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -330,11 +330,11 @@ public static class MaybeExtensions
 #pragma warning restore CS8603 // Possible null reference return.
 
 	/// <summary>
-	/// Applies the provided action to the content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe{TIn}.Some"/>.
+	/// Applies the provided action to the content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe.Some{TIn}"/>.
 	/// </summary>
 	/// <typeparam name="TIn">The type of the content of the <see cref="Maybe{TIn}"/> instance.</typeparam>
 	/// <param name="self">The <see cref="Maybe{TIn}"/> instance to apply the action to.</param>
-	/// <param name="action">The action to apply to the content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe{TIn}.Some"/>.</param>
+	/// <param name="action">The action to apply to the content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe.Some{TIn}"/>.</param>
 	/// <returns>The original <see cref="Maybe{TIn}"/> instance.</returns>
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -351,11 +351,11 @@ public static class MaybeExtensions
 	}
 
 	/// <summary>
-	/// Executes the provided action if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe{TIn}.None"/>.
+	/// Executes the provided action if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe.None{TIn}"/>.
 	/// </summary>
 	/// <typeparam name="TIn">The type of the content of the <see cref="Maybe{TIn}"/> instance.</typeparam>
 	/// <param name="self">The <see cref="Maybe{TIn}"/> instance to check.</param>
-	/// <param name="action">The action to execute if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe{TIn}.None"/>.</param>
+	/// <param name="action">The action to execute if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe.None{TIn}"/>.</param>
 	/// <returns>The original <see cref="Maybe{TIn}"/> instance.</returns>
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -370,14 +370,14 @@ public static class MaybeExtensions
 	}
 
 	/// <summary>
-	/// Returns the value of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe{TIn}.Some"/>,
+	/// Returns the value of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe.Some{TIn}"/>,
 	/// otherwise throws an <see cref="InvalidOperationException"/>.
 	/// </summary>
 	/// <typeparam name="TIn">The type of the content of the <see cref="Maybe{TIn}"/> instance.</typeparam>
 	/// <param name="self">The <see cref="Maybe{TIn}"/> instance whose value to return.</param>
 	/// <returns>
-	/// The value of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe{TIn}.Some"/>,
-	/// or throws an <see cref="InvalidOperationException"/> if it is <see cref="Maybe{TIn}.None"/>.
+	/// The value of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe.Some{TIn}"/>,
+	/// or throws an <see cref="InvalidOperationException"/> if it is <see cref="Maybe.None{TIn}"/>.
 	/// </returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static TIn ValueOrThrow<TIn>(this Maybe<TIn> self)

@@ -6,10 +6,10 @@ namespace ZeidLab.ToolBox.Test.Units.Options
     public class MaybeTests
     {
         // Helper function to create a Maybe with a value
-        private Maybe<T> CreateMaybe<T>(T value) => Maybe<T>.Some(value);
+        private Maybe<T> CreateMaybe<T>(T value) => Maybe.Some(value);
 
         // Helper function to create a Maybe in the 'None' state
-        private Maybe<T> CreateNoneMaybe<T>() => Maybe<T>.None();
+        private Maybe<T> CreateNoneMaybe<T>() => Maybe.None<T>();
 
         [Fact]
         public void Some_WithNonNullValue_ShouldReturnMaybeWithValue()
