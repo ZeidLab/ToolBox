@@ -129,14 +129,23 @@ public readonly record struct ResultError
 #pragma warning restore S1133 //Do not forget to remove this deprecated code someday
 
     /// <summary>
-    /// Implicitly converts an exception to a ResultError.
+    /// Provides implicit conversion from an <see cref="Exception"/> to a <see cref="ResultError"/>.
     /// </summary>
-    /// <param name="exception">The exception to convert</param>
-    /// <remarks>
-    /// The resulting error will use the exception's HResult as the error code,
-    /// the exception's message as the error message, and retain the exception instance.
-    /// </remarks>
-    /// <returns>A new ResultError instance</returns>
+    /// <param name="exception">
+    /// The exception to convert. Must not be <see langword="null"/>.
+    /// </param>
+    /// <returns>
+    /// A new <see cref="ResultError"/> instance with:
+    /// <list type="bullet">
+    ///   <item><description>Code: The exception's <see cref="Exception.HResult"/></description></item>
+    ///   <item><description>Name: <see cref="DefaultName"/></description></item>
+    ///   <item><description>Message: The exception's message</description></item>
+    ///   <item><description>Exception: The original exception</description></item>
+    /// </list>
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="exception"/> is <see langword="null"/>.
+    /// </exception>
     public static implicit operator ResultError(Exception exception) => New(exception);
 
     /// <summary>
