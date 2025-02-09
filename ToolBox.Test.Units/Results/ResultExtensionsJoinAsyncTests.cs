@@ -1,5 +1,4 @@
-﻿using System.Runtime.Serialization;
-using FluentAssertions;
+﻿using FluentAssertions;
 using ZeidLab.ToolBox.Results;
 
 namespace ZeidLab.ToolBox.Test.Units.Results;

@@ -1,8 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ZeidLab.ToolBox.Common;
-
 namespace ZeidLab.ToolBox.Results;
 
 /// <summary>
@@ -27,13 +25,13 @@ namespace ZeidLab.ToolBox.Results;
 /// Example Usage:
 /// <code>
 /// // Create an error with a custom message
-/// Error error1 = Error.New("An unexpected error occurred.");
+/// ResultError error1 = Error.New("An unexpected error occurred.");
 ///
 /// // Create an error from an exception
-/// Error error2 = new InvalidOperationException("Invalid operation");
+/// ResultError error2 = new InvalidOperationException("Invalid operation");
 ///
 /// // Create an error with a custom code, name, and message
-/// Error error3 = Error.New(404, "NotFound", "The requested resource was not found.");
+/// ResultError error3 = Error.New(404, "NotFound", "The requested resource was not found.");
 ///
 /// // Deconstruct an error into its components
 /// var (code, name, message, exception) = error3;
@@ -42,26 +40,64 @@ namespace ZeidLab.ToolBox.Results;
 /// This type is a fundamental building block for robust and predictable error handling in functional-style
 /// C# applications.
 /// </summary>
+
+/// <summary>
+/// Represents standard error codes for <see cref="ResultError"/>
+/// </summary>
+public enum ResultErrorCode
+{
+    /// <summary>
+    /// No error
+    /// </summary>
+    None = 0,
+
+    /// <summary>
+    /// Generic error
+    /// </summary>
+    Generic = 1,
+
+    /// <summary>
+    /// Validation error
+    /// </summary>
+    Validation = 400,
+
+    /// <summary>
+    /// Not found error
+    /// </summary>
+    NotFound = 404,
+
+    /// <summary>
+    /// Internal error
+    /// </summary>
+    Internal = 500
+}
+
+/// <summary>
+/// Represents an error in a structured and immutable way.
+/// </summary>
 [Serializable]
 [StructLayout(LayoutKind.Sequential)]
 public readonly record struct ResultError
 {
-    internal const string DefaultName = "DefaultErrorName";
-    internal const int DefaultCode = 1;
+    internal const string DefaultName = "UnspecifiedError";
+    internal const int DefaultCode = (int)ResultErrorCode.Generic;
 
+    private readonly int code;
+    private readonly string name;
+    private readonly string message;
+    private readonly Exception? exception;
 
     /// <summary>Error code</summary>
-    public readonly int Code;
+    public int Code => code;
 
     /// <summary>Error name. It is a meaningful name instead of numbers and more readable.</summary>
-    public readonly string Name;
+    public string Name => name;
 
     /// <summary>Error message</summary>
-    public readonly string Message;
+    public string Message => message;
 
-    /// <summary>system exception</summary>
-    public readonly Exception? Exception;
-
+    /// <summary>System exception</summary>
+    public Exception? Exception => exception;
 
     /// <summary>
     /// Creates an instance of the <see cref="ResultError"/> struct.
@@ -72,10 +108,10 @@ public readonly record struct ResultError
     /// <param name="exception">The exception associated with this error, or <see langword="null"/> if there is no exception.</param>
     internal ResultError(int code, string name, string message, Exception? exception = null)
     {
-        Code = code;
-        Name = name;
-        Message = message;
-        Exception = exception;
+        this.code = code;
+        this.name = name;
+        this.message = message;
+        this.exception = exception;
     }
 
     /// <summary>
@@ -92,20 +128,32 @@ public readonly record struct ResultError
     public ResultError() => throw new InvalidOperationException("Use factory methods like Error.New() instead.");
 #pragma warning restore S1133 //Do not forget to remove this deprecated code someday
 
-
     /// <summary>
-    /// implicitly converts an exception to an error
+    /// Implicitly converts an exception to a ResultError.
     /// </summary>
-    /// <param name="exception"></param>
-    /// <returns></returns>
+    /// <param name="exception">The exception to convert</param>
+    /// <remarks>
+    /// The resulting error will use the exception's HResult as the error code,
+    /// the exception's message as the error message, and retain the exception instance.
+    /// </remarks>
+    /// <returns>A new ResultError instance</returns>
     public static implicit operator ResultError(Exception exception) => New(exception);
 
     /// <summary>
-    /// implicitly converts an error message to an error
+    /// Implicitly converts a string message to a ResultError.
     /// </summary>
-    /// <param name="message"></param>
-    /// <returns></returns>
+    /// <param name="message">The error message</param>
+    /// <remarks>
+    /// The resulting error will use the default error code and name.
+    /// </remarks>
+    /// <returns>A new ResultError instance</returns>
     public static implicit operator ResultError(string message) => New(message);
+
+    /// <summary>
+    /// Returns a string representation of the error for debugging.
+    /// </summary>
+    /// <returns>A string containing the error's code, name, and message.</returns>
+    public override string ToString() => $"[{Code}] {Name}: {Message}";
 
     /// <summary>
     /// Creates a new <see cref="ResultError"/> instance with the provided error message.
@@ -145,7 +193,6 @@ public readonly record struct ResultError
         return new ResultError(code, DefaultName, message);
     }
 
-
     /// <summary>
     /// Creates a new <see cref="ResultError"/> instance with the provided error name and error message.
     /// </summary>
@@ -157,10 +204,8 @@ public readonly record struct ResultError
     {
         Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
         Guards.ThrowIfNullOrWhiteSpace(name, nameof(name));
-
         return new ResultError(DefaultCode, name, message);
     }
-
 
     /// <summary>
     /// Creates a new <see cref="ResultError"/> instance with the provided error name, error message, and exception.
@@ -174,8 +219,8 @@ public readonly record struct ResultError
     {
         Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
         Guards.ThrowIfNullOrWhiteSpace(name, nameof(name));
-
-        return new ResultError(DefaultCode, name, message, exception);
+        Guards.ThrowIfNull(exception, nameof(exception));
+        return new ResultError(exception.HResult, name, message, exception);
     }
 
     /// <summary>
@@ -190,14 +235,12 @@ public readonly record struct ResultError
     {
         Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
         Guards.ThrowIfNegativeOrZero(code, nameof(code));
-
+        Guards.ThrowIfNull(exception, nameof(exception));
         return new ResultError(code, DefaultName, message, exception);
     }
 
-
     /// <summary>
-    /// Creates a new <see cref="ResultError"/> instance with the provided code, error message, and exception.
-    /// The code of the error is set to the HResult of the exception.
+    /// Creates a new <see cref="ResultError"/> instance with the provided error message and exception.
     /// </summary>
     /// <param name="message">The error message. It should not be <see langword="null"/> or empty.</param>
     /// <param name="exception">The exception associated with this error. It should not be <see langword="null"/>.</param>
@@ -207,7 +250,7 @@ public readonly record struct ResultError
     {
         Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
         Guards.ThrowIfNull(exception, nameof(exception));
-        return new ResultError(DefaultCode, DefaultName, message, exception);
+        return new ResultError(exception.HResult, DefaultName, message, exception);
     }
 
     /// <summary>

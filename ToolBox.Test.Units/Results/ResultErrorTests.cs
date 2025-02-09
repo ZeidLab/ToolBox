@@ -103,7 +103,7 @@ public class ResultErrorTests
         var error = ResultError.New(name, message, exception);
 
         // Assert
-        error.Code.Should().Be(ResultError.DefaultCode);
+        error.Code.Should().Be(exception.HResult);
         error.Name.Should().Be(name);
         error.Message.Should().Be(message);
         error.Exception.Should().Be(exception);
@@ -138,7 +138,7 @@ public class ResultErrorTests
         var error = ResultError.New(message, exception);
 
         // Assert
-        error.Code.Should().Be(ResultError.DefaultCode);
+        error.Code.Should().Be(exception.HResult);
         error.Name.Should().Be(ResultError.DefaultName);
         error.Message.Should().Be(message);
         error.Exception.Should().Be(exception);
@@ -242,7 +242,7 @@ public class ResultErrorTests
         // Arrange
         var code = -1;
         var message = "Test message";
-           
+
         // Act
         Action act = () => ResultError.New(code, message);
 
