@@ -5,112 +5,144 @@ using System.Runtime.CompilerServices;
 namespace ZeidLab.ToolBox.Results;
 
 /// <summary>
-/// provides extension methods for matching operations on <see cref="Result{TValue}"/> objects.
-/// you need to consider both success and failure cases while using this extension methods
-/// which is the main idea of doing railway oriented programming
+/// Provides extension methods for pattern matching operations on <see cref="Result{TValue}"/> and <see cref="Try{TValue}"/> types.
+/// These methods enable railway-oriented programming by handling both success and failure cases explicitly.
 /// </summary>
+/// <remarks>
+/// Pattern matching is a core concept in railway-oriented programming that ensures all possible outcomes
+/// are handled appropriately. These methods force developers to consider both success and failure paths.
+/// </remarks>
+/// <example>
+/// Basic result matching:
+/// <code>
+/// var result = Result.Success&lt;int&gt;(42);
+/// var matched = result.Match(
+///     success: value => $"Got {value}",
+///     failure: error => $"Error: {error.Message}"
+/// ); // matched = "Got 42"
+/// </code>
+/// 
+/// Chaining with Try:
+/// <code>
+/// var tryResult = new Try&lt;int&gt;(() => int.Parse("xyz"));
+/// var handled = tryResult.Match(
+///     success: x => Result.Success($"Parsed {x}"),
+///     failure: err => Result.Success("Failed to parse")
+/// ); // handled = Result.Success("Failed to parse")
+/// </code>
+/// </example>
 [SuppressMessage("Design", "CA1062:Validate arguments of public methods")]
 public static class ResultExtensionsMatch
 {
-	#region Match
+   
 
-	/// <summary>
-	/// Matches the content of a <see cref="Result{TIn}"/> instance to either a successful or failed result.
-	/// </summary>
-	/// <typeparam name="TIn">The type of the value contained in the result.</typeparam>
-	/// <typeparam name="TOut">The type of the value of the result returned by the success or failure function.</typeparam>
-	/// <param name="self">The result to match.</param>
-	/// <param name="success">A function that takes the value of the successful result and returns a new result.</param>
-	/// <param name="failure">A function that takes the error of the failed result and returns a new result.</param>
-	/// <returns>The result of applying the success or failure function to the content of the original result.</returns>
-	[Pure]
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static Result<TOut> Match<TIn, TOut>(this Result<TIn> self, Func<TIn, Result<TOut>> success,
-		Func<ResultError, Result<TOut>> failure)
-		=> self.IsSuccess ? success(self.Value) : failure(self.Error);
+    /// <summary>
+    /// Matches a <see cref="Result{TIn}"/> to a new <see cref="Result{TOut}"/> by applying
+    /// appropriate transformation functions based on the result's state.
+    /// </summary>
+    /// <typeparam name="TIn">The type of the value in the source result.</typeparam>
+    /// <typeparam name="TOut">The type of the value in the target result.</typeparam>
+    /// <param name="self">The source result to match against.</param>
+    /// <param name="success">Function to transform the value if the result is successful.</param>
+    /// <param name="failure">Function to transform the error if the result is a failure.</param>
+    /// <returns>A new result containing the transformed value or error.</returns>
+    /// <example>
+    /// Using Match to transform results:
+    /// <code>
+    /// var result = Result.Success&lt;int&gt;(42);
+    /// var transformed = result.Match(
+    ///     success: x => Result.Success(x * 2),
+    ///     failure: err => Result.Failure&lt;int&gt;(err)
+    /// ); // transformed = Result.Success(84)
+    /// </code>
+    /// </example>
+    [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Result<TOut> Match<TIn, TOut>(this Result<TIn> self, Func<TIn, Result<TOut>> success,
+        Func<ResultError, Result<TOut>> failure)
+        => self.IsSuccess ? success(self.Value) : failure(self.Error);
 
-	/// <summary>
-	/// Matches the content of a <see cref="Result{TIn}"/> instance to either a successful or failed result.
-	/// </summary>
-	/// <typeparam name="TIn">The type of the value contained in the result.</typeparam>
-	/// <typeparam name="TOut">The type of the value of the result returned by the success or failure function.</typeparam>
-	/// <param name="self">The result to match.</param>
-	/// <param name="success">A function that takes the value of the successful result and returns a new result.</param>
-	/// <param name="failure">A function that takes the error of the failed result and returns a new result.</param>
-	/// <returns>The result of applying the success or failure function to the content of the original result.</returns>
-	[Pure]
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static TOut Match<TIn, TOut>(this Result<TIn> self, Func<TIn, TOut> success,
-		Func<ResultError, TOut> failure)
-		=> self.IsSuccess ? success(self.Value) : failure(self.Error);
+    /// <summary>
+    /// Matches a <see cref="Result{TIn}"/> to a value of type <typeparamref name="TOut"/> by applying
+    /// transformation functions based on the result's state.
+    /// </summary>
+    /// <inheritdoc cref="Match{TIn, TOut}(Result{TIn}, Func{TIn, Result{TOut}}, Func{ResultError, Result{TOut}})"/>
+    [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static TOut Match<TIn, TOut>(this Result<TIn> self, Func<TIn, TOut> success,
+        Func<ResultError, TOut> failure)
+        => self.IsSuccess ? success(self.Value) : failure(self.Error);
 
-	/// <summary>
-	/// Matches the content of a <see cref="Try{TIn}"/> instance to either a successful or failed result.
-	/// </summary>
-	/// <typeparam name="TIn">The type of the value contained in the result.</typeparam>
-	/// <typeparam name="TOut">The type of the value of the result returned by the success or failure function.</typeparam>
-	/// <param name="self">The result to match.</param>
-	/// <param name="success">A function that takes the value of the successful result and returns a new result.</param>
-	/// <param name="failure">A function that takes the error of the failed result and returns a new result.</param>
-	/// <returns>The result of applying the success or failure function to the content of the original result.</returns>
-	[Pure]
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static Result<TOut> Match<TIn, TOut>(this Try<TIn> self, Func<TIn, Result<TOut>> success,
-		Func<ResultError, Result<TOut>> failure)
-		=> self.Try().Match(success, failure);
+    /// <summary>
+    /// Matches a <see cref="Try{TIn}"/> operation to a new <see cref="Result{TOut}"/> by applying
+    /// transformation functions based on the operation's outcome.
+    /// </summary>
+    /// <inheritdoc cref="Match{TIn, TOut}(Result{TIn}, Func{TIn, Result{TOut}}, Func{ResultError, Result{TOut}})"/>
+    /// <remarks>
+    /// This overload automatically executes the <see cref="Try{TIn}"/> operation and matches its result.
+    /// </remarks>
+    [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Result<TOut> Match<TIn, TOut>(this Try<TIn> self, Func<TIn, Result<TOut>> success,
+        Func<ResultError, Result<TOut>> failure)
+        => self.Try().Match(success, failure);
 
-	/// <summary>
-	/// Matches the content of a <see cref="Try{TIn}"/> instance to either a successful or failed result.
-	/// </summary>
-	/// <typeparam name="TIn">The type of the value contained in the result.</typeparam>
-	/// <typeparam name="TOut">The type of the value of the result returned by the success or failure function.</typeparam>
-	/// <param name="self">The result to match.</param>
-	/// <param name="success">A function that takes the value of the successful result and returns a new result.</param>
-	/// <param name="failure">A function that takes the error of the failed result and returns a new result.</param>
-	/// <returns>The result of applying the success or failure function to the content of the original result.</returns>
-	[Pure]
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static TOut Match<TIn, TOut>(this Try<TIn> self, Func<TIn, TOut> success, Func<ResultError, TOut> failure)
-		=> self.Try().Match(success, failure);
+    /// <summary>
+    /// Matches a <see cref="Try{TIn}"/> operation to a value of type <typeparamref name="TOut"/> by applying
+    /// transformation functions based on the operation's outcome.
+    /// </summary>
+    /// <inheritdoc cref="Match{TIn, TOut}(Result{TIn}, Func{TIn, TOut}, Func{ResultError, TOut})"/>
+    /// <remarks>
+    /// This overload automatically executes the <see cref="Try{TIn}"/> operation and matches its result.
+    /// </remarks>
+    [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static TOut Match<TIn, TOut>(this Try<TIn> self, Func<TIn, TOut> success, Func<ResultError, TOut> failure)
+        => self.Try().Match(success, failure);
 
+    /// <summary>
+    /// Performs side effects based on the state of a <see cref="Result{TIn}"/> by executing
+    /// appropriate actions for success or failure cases.
+    /// </summary>
+    /// <typeparam name="TIn">The type of the value in the result.</typeparam>
+    /// <param name="self">The result to match against.</param>
+    /// <param name="success">Action to execute if the result is successful.</param>
+    /// <param name="failure">Action to execute if the result is a failure.</param>
+    /// <example>
+    /// Handling side effects:
+    /// <code>
+    /// var result = Result.Success&lt;int&gt;(42);
+    /// result.Match(
+    ///     success: value => Console.WriteLine($"Got value: {value}"),
+    ///     failure: error => Console.WriteLine($"Error: {error.Message}")
+    /// ); // Prints: "Got value: 42"
+    /// </code>
+    /// </example>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Match<TIn>(this Result<TIn> self, Action<TIn> success, Action<ResultError> failure)
+    {
+        if (self.IsSuccess)
+            success(self.Value);
+        else
+            failure(self.Error);
+    }
 
-	/// <summary>
-	/// Matches the content of a <see cref="Result{TIn}"/> instance to either a successful or failed result.
-	/// </summary>
-	/// <typeparam name="TIn">The type of the value contained in the result.</typeparam>
-	/// <param name="self">The result to match.</param>
-	/// <param name="success">An action that takes the value of the successful result and performs side effects.</param>
-	/// <param name="failure">An action that takes the error of the failed result and performs side effects.</param>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static void Match<TIn>(this Result<TIn> self, Action<TIn> success, Action<ResultError> failure)
-	{
-		if (self.IsSuccess)
-			success(self.Value);
-		else
-			failure(self.Error);
-	}
+    /// <summary>
+    /// Performs side effects based on the outcome of a <see cref="Try{TIn}"/> operation by executing
+    /// appropriate actions for success or failure cases.
+    /// </summary>
+    /// <inheritdoc cref="Match{TIn}(Result{TIn}, Action{TIn}, Action{ResultError})"/>
+    /// <remarks>
+    /// This overload automatically executes the <see cref="Try{TIn}"/> operation and matches its result.
+    /// </remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Match<TIn>(this Try<TIn> self, Action<TIn> success, Action<ResultError> failure)
+    {
+        var result = self.Try();
+        if (result.IsSuccess)
+            success(result.Value);
+        else
+            failure(result.Error);
+    }
 
-
-	/// <summary>
-	/// Matches the content of a <see cref="Try{TIn}"/> instance to either a successful or failed result.
-	/// </summary>
-	/// <typeparam name="TIn">The type of the value contained in the result.</typeparam>
-	/// <param name="self">The result to match.</param>
-	/// <param name="success">A function that takes the value of the successful result and executes side effects.</param>
-	/// <param name="failure">A function that takes the error of the failed result and executes side effects.</param>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static void Match<TIn>(this Try<TIn> self, Action<TIn> success, Action<ResultError> failure)
-	{
-		var result = self.Try();
-		if (result.IsSuccess)
-			success(result.Value);
-		else
-			failure(result.Error);
-	}
-
-	#endregion
-
-	#region MatchAsync
-
-	#endregion
 }
