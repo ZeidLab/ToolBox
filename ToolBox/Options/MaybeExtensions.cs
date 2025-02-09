@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.Contracts;
+﻿﻿using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 
 // ReSharper disable once CheckNamespace
@@ -6,7 +6,8 @@ using System.Runtime.CompilerServices;
 namespace ZeidLab.ToolBox.Options;
 
 /// <summary>
-/// Contains extension methods for the Maybe type.
+/// Contains extension methods for working with <see cref="Maybe{T}"/> instances, providing functional programming operations
+/// such as binding, mapping, filtering, and pattern matching.
 /// </summary>
 public static class MaybeExtensions
 {
@@ -77,24 +78,40 @@ public static class MaybeExtensions
 
 
 	/// <summary>
-	/// Maps the content of a <see cref="Maybe{TIn}"/> instance to a new value using either the provided mapping function
-	/// if the <see cref="Maybe{TIn}"/> instance is Some, or the provided default value if the <see cref="Maybe{TIn}"/> instance is None.
+	/// Maps the content of a <see cref="Maybe{TIn}"/> instance to a new value using two functions:
+	/// one for handling the Some case and another for handling the None case. This method always returns
+	/// a value, making it useful for providing default values or handling both states of a Maybe instance.
 	/// </summary>
-	/// <typeparam name="TIn">The type of the content of the original <see cref="Maybe{TIn}"/> instance.</typeparam>
-	/// <typeparam name="TOut">The type of the new value.</typeparam>
+	/// <typeparam name="TIn">The type of the content in the original <see cref="Maybe{TIn}"/> instance.</typeparam>
+	/// <typeparam name="TOut">The type of the result value after mapping.</typeparam>
 	/// <param name="self">The original <see cref="Maybe{TIn}"/> instance to map.</param>
 	/// <param name="some">
 	/// The mapping function to apply if <paramref name="self"/> is Some.
-	/// It takes a value of type <typeparamref name="TIn"/> and returns a value of type <typeparamref name="TOut"/>.
+	/// Takes a value of type <typeparamref name="TIn"/> and returns a value of type <typeparamref name="TOut"/>.
 	/// </param>
 	/// <param name="none">
-	/// The function to provide a default value if <paramref name="self"/> is None.
-	/// It returns a value of type <typeparamref name="TOut"/>.
+	/// The function to execute if <paramref name="self"/> is None.
+	/// Returns a default or fallback value of type <typeparamref name="TOut"/>.
 	/// </param>
 	/// <returns>
-	/// A new value of type <typeparamref name="TOut"/>, either the mapped value of the original <see cref="Maybe{TIn}"/> instance
-	/// if it is Some, or the default value if it is None.
+	/// A value of type <typeparamref name="TOut"/>: either the result of applying <paramref name="some"/>
+	/// to the content if <paramref name="self"/> is Some, or the result of <paramref name="none"/> if it is None.
 	/// </returns>
+	/// <example>
+	/// <code>
+	/// var maybeAge = Maybe&lt;int&gt;.Some(25);
+	/// var description = maybeAge.Map(
+	///     some: age => $"Age is {age}",
+	///     none: () => "Age unknown"
+	/// ); // Returns "Age is 25"
+	///
+	/// var maybeNone = Maybe&lt;int&gt;.None();
+	/// var result = maybeNone.Map(
+	///     some: age => age * 2,
+	///     none: () => 0
+	/// ); // Returns 0
+	/// </code>
+	/// </example>
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static TOut Map<TIn, TOut>(this Maybe<TIn> self, Func<TIn, TOut> some, Func<TOut> none)
