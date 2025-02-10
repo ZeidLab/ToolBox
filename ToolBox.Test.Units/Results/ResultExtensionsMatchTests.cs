@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using NSubstitute;
 using ZeidLab.ToolBox.Results;
 
 namespace ZeidLab.ToolBox.Test.Units.Results;
@@ -9,7 +8,6 @@ namespace ZeidLab.ToolBox.Test.Units.Results;
 public class ResultExtensionsMatchTests
 {
     private static readonly int SuccessValue = 42;
-    private static readonly string TransformedValue = "42";
 
     [Fact]
     public void Match_ResultSuccess_InvokesSuccessFunction()
@@ -17,7 +15,7 @@ public class ResultExtensionsMatchTests
         // Arrange
         var result = TestHelper.CreateSuccessResult(SuccessValue);
         var successCalled = false;
-        
+
         // Act
         var matched = result.Match(
             success: value =>
@@ -245,7 +243,7 @@ public class ResultExtensionsMatchTests
     {
         // Arrange
         var result = TestHelper.CreateSuccessResult("42");
-        
+
         // Act
         var matched = result.Match(
             success: int.Parse,
@@ -265,7 +263,7 @@ public class ResultExtensionsMatchTests
         ResultError? capturedError = null;
 
         // Act
-        var matched = tryFunc.Match(
+        _ = tryFunc.Match(
             success: _ => Result.Success("success"),
             failure: error =>
             {
@@ -277,7 +275,7 @@ public class ResultExtensionsMatchTests
         // Assert
         failureCalled.Should().BeTrue();
         capturedError.Should().NotBeNull();
-        capturedError!.ToString().Should().Contain(exception.Message);
+        capturedError.ToString().Should().Contain(exception.Message);
     }
 
     [Fact]
@@ -325,8 +323,8 @@ public class ResultExtensionsMatchTests
         Try<int> tryFunc = () =>
         {
             counter++;
-            return counter > 1 
-                ? Result.Success(counter) 
+            return counter > 1
+                ? Result.Success(counter)
                 : Result.Failure<int>(TestHelper.DefaultResultError);
         };
 
