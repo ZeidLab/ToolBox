@@ -109,7 +109,7 @@ public static class ResultErrorExtensions
     /// </code>
     /// </example>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ResultError WithCode(this ResultError self, ResultErrorCode code)
+    internal static ResultError WithCode(this ResultError self, ResultErrorCode code)
     {
         return new ResultError((int)code, self.Name, self.Message, self.Exception);
     }
@@ -190,7 +190,7 @@ public static class ResultErrorExtensions
     /// </code>
     /// </example>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsErrorCode(this ResultError self, ResultErrorCode code)
+    internal static bool IsErrorCode(this ResultError self, ResultErrorCode code)
     {
         return self.Code == (int)code;
     }
@@ -210,7 +210,7 @@ public static class ResultErrorExtensions
     /// </code>
     /// </example>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsValidationError(this ResultError self)
+    internal static bool IsValidationError(this ResultError self)
     {
         return self.IsErrorCode(ResultErrorCode.Validation);
     }
@@ -230,7 +230,7 @@ public static class ResultErrorExtensions
     /// </code>
     /// </example>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsNotFoundError(this ResultError self)
+    internal static bool IsNotFoundError(this ResultError self)
     {
         return self.IsErrorCode(ResultErrorCode.NotFound);
     }
@@ -250,7 +250,7 @@ public static class ResultErrorExtensions
     /// </code>
     /// </example>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsInternalError(this ResultError self)
+    internal static bool IsInternalError(this ResultError self)
     {
         return self.IsErrorCode(ResultErrorCode.Internal);
     }

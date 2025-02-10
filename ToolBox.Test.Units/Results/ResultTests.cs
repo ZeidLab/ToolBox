@@ -5,6 +5,8 @@ namespace ZeidLab.ToolBox.Test.Units.Results;
 
 public class ResultTests
 {
+    private record struct CustomValueType(int Value);
+
     [Fact]
     public void Success_ShouldReturnResultWithValue_WhenValueIsNotNull()
     {
@@ -115,34 +117,92 @@ public class ResultTests
     }
 
     [Fact]
-    public void TryDelegate_ShouldReturnSuccessResult_WhenDelegateDoesNotThrow()
+    public void Failure_ShouldAcceptNullError_WhenCreatingFailureResult()
     {
-        // Arrange
-        var tryDelegate = new Try<string>(() => Result.Success("success"));
-
-        // Act
-        var result = tryDelegate();
+        // Arrange & Act
+        var result = Result.Failure<string>(default);
 
         // Assert
-        result.IsSuccess.Should().BeTrue();
-        result.Value.Should().Be("success");
-
+        result.IsFailure.Should().BeTrue();
+        result.Error.Name.Should().Be(ResultError.Default.Name);
+        result.Error.Code.Should().Be(ResultError.Default.Code);
     }
 
     [Fact]
-    public async Task TryAsyncDelegate_ShouldReturnSuccessResult_WhenDelegateDoesNotThrow()
+    public void FromException_ShouldCreateFailureResult_WithExceptionMessage()
     {
         // Arrange
-        var tryAsyncDelegate = new TryAsync<string>(() => Task.FromResult(Result.Success("success")));
+        var exception = new InvalidOperationException("Test exception");
 
         // Act
-        var result = await tryAsyncDelegate();
+        var result = Result.FromException<string>(exception);
 
         // Assert
-        result.IsSuccess.Should().BeTrue();
-        result.Value.Should().Be("success");
+        result.IsSuccess.Should().BeFalse();
+        result.Value.Should().BeNull();
+        result.Error.Message.Should().Be(exception.Message);
+    }
 
+    [Fact]
+    public void IsFailure_ShouldBeOppositeOfIsSuccess()
+    {
+        // Arrange
+        var successResult = Result.Success("test");
+        var failureResult = Result.Failure<string>(ResultError.New("error"));
+
+        // Assert
+        successResult.IsFailure.Should().BeFalse();
+        failureResult.IsFailure.Should().BeTrue();
     }
 
 
+    [Fact]
+    public void Success_ShouldWorkWithValueTypes()
+    {
+        // Arrange & Act
+        var result = Result.Success(42);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().Be(42);
+        result.Error.Should().Be(ResultError.Default);
+    }
+
+    [Fact]
+    public void Result_WithDefaultStruct_ShouldDetectDefaultValue()
+    {
+        // Arrange & Act
+        var result = Result.Success(default(DateTime));
+
+        // Assert
+        result.IsDefault.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().Be(default);
+    }
+
+
+    [Fact]
+    public void Result_ShouldHaveValueSemantics()
+    {
+        // Arrange
+        var result1 = Result.Success("test");
+        var result2 = Result.Success("test");
+        var result3 = Result.Success("different");
+
+        // Assert
+        result1.Should().Be(result2);
+        result1.Should().NotBe(result3);
+    }
+
+    [Fact]
+    public void Result_WithCustomStruct_ShouldHandleDefaultCorrectly()
+    {
+        // Arrange & Act
+        var defaultResult = Result.Success(new CustomValueType());
+        var nonDefaultResult = Result.Success(new CustomValueType(42));
+
+        // Assert
+        defaultResult.IsDefault.Should().BeTrue();
+        nonDefaultResult.IsDefault.Should().BeFalse();
+    }
 }

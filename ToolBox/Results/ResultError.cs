@@ -79,6 +79,10 @@ public enum ResultErrorCode
 [StructLayout(LayoutKind.Sequential)]
 public readonly record struct ResultError
 {
+    /// <summary>
+    /// The default error value.
+    /// </summary>
+	public static readonly  ResultError Default ;
     internal const string DefaultName = "UnspecifiedError";
     internal const int DefaultCode = (int)ResultErrorCode.Generic;
 
@@ -123,9 +127,9 @@ public readonly record struct ResultError
     /// </remarks>
 #pragma warning disable S1133 // Do not forget to remove this deprecated code someday
     [Obsolete(
-        "Use factory methods like Error.New() instead. Any instance of public constructor will be considered empty.",
+        "Use factory methods like ResultError.New() instead. Any instance of public constructor will be considered empty.",
         true)]
-    public ResultError() => throw new InvalidOperationException("Use factory methods like Error.New() instead.");
+    public ResultError() => throw new InvalidOperationException("Use factory methods like ResultError.New() instead.");
 #pragma warning restore S1133 //Do not forget to remove this deprecated code someday
 
     /// <summary>
