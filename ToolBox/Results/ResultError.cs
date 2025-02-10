@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ZeidLab.ToolBox.Common;
 namespace ZeidLab.ToolBox.Results;
