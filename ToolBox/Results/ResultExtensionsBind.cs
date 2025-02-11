@@ -18,19 +18,130 @@ namespace ZeidLab.ToolBox.Results;
 /// <example>
 /// Basic usage with successful results:
 /// <code>
-/// var result = Result.Success(5)
-///     .Bind(x => Result.Success(x * 2))
-///     .Bind(x => Result.Success(x + 1));
-/// // result is Success(11)
+/// // Create a function that validates a positive number
+/// Result&lt;int&gt; ValidatePositive(int x) =>
+///     x > 0 ? Result.Success(x)
+///           : Result.Failure&lt;int&gt;(ResultError.New("Number must be positive"));
+///
+/// // Create a function that validates if a number is even
+/// Result&lt;int&gt; ValidateEven(int x) =>
+///     x % 2 == 0 ? Result.Success(x)
+///                : Result.Failure&lt;int&gt;(ResultError.New("Number must be even"));
+///
+/// // Chain validations using Bind
+/// var result = Result.Success(4)
+///     .Bind(ValidatePositive)
+///     .Bind(ValidateEven);
+/// Console.WriteLine(result.IsSuccess); // Output: True
+///
+/// // Chain that will fail
+/// var failedResult = Result.Success(-2)
+///     .Bind(ValidatePositive)
+///     .Bind(ValidateEven);
+/// Console.WriteLine(failedResult.IsFailure); // Output: True
+/// Console.WriteLine(failedResult.Error.Message); // Output: "Number must be positive"
 /// </code>
 /// </example>
 /// <example>
-/// Error propagation:
+/// Error propagation with string processing:
 /// <code>
-/// var result = Result.Success(5)
-///     .Bind(x => Result.Failure&lt;int&gt;(new ResultError("Operation failed")))
-///     .Bind(x => Result.Success(x * 2));
-/// // result is Failure("Operation failed")
+/// Result&lt;string&gt; ValidateNotEmpty(string input) =>
+///     string.IsNullOrEmpty(input)
+///         ? Result.Failure&lt;string&gt;(ResultError.New("Input cannot be empty"))
+///         : Result.Success(input);
+///
+/// Result&lt;string&gt; ValidateLength(string input) =>
+///     input.Length > 10
+///         ? Result.Failure&lt;string&gt;(ResultError.New("Input too long"))
+///         : Result.Success(input);
+///
+/// var result = Result.Success("Hello")
+///     .Bind(ValidateNotEmpty)
+///     .Bind(ValidateLength);
+/// Console.WriteLine(result.IsSuccess); // Output: True
+///
+/// var failedResult = Result.Success("")
+///     .Bind(ValidateNotEmpty)
+///     .Bind(ValidateLength);
+/// Console.WriteLine(failedResult.IsFailure); // Output: True
+/// Console.WriteLine(failedResult.Error.Message); // Output: "Input cannot be empty"
+/// </code>
+/// </example>
+/// <example>
+/// User registration validation example:
+/// <code>
+/// public class UserRegistration
+/// {
+///     public Result&lt;string&gt; ValidateUsername(string username) =>
+///         string.IsNullOrWhiteSpace(username)
+///             ? Result.Failure&lt;string&gt;(ResultError.New("Username cannot be empty"))
+///             : username.Length &lt; 3
+///                 ? Result.Failure&lt;string&gt;(ResultError.New("Username too short"))
+///                 : Result.Success(username);
+///
+///     public Result&lt;string&gt; ValidatePassword(string password) =>
+///         string.IsNullOrWhiteSpace(password)
+///             ? Result.Failure&lt;string&gt;(ResultError.New("Password cannot be empty"))
+///             : password.Length &lt; 8
+///                 ? Result.Failure&lt;string&gt;(ResultError.New("Password too short"))
+///                 : Result.Success(password);
+///
+///     public Result&lt;(string username, string password)&gt; ValidateRegistration(
+///         string username, string password) =>
+///         Result.Success(username)
+///             .Bind(ValidateUsername)
+///             .Bind(validUsername =>
+///                 ValidatePassword(password)
+///                     .Bind(validPassword =>
+///                         Result.Success((validUsername, validPassword))));
+/// }
+///
+/// // Usage:
+/// var registration = new UserRegistration();
+/// var result = registration.ValidateRegistration("jo", "weak");
+/// Console.WriteLine(result.IsFailure); // Output: True
+/// Console.WriteLine(result.Error.Message); // Output: "Username too short"
+///
+/// var success = registration.ValidateRegistration("john", "strongpass123");
+/// Console.WriteLine(success.IsSuccess); // Output: True
+/// </code>
+/// </example>
+/// <example>
+/// Configuration parsing example:
+/// <code>
+/// public class ConfigParser
+/// {
+///     public Result&lt;int&gt; ParsePort(string value) =>
+///         int.TryParse(value, out int port)
+///             ? port > 0 && port &lt; 65536
+///                 ? Result.Success(port)
+///                 : Result.Failure&lt;int&gt;(ResultError.New("Port must be between 1 and 65535"))
+///             : Result.Failure&lt;int&gt;(ResultError.New("Invalid port format"));
+///
+///     public Result&lt;TimeSpan&gt; ParseTimeout(string value) =>
+///         int.TryParse(value, out int seconds)
+///             ? seconds > 0
+///                 ? Result.Success(TimeSpan.FromSeconds(seconds))
+///                 : Result.Failure&lt;TimeSpan&gt;(ResultError.New("Timeout must be positive"))
+///             : Result.Failure&lt;TimeSpan&gt;(ResultError.New("Invalid timeout format"));
+///
+///     public Result&lt;(int port, TimeSpan timeout)&gt; ParseConfig(
+///         string portStr, string timeoutStr) =>
+///         ParsePort(portStr)
+///             .Bind(port =>
+///                 ParseTimeout(timeoutStr)
+///                     .Bind(timeout =>
+///                         Result.Success((port, timeout))));
+/// }
+///
+/// // Usage:
+/// var parser = new ConfigParser();
+/// var failed = parser.ParseConfig("invalid", "30");
+/// Console.WriteLine(failed.IsFailure); // Output: True
+/// Console.WriteLine(failed.Error.Message); // Output: "Invalid port format"
+///
+/// var success = parser.ParseConfig("8080", "30");
+/// Console.WriteLine(success.IsSuccess); // Output: True
 /// </code>
 /// </example>
 /// </remarks>
@@ -53,24 +164,38 @@ public static class ResultExtensionsBind
     /// </list>
     /// </returns>
     /// <example>
-    /// Basic usage:
+    /// Here's an example of validating user input:
     /// <code>
-    /// Result&lt;int&gt; Divide(int x, int y) =>
-    ///     y == 0 ? Result.Failure&lt;int&gt;(new ResultError("Division by zero"))
-    ///            : Result.Success(x / y);
+    /// Result&lt;string&gt; ValidateEmail(string email) =>
+    ///     email.Contains("@")
+    ///         ? Result.Success(email)
+    ///         : Result.Failure&lt;string&gt;(ResultError.New("Invalid email format"));
     ///
-    /// var result = Result.Success(10)
-    ///     .Bind(x => Divide(x, 2))
-    ///     .Bind(x => Divide(x, 0));
-    /// // result is Failure("Division by zero")
+    /// Result&lt;string&gt; ValidateDomain(string email) =>
+    ///     email.EndsWith(".com")
+    ///         ? Result.Success(email)
+    ///         : Result.Failure&lt;string&gt;(ResultError.New("Only .com domains allowed"));
+    ///
+    /// // Chain multiple validations
+    /// var result = Result.Success("user@example.com")
+    ///     .Bind(ValidateEmail)
+    ///     .Bind(ValidateDomain);
+    /// Console.WriteLine(result.IsSuccess); // Output: True
+    ///
+    /// // Invalid input shows how errors propagate
+    /// var invalid = Result.Success("invalid-email")
+    ///     .Bind(ValidateEmail)
+    ///     .Bind(ValidateDomain);
+    /// Console.WriteLine(invalid.IsFailure); // Output: True
+    /// Console.WriteLine(invalid.Error.Message); // Output: "Invalid email format"
     /// </code>
     /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<TOut> Bind<TIn, TOut>(this Result<TIn> self, Func<TIn, Result<TOut>> func)
-        => self.IsSuccess
-            ? func(self.Value)
-            : Result.Failure<TOut>(self.Error);
+        => self.Match(
+            success: func,
+            failure: error => Result.Failure<TOut>(error));
 
     /// <summary>
     /// Binds the value of a successful <see cref="Try{TIn}"/> to a new result by applying the specified function.
@@ -88,19 +213,36 @@ public static class ResultExtensionsBind
     /// </list>
     /// </returns>
     /// <example>
-    /// Basic usage with exception handling:
+    /// Safe number parsing and validation:
     /// <code>
-    /// var tryParse = Try.Create((string s) => int.Parse(s));
-    /// var result = tryParse
-    ///     .Bind(x => Result.Success(x * 2));
-    /// // For "123": result is Success(246)
-    /// // For "abc": result is Failure(FormatException)
+    /// // Define a Try operation for parsing
+    /// Try&lt;int&gt; ParseNumber = () =>
+    ///     Result.Success(int.Parse("123"));
+    ///
+    /// // Define a validation function
+    /// Result&lt;int&gt; ValidateRange(int number) =>
+    ///     (number &gt;= 1 && number &lt;= 100)
+    ///         ? Result.Success(number)
+    ///         : Result.Failure&lt;int&gt;(ResultError.New("Number must be between 1 and 100"));
+    ///
+    /// // Combine parsing and validation
+    /// var result = ParseNumber.Bind(ValidateRange);
+    /// Console.WriteLine(result.IsSuccess); // Output: True
+    ///
+    /// // Example with parsing failure
+    /// Try&lt;int&gt; ParseInvalid = () =>
+    ///     Result.Success(int.Parse("not a number"));
+    /// var failed = ParseInvalid.Bind(ValidateRange);
+    /// Console.WriteLine(failed.IsFailure); // Output: True
+    /// // Error will contain FormatException details
     /// </code>
     /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<TOut> Bind<TIn, TOut>(this Try<TIn> self, Func<TIn, Result<TOut>> func)
-        => self.Try().Bind(func);
+        => self.Try().Match(
+            success: func,
+            failure: error => Result.Failure<TOut>(error));
 
     /// <summary>
     /// Binds the value of a successful <see cref="Try{TIn}"/> to a new result by applying another Try operation.
@@ -118,20 +260,102 @@ public static class ResultExtensionsBind
     /// </list>
     /// </returns>
     /// <example>
-    /// Chaining multiple Try operations:
+    /// Safe data parsing example:
     /// <code>
-    /// var tryParse = Try.Create((string s) => int.Parse(s));
-    /// var tryDivide = Try.Create((int x) => 100 / x);
+    /// public class DataProcessor
+    /// {
+    ///     // First Try operation: Parse date string
+    ///     public Try&lt;DateTime&gt; ParseDate(string input) => () =>
+    ///     {
+    ///         if (DateTime.TryParse(input, out var date))
+    ///             return Result.Success(date);
+    ///         throw new FormatException($"Invalid date format: {input}");
+    ///     };
     ///
-    /// var result = tryParse
-    ///     .Bind(x => tryDivide);
-    /// // For "10": result is Success(10)
-    /// // For "0": result is Failure(DivideByZeroException)
-    /// // For "abc": result is Failure(FormatException)
+    ///     // Second Try operation: Validate business rules
+    ///     public Try&lt;DateTime&gt; ValidateBusinessDay(DateTime date) => () =>
+    ///     {
+    ///         if (date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
+    ///             throw new ArgumentException("Date must be a business day");
+    ///         if (date.Date &lt; DateTime.Today)
+    ///             throw new ArgumentException("Date must not be in the past");
+    ///         return Result.Success(date);
+    ///     };
+    ///
+    ///     public Result&lt;DateTime&gt; ProcessDate(string input) =>
+    ///         ParseDate(input).Bind(ValidateBusinessDay);
+    /// }
+    ///
+    /// // Usage:
+    /// var processor = new DataProcessor();
+    ///
+    /// // Invalid format
+    /// var result1 = processor.ProcessDate("not a date");
+    /// Console.WriteLine(result1.IsFailure); // Output: True
+    /// Console.WriteLine(result1.Error.Message); // Output: "Invalid date format: not a date"
+    ///
+    /// // Weekend date
+    /// var result2 = processor.ProcessDate("2024-01-13"); // A Saturday
+    /// Console.WriteLine(result2.IsFailure); // Output: True
+    /// Console.WriteLine(result2.Error.Message); // Output: "Date must be a business day"
+    ///
+    /// // Valid business day
+    /// var result3 = processor.ProcessDate("2024-01-15"); // A Monday
+    /// Console.WriteLine(result3.IsSuccess); // Output: True
     /// </code>
     /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<TOut> Bind<TIn, TOut>(this Try<TIn> self, Func<TIn, Try<TOut>> func)
-        => self.Try().Bind(input => func(input).Try());
+        => self.Try().Match(
+            success: input => func(input).Try(),
+            failure: error => Result.Failure<TOut>(error));
+
+    /// <inheritdoc cref="Bind{TIn,TOut}(Result{TIn},Func{TIn,Result{TOut}})"/>
+    /// <remarks>
+    /// This asynchronous version works with Task-wrapped Results and maintains asynchronous
+    /// execution throughout the chain of operations.
+    /// </remarks>
+    /// <example>
+    /// Asynchronous validation example:
+    /// <code>
+    /// public class AsyncUserValidator
+    /// {
+    ///     public async Task&lt;Result&lt;string&gt;&gt; ValidateUsernameAsync(string username)
+    ///     {
+    ///         await Task.Delay(100); // Simulate async check
+    ///         return username.Length >= 3
+    ///             ? Result.Success(username)
+    ///             : Result.Failure&lt;string&gt;(ResultError.New("Username too short"));
+    ///     }
+    ///
+    ///     public async Task&lt;Result&lt;string&gt;&gt; CheckUsernameAvailableAsync(string username)
+    ///     {
+    ///         await Task.Delay(100); // Simulate database check
+    ///         return username != "admin"
+    ///             ? Result.Success(username)
+    ///             : Result.Failure&lt;string&gt;(ResultError.New("Username already taken"));
+    ///     }
+    /// }
+    ///
+    /// // Usage:
+    /// var validator = new AsyncUserValidator();
+    /// var result = await Task.FromResult(Result.Success("admin"))
+    ///     .BindAsync(validator.ValidateUsernameAsync)
+    ///     .BindAsync(validator.CheckUsernameAvailableAsync);
+    /// Console.WriteLine(result.IsFailure); // Output: True
+    /// Console.WriteLine(result.Error.Message); // Output: "Username already taken"
+    /// </code>
+    /// </example>
+    [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static async Task<Result<TOut>> BindAsync<TIn, TOut>(
+        this Task<Result<TIn>> self,
+        Func<TIn, Task<Result<TOut>>> func)
+    {
+        var result = await self.ConfigureAwait(false);
+        return result.IsSuccess
+            ? await func(result.Value).ConfigureAwait(false)
+            : Result.Failure<TOut>(result.Error);
+    }
 }
