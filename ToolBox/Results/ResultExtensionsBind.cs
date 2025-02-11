@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
-using ZeidLab.ToolBox.Common;
 
 namespace ZeidLab.ToolBox.Results;
 
@@ -17,16 +16,16 @@ namespace ZeidLab.ToolBox.Results;
 /// </para>
 /// <example>
 /// Basic usage with successful results:
-/// <code>
+/// <code><![CDATA[
 /// // Create a function that validates a positive number
-/// Result&lt;int&gt; ValidatePositive(int x) =>
+/// Result<int> ValidatePositive(int x) =>
 ///     x > 0 ? Result.Success(x)
-///           : Result.Failure&lt;int&gt;(ResultError.New("Number must be positive"));
+///           : Result.Failure<int>(ResultError.New("Number must be positive"));
 ///
 /// // Create a function that validates if a number is even
-/// Result&lt;int&gt; ValidateEven(int x) =>
+/// Result<int> ValidateEven(int x) =>
 ///     x % 2 == 0 ? Result.Success(x)
-///                : Result.Failure&lt;int&gt;(ResultError.New("Number must be even"));
+///                : Result.Failure<int>(ResultError.New("Number must be even"));
 ///
 /// // Chain validations using Bind
 /// var result = Result.Success(4)
@@ -40,19 +39,19 @@ namespace ZeidLab.ToolBox.Results;
 ///     .Bind(ValidateEven);
 /// Console.WriteLine(failedResult.IsFailure); // Output: True
 /// Console.WriteLine(failedResult.Error.Message); // Output: "Number must be positive"
-/// </code>
+/// ]]></code>
 /// </example>
 /// <example>
 /// Error propagation with string processing:
-/// <code>
-/// Result&lt;string&gt; ValidateNotEmpty(string input) =>
+/// <code><![CDATA[
+/// Result<string> ValidateNotEmpty(string input) =>
 ///     string.IsNullOrEmpty(input)
-///         ? Result.Failure&lt;string&gt;(ResultError.New("Input cannot be empty"))
+///         ? Result.Failure<string>(ResultError.New("Input cannot be empty"))
 ///         : Result.Success(input);
 ///
-/// Result&lt;string&gt; ValidateLength(string input) =>
+/// Result<string> ValidateLength(string input) =>
 ///     input.Length > 10
-///         ? Result.Failure&lt;string&gt;(ResultError.New("Input too long"))
+///         ? Result.Failure<string>(ResultError.New("Input too long"))
 ///         : Result.Success(input);
 ///
 /// var result = Result.Success("Hello")
@@ -65,28 +64,28 @@ namespace ZeidLab.ToolBox.Results;
 ///     .Bind(ValidateLength);
 /// Console.WriteLine(failedResult.IsFailure); // Output: True
 /// Console.WriteLine(failedResult.Error.Message); // Output: "Input cannot be empty"
-/// </code>
+/// ]]></code>
 /// </example>
 /// <example>
 /// User registration validation example:
-/// <code>
+/// <code><![CDATA[
 /// public class UserRegistration
 /// {
-///     public Result&lt;string&gt; ValidateUsername(string username) =>
+///     public Result<string> ValidateUsername(string username) =>
 ///         string.IsNullOrWhiteSpace(username)
-///             ? Result.Failure&lt;string&gt;(ResultError.New("Username cannot be empty"))
-///             : username.Length &lt; 3
-///                 ? Result.Failure&lt;string&gt;(ResultError.New("Username too short"))
+///             ? Result.Failure<string>(ResultError.New("Username cannot be empty"))
+///             : username.Length < 3
+///                 ? Result.Failure<string>(ResultError.New("Username too short"))
 ///                 : Result.Success(username);
 ///
-///     public Result&lt;string&gt; ValidatePassword(string password) =>
+///     public Result<string> ValidatePassword(string password) =>
 ///         string.IsNullOrWhiteSpace(password)
-///             ? Result.Failure&lt;string&gt;(ResultError.New("Password cannot be empty"))
-///             : password.Length &lt; 8
-///                 ? Result.Failure&lt;string&gt;(ResultError.New("Password too short"))
+///             ? Result.Failure<string>(ResultError.New("Password cannot be empty"))
+///             : password.Length < 8
+///                 ? Result.Failure<string>(ResultError.New("Password too short"))
 ///                 : Result.Success(password);
 ///
-///     public Result&lt;(string username, string password)&gt; ValidateRegistration(
+///     public Result<(string username, string password)> ValidateRegistration(
 ///         string username, string password) =>
 ///         Result.Success(username)
 ///             .Bind(ValidateUsername)
@@ -104,28 +103,28 @@ namespace ZeidLab.ToolBox.Results;
 ///
 /// var success = registration.ValidateRegistration("john", "strongpass123");
 /// Console.WriteLine(success.IsSuccess); // Output: True
-/// </code>
+/// ]]></code>
 /// </example>
 /// <example>
 /// Configuration parsing example:
-/// <code>
+/// <code><![CDATA[
 /// public class ConfigParser
 /// {
-///     public Result&lt;int&gt; ParsePort(string value) =>
+///     public Result<int> ParsePort(string value) =>
 ///         int.TryParse(value, out int port)
-///             ? port > 0 && port &lt; 65536
+///             ? port > 0 && port < 65536
 ///                 ? Result.Success(port)
-///                 : Result.Failure&lt;int&gt;(ResultError.New("Port must be between 1 and 65535"))
-///             : Result.Failure&lt;int&gt;(ResultError.New("Invalid port format"));
+///                 : Result.Failure<int>(ResultError.New("Port must be between 1 and 65535"))
+///             : Result.Failure<int>(ResultError.New("Invalid port format"));
 ///
-///     public Result&lt;TimeSpan&gt; ParseTimeout(string value) =>
+///     public Result<TimeSpan> ParseTimeout(string value) =>
 ///         int.TryParse(value, out int seconds)
 ///             ? seconds > 0
 ///                 ? Result.Success(TimeSpan.FromSeconds(seconds))
-///                 : Result.Failure&lt;TimeSpan&gt;(ResultError.New("Timeout must be positive"))
-///             : Result.Failure&lt;TimeSpan&gt;(ResultError.New("Invalid timeout format"));
+///                 : Result.Failure<TimeSpan>(ResultError.New("Timeout must be positive"))
+///             : Result.Failure<TimeSpan>(ResultError.New("Invalid timeout format"));
 ///
-///     public Result&lt;(int port, TimeSpan timeout)&gt; ParseConfig(
+///     public Result<(int port, TimeSpan timeout)> ParseConfig(
 ///         string portStr, string timeoutStr) =>
 ///         ParsePort(portStr)
 ///             .Bind(port =>
@@ -142,7 +141,7 @@ namespace ZeidLab.ToolBox.Results;
 ///
 /// var success = parser.ParseConfig("8080", "30");
 /// Console.WriteLine(success.IsSuccess); // Output: True
-/// </code>
+/// ]]></code>
 /// </example>
 /// </remarks>
 [SuppressMessage("Design", "CA1062:Validate arguments of public methods")]
@@ -157,38 +156,30 @@ public static class ResultExtensionsBind
     /// <param name="self">The result to bind.</param>
     /// <param name="func">The function to apply to the value if the result is successful.</param>
     /// <returns>
-    /// A new result that will be:
     /// <list type="bullet">
     /// <item><description>The result of applying <paramref name="func"/> to the value if the input result is successful</description></item>
     /// <item><description>A failure containing the original error if the input result is a failure</description></item>
     /// </list>
     /// </returns>
     /// <example>
-    /// Here's an example of validating user input:
-    /// <code>
-    /// Result&lt;string&gt; ValidateEmail(string email) =>
-    ///     email.Contains("@")
-    ///         ? Result.Success(email)
-    ///         : Result.Failure&lt;string&gt;(ResultError.New("Invalid email format"));
+    /// Basic email validation example:
+    /// <code><![CDATA[
+    /// Result<string> ValidateEmail(string email) =>
+    ///     !email.Contains("@")
+    ///         ? Result.Failure<string>(ResultError.New("Invalid email format"))
+    ///         : Result.Success(email);
     ///
-    /// Result&lt;string&gt; ValidateDomain(string email) =>
-    ///     email.EndsWith(".com")
-    ///         ? Result.Success(email)
-    ///         : Result.Failure&lt;string&gt;(ResultError.New("Only .com domains allowed"));
+    /// Result<string> ValidateDomain(string email) =>
+    ///     !email.EndsWith(".com")
+    ///         ? Result.Failure<string>(ResultError.New("Only .com domains allowed"))
+    ///         : Result.Success(email);
     ///
     /// // Chain multiple validations
     /// var result = Result.Success("user@example.com")
     ///     .Bind(ValidateEmail)
     ///     .Bind(ValidateDomain);
     /// Console.WriteLine(result.IsSuccess); // Output: True
-    ///
-    /// // Invalid input shows how errors propagate
-    /// var invalid = Result.Success("invalid-email")
-    ///     .Bind(ValidateEmail)
-    ///     .Bind(ValidateDomain);
-    /// Console.WriteLine(invalid.IsFailure); // Output: True
-    /// Console.WriteLine(invalid.Error.Message); // Output: "Invalid email format"
-    /// </code>
+    /// ]]></code>
     /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -206,7 +197,6 @@ public static class ResultExtensionsBind
     /// <param name="self">The Try operation to bind.</param>
     /// <param name="func">The function to apply to the value if the Try operation succeeds.</param>
     /// <returns>
-    /// A new Result that will be:
     /// <list type="bullet">
     /// <item><description>The result of applying <paramref name="func"/> to the value if the Try operation succeeds</description></item>
     /// <item><description>A failure containing the exception as a ResultError if the Try operation fails</description></item>
@@ -214,28 +204,28 @@ public static class ResultExtensionsBind
     /// </returns>
     /// <example>
     /// Safe number parsing and validation:
-    /// <code>
+    /// <code><![CDATA[
     /// // Define a Try operation for parsing
-    /// Try&lt;int&gt; ParseNumber = () =>
-    ///     Result.Success(int.Parse("123"));
+    /// Try<int> ParseNumber(string input) => () =>
+    /// {
+    ///     if (int.TryParse(input, out int number))
+    ///         return Result.Success(number);
+    ///     return Result.Failure<int>(ResultError.New($"Cannot parse '{input}' as number"));
+    /// };
     ///
     /// // Define a validation function
-    /// Result&lt;int&gt; ValidateRange(int number) =>
-    ///     (number &gt;= 1 && number &lt;= 100)
+    /// Result<int> ValidateRange(int number) =>
+    ///     number >= 1 && number <= 100
     ///         ? Result.Success(number)
-    ///         : Result.Failure&lt;int&gt;(ResultError.New("Number must be between 1 and 100"));
+    ///         : Result.Failure<int>(ResultError.New("Number must be between 1 and 100"));
     ///
-    /// // Combine parsing and validation
-    /// var result = ParseNumber.Bind(ValidateRange);
+    /// // Usage:
+    /// var result = ParseNumber("42").Bind(ValidateRange);
     /// Console.WriteLine(result.IsSuccess); // Output: True
     ///
-    /// // Example with parsing failure
-    /// Try&lt;int&gt; ParseInvalid = () =>
-    ///     Result.Success(int.Parse("not a number"));
-    /// var failed = ParseInvalid.Bind(ValidateRange);
+    /// var failed = ParseNumber("not a number").Bind(ValidateRange);
     /// Console.WriteLine(failed.IsFailure); // Output: True
-    /// // Error will contain FormatException details
-    /// </code>
+    /// ]]></code>
     /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -253,56 +243,39 @@ public static class ResultExtensionsBind
     /// <param name="self">The first Try operation to bind.</param>
     /// <param name="func">The function returning a second Try operation to apply if the first succeeds.</param>
     /// <returns>
-    /// A new Result that will be:
     /// <list type="bullet">
     /// <item><description>Successful if both Try operations succeed</description></item>
     /// <item><description>A failure containing the first encountered exception as a ResultError</description></item>
     /// </list>
     /// </returns>
     /// <example>
-    /// Safe data parsing example:
-    /// <code>
-    /// public class DataProcessor
+    /// Safe date parsing and validation:
+    /// <code><![CDATA[
+    /// public class DateProcessor
     /// {
-    ///     // First Try operation: Parse date string
-    ///     public Try&lt;DateTime&gt; ParseDate(string input) => () =>
+    ///     // Parse date string safely
+    ///     public Try<DateTime> ParseDate(string input) => () =>
     ///     {
     ///         if (DateTime.TryParse(input, out var date))
     ///             return Result.Success(date);
-    ///         throw new FormatException($"Invalid date format: {input}");
+    ///         return Result.Failure<DateTime>(ResultError.New($"Invalid date: {input}"));
     ///     };
     ///
-    ///     // Second Try operation: Validate business rules
-    ///     public Try&lt;DateTime&gt; ValidateBusinessDay(DateTime date) => () =>
+    ///     // Validate business rules
+    ///     public Try<DateTime> ValidateBusinessDay(DateTime date) => () =>
     ///     {
-    ///         if (date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
-    ///             throw new ArgumentException("Date must be a business day");
-    ///         if (date.Date &lt; DateTime.Today)
-    ///             throw new ArgumentException("Date must not be in the past");
+    ///         if (date.DayOfWeek is DayOfWeek.Saturday || date.DayOfWeek is DayOfWeek.Sunday)
+    ///             return Result.Failure<DateTime>(ResultError.New("Must be a business day"));
+    ///         if (date < DateTime.Today)
+    ///             return Result.Failure<DateTime>(ResultError.New("Must not be in the past"));
     ///         return Result.Success(date);
     ///     };
     ///
-    ///     public Result&lt;DateTime&gt; ProcessDate(string input) =>
+    ///     // Process date with validation
+    ///     public Result<DateTime> ProcessDate(string input) =>
     ///         ParseDate(input).Bind(ValidateBusinessDay);
     /// }
-    ///
-    /// // Usage:
-    /// var processor = new DataProcessor();
-    ///
-    /// // Invalid format
-    /// var result1 = processor.ProcessDate("not a date");
-    /// Console.WriteLine(result1.IsFailure); // Output: True
-    /// Console.WriteLine(result1.Error.Message); // Output: "Invalid date format: not a date"
-    ///
-    /// // Weekend date
-    /// var result2 = processor.ProcessDate("2024-01-13"); // A Saturday
-    /// Console.WriteLine(result2.IsFailure); // Output: True
-    /// Console.WriteLine(result2.Error.Message); // Output: "Date must be a business day"
-    ///
-    /// // Valid business day
-    /// var result3 = processor.ProcessDate("2024-01-15"); // A Monday
-    /// Console.WriteLine(result3.IsSuccess); // Output: True
-    /// </code>
+    /// ]]></code>
     /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -310,5 +283,4 @@ public static class ResultExtensionsBind
         => self.Try().Match(
             success: input => func(input).Try(),
             failure: error => Result.Failure<TOut>(error));
-
 }
