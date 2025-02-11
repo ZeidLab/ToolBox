@@ -24,29 +24,30 @@ namespace ZeidLab.ToolBox.Results;
 ///   and <see cref="Exception"/> to simplify usage.
 /// - Factory methods: Provides <see cref="Result.Success{TValue}(TValue)"/> and <see cref="Result.Failure{TValue}(ResultError)"/>
 ///   methods for creating instances with validation.
-/// - Default value detection: The <see cref="IsDefault"/> property indicates whether the <see cref="Value"/>
-///   is the default value for <typeparamref name="TValue"/>.
+/// - Default value detection: The <see cref="IsDefault"/> property indicates whether the value is the default for <typeparamref name="TValue"/>.
 ///
 /// Example Usage:
 /// <code>
 /// // Successful result
-/// Result&lt;int&gt; successResult = Result&lt;int&gt;.Success(42);
+/// Result&lt;int&gt; successResult = Result.Success(42);
+/// Console.WriteLine(successResult.IsSuccess); // Output: True
+/// Console.WriteLine(successResult.IsDefault); // Output: False
 ///
 /// // Failed result with an error message
-/// Result&lt;int&gt; failureResult = Result&lt;int&gt;.Failure(Error.New("Operation failed."));
+/// Result&lt;int&gt; failureResult = Result.Failure&lt;int&gt;(ResultError.New("Operation failed."));
+/// Console.WriteLine(failureResult.IsFailure); // Output: True
+/// Console.WriteLine(failureResult.Error.Message); // Output: "Operation failed."
 ///
 /// // Failed result from an exception
 /// Result&lt;int&gt; exceptionResult = new InvalidOperationException("Invalid operation");
+/// Console.WriteLine(exceptionResult.IsFailure); // Output: True
+/// Console.WriteLine(exceptionResult.Error.Message); // Output: "Invalid operation"
 ///
-/// // Check the result state
-/// if (successResult.IsSuccess)
-/// {
-///     Console.WriteLine($"Success: {successResult.Value}");
-/// }
-/// else
-/// {
-///     Console.WriteLine($"Failure: {successResult.Error.Message}");
-/// }
+/// // Pattern matching with Match extension method
+/// string resultText = successResult.Match(
+///     success: value => $"Success: {value}",
+///     failure: error => $"Failure: {error.Message}"
+/// ); // Output: "Success: 42"
 /// </code>
 ///
 /// This type is designed to promote explicit and predictable error handling, making it easier to reason
