@@ -18,23 +18,26 @@ namespace ZeidLab.ToolBox.Results;
 /// <code><![CDATA[
 /// Try<int> divide = () => {
 ///     int dividend = 10;
-///     int divisor = 2;
+///     int divisor = 0;
 ///     if (divisor == 0)
-///         return Result.Failure<int>("Division by zero");
+///         return Result.Failure<int>(new DivideByZeroException("Cannot divide by zero"));
 ///     return Result.Success(dividend / divisor);
 /// };
 ///
-/// var result = divide.Try(); // Returns Success(5)
+/// var result = divide.Try(); // Returns Failure with DivideByZeroException
+/// result.Match(
+///     success: value => Console.WriteLine($"Result: {value}"),
+///     failure: error => Console.WriteLine($"Error: {error.Message}")
+/// );
 /// ]]></code>
 ///
-/// Handling exceptions automatically:
+/// Handling exceptions properly:
 /// <code><![CDATA[
-/// Try<string> readFile = () => {
-///     var content = File.ReadAllText("nonexistent.txt");
-///     return Result.Success(content);
+/// Try<int> parseNumber = () => {
+///         return Result.Success(int.Parse("invalid"));
 /// };
 ///
-/// var result = readFile.Try(); // Returns Failure with FileNotFoundException
+/// var result = parseNumber.Try(); // Returns Failure with FormatException
 /// ]]></code>
 /// </example>
 #pragma warning disable CA1716
@@ -53,22 +56,32 @@ public delegate Result<TIn> Try<TIn>();
 /// Basic usage with an async operation:
 /// <code><![CDATA[
 /// TryAsync<string> fetchData = async () => {
-///     using var client = new HttpClient();
-///     var response = await client.GetStringAsync("https://api.example.com/data");
-///     return Result.Success(response);
+///         using var client = new HttpClient();
+///         var response = await client.GetStringAsync("https://api.example.com/data");
+///         return Result.Success(response);
 /// };
 ///
 /// var result = await fetchData.TryAsync(); // Handles both success and exceptions
+/// result.Match(
+///     success: data => Console.WriteLine($"Data: {data}"),
+///     failure: error => Console.WriteLine($"Error: {error.Message}")
+/// );
 /// ]]></code>
 ///
-/// Chaining async operations:
+/// Converting and chaining sync/async operations:
 /// <code><![CDATA[
-/// TryAsync<int> processData = async () => {
-///     var syncOp = new Try<string>(() => Result.Success("42"));
-///     var asyncOp = syncOp.ToAsync();
-///     var result = await asyncOp.TryAsync();
-///     return result.Map(int.Parse);
-/// };
+/// // Synchronous operation
+/// Try<int> getValue = () => Result.Success(42);
+///
+/// // Convert to async and chain
+/// var asyncResult = await getValue
+///     .ToAsync()
+///     .TryAsync();
+///
+/// asyncResult.Match(
+///     success: value => Console.WriteLine($"Value: {value}"),
+///     failure: error => Console.WriteLine($"Error: {error.Message}")
+/// );
 /// ]]></code>
 /// </example>
 public delegate Task<Result<TIn>> TryAsync<TIn>();
@@ -87,8 +100,7 @@ public delegate Task<Result<TIn>> TryAsync<TIn>();
 /// // Convert to async and chain operations
 /// var result = await getData
 ///     .ToAsync()
-///     .TryAsync()
-///     .Map(x => x * 2);
+///     .TryAsync();
 ///
 /// Console.WriteLine(result.Match(
 ///     success: x => $"Result: {x}",     // Outputs: "Result: 84"
@@ -107,40 +119,38 @@ public static class ResultExtensionsTry
     /// <typeparam name="TIn">The type of the value within the result.</typeparam>
     /// <param name="self">The synchronous operation to convert.</param>
     /// <returns>An asynchronous operation that wraps the original synchronous operation.</returns>
-    /// <example>
-    /// Converting and using a synchronous operation in an async context:
-    /// <code><![CDATA[
-    /// // Synchronous operation that might fail
-    /// Try<int> parseNumber = () => {
-    ///     string input = "abc";
-    ///     return int.Parse(input); // Throws FormatException
-    /// };
-    ///
-    /// // Convert to async and execute safely
-    /// var asyncOp = parseNumber.ToAsync();
-    /// var result = await asyncOp.TryAsync();
-    ///
-    /// result.Match(
-    ///     success: value => Console.WriteLine($"Parsed: {value}"),
-    ///     failure: error => Console.WriteLine($"Error: {error.Message}") // Output: "Error: Input string was not in a correct format."
-    /// );
-    /// ]]></code>
-    ///
-    /// Chaining sync and async operations:
-    /// <code><![CDATA[
-    /// Try<int> getInventory = () => Result.Success(100);
-    ///
-    /// var updatedInventory = await getInventory
-    ///     .ToAsync()
-    ///     .TryAsync()
-    ///     .MapAsync(async x => {
-    ///         await Task.Delay(100); // Simulate async operation
-    ///         return x - 25;
-    ///     });
-    ///
-    /// Console.WriteLine(updatedInventory.Value); // Output: 75
-    /// ]]></code>
-    /// </example>
+/// <example>
+/// Converting and using a synchronous operation in an async context:
+/// <code><![CDATA[
+/// // Synchronous operation that might fail
+/// Try<int> parseNumber = () => {
+///         return Result.Success(int.Parse("abc"));
+/// };
+///
+/// // Convert to async and execute safely
+/// var asyncOp = parseNumber.ToAsync();
+/// var result = await asyncOp.TryAsync();
+///
+/// result.Match(
+///     success: value => Console.WriteLine($"Parsed: {value}"),
+///     failure: error => Console.WriteLine($"Error: {error.Message}") // Output: "Error: Input string was not in a correct format."
+/// );
+/// ]]></code>
+///
+/// Converting a successful operation:
+/// <code><![CDATA[
+/// Try<int> getValue = () => Result.Success(42);
+///
+/// var asyncResult = await getValue
+///     .ToAsync()
+///     .TryAsync();
+///
+/// asyncResult.Match(
+///     success: value => Console.WriteLine($"Value: {value}"), // Output: "Value: 42"
+///     failure: error => Console.WriteLine($"Error: {error.Message}")
+/// );
+/// ]]></code>
+/// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #pragma warning disable AMNF0002
@@ -197,13 +207,8 @@ public static class ResultExtensionsTry
     /// <code><![CDATA[
     /// TryAsync<string> fetchData = async () => {
     ///     using var client = new HttpClient();
-    ///     try {
-    ///         var data = await client.GetStringAsync("https://invalid-url");
-    ///         return Result.Success(data);
-    ///     }
-    ///     catch (HttpRequestException ex) {
-    ///         return Result.Failure<string>(ex);
-    ///     }
+    ///     var data = await client.GetStringAsync("https://invalid-url");
+    ///     return Result.Success(data);
     /// };
     ///
     /// var result = await fetchData.TryAsync();
