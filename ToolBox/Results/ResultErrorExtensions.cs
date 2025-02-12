@@ -39,66 +39,31 @@ namespace ZeidLab.ToolBox.Results;
 
 public static class ResultErrorExtensions
 {
-    /// <summary>
-    /// Tries to get the exception associated with this error.
-    /// </summary>
-    /// <param name="self">The error instance.</param>
-    /// <param name="exception">The exception associated with this error, or <c>null</c> if there is no exception.</param>
-    /// <returns>
-    /// <see langword="true"/> if there is an exception associated with this error;
-    /// otherwise, <see langword="false"/>.
-    /// </returns>
-    /// <example>
-    /// <code><![CDATA[
-    /// try
-    /// {
-    ///     throw new InvalidOperationException("Database connection failed");
-    /// }
-    /// catch (Exception ex)
-    /// {
-    ///     var error = ResultError.New("DatabaseError", "Connection failed", ex);
-    ///
-    ///     if (error.TryGetException(out var exception))
-    ///     {
-    ///         Console.WriteLine($"Original error: {exception.Message}");
-    ///         // Handle or log the exception
-    ///     }
-    /// }
-    /// ]]></code>
-    /// </example>
-    public static bool TryGetException(this ResultError self, out Exception? exception)
-    {
-        exception = self.Exception;
-        return exception is not null;
-    }
 
     /// <summary>
     /// Tries to get the exception associated with this error.
     /// </summary>
     /// <param name="self">The original error instance.</param>
-    /// <returns>The exception associated with this error, or null if there is no exception.</returns>
+    /// <returns>
+    /// A <see cref="Maybe{T}"/> that contains the exception associated with this
+    /// error, or <see cref="Maybe.None{T}"/> if there is no exception.
+    /// </returns>
     /// <example>
     /// <code><![CDATA[
-    /// var error = ResultError.New(
-    ///     (int)ResultErrorCode.Internal,
-    ///     "Database operation failed"
-    /// );
-    ///
-    /// // Use TryGetException with out parameter
-    /// if (error.TryGetException(out var exception))
+    /// var ex = new Exception("Test");
+    /// var error = ResultError.New(ex);
+    /// var maybeException = error.TryGetException();
+    /// if (maybeException.IsSome)
     /// {
-    ///     Console.WriteLine($"Root cause: {exception.Message}");
-    /// }
-    /// else
-    /// {
-    ///     Console.WriteLine("No underlying exception");
+    ///     Console.WriteLine(maybeException.Value.Message); // Outputs: Test
     /// }
     /// ]]></code>
     /// </example>
-    public static Exception? TryGetException(this ResultError self)
+    public static Maybe<Exception> TryGetException(this ResultError self)
     {
-        return self.Exception;
+	    return self.Exception is { } exception ? exception.ToSome() : Maybe.None<Exception>();
     }
+
 
     /// <summary>
     /// Creates a new <see cref="ResultError"/> instance with the specified error code.

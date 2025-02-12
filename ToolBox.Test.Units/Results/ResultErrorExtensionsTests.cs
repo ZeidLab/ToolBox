@@ -5,34 +5,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results;
 
 public class ResultErrorExtensionsTests
 {
-    [Fact]
-    public void TryGetException_WhenUnhandledExceptionIsNotNull_ShouldReturnTrueAndException()
-    {
-        // Arrange
-        var exception = new Exception("Test exception");
-        var error = new ResultError(1, "TestError", "Test message", exception);
 
-        // Act
-        var result = error.TryGetException(out var actualException);
-
-        // Assert
-        result.Should().BeTrue();
-        actualException.Should().Be(exception);
-    }
-
-    [Fact]
-    public void TryGetException_WhenUnhandledExceptionIsNull_ShouldReturnFalseAndNull()
-    {
-        // Arrange
-        var error = new ResultError(1, "TestError", "Test message");
-
-        // Act
-        var result = error.TryGetException(out var actualException);
-
-        // Assert
-        result.Should().BeFalse();
-        actualException.Should().BeNull();
-    }
 
     [Fact]
     public void TryGetException_WhenUnhandledExceptionIsNotNull_ShouldReturnSomeException()
