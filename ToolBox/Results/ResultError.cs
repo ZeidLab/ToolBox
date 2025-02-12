@@ -23,19 +23,38 @@ namespace ZeidLab.ToolBox.Results;
 /// - Default values: Provides default error codes and names for common use cases.
 ///
 /// Example Usage:
-/// <code>
-/// // Create an error with a custom message
-/// ResultError error1 = Error.New("An unexpected error occurred.");
+/// <code><![CDATA[
+/// // Create an error with a validation message
+/// ResultError validationError = ResultError.New(
+///     (int)ResultErrorCode.Validation,
+///     "The provided email address is invalid."
+/// );
+/// Console.WriteLine(validationError); // Output: [400] UnspecifiedError: The provided email address is invalid.
 ///
-/// // Create an error from an exception
-/// ResultError error2 = new InvalidOperationException("Invalid operation");
+/// // Create an error from an exception with custom name
+/// try
+/// {
+///     throw new InvalidOperationException("Database connection failed");
+/// }
+/// catch (Exception ex)
+/// {
+///     ResultError dbError = ResultError.New("DatabaseError", "Failed to connect to database", ex);
+///     Console.WriteLine(dbError); // Output: [-2146233079] DatabaseError: Failed to connect to database
+/// }
 ///
-/// // Create an error with a custom code, name, and message
-/// ResultError error3 = Error.New(404, "NotFound", "The requested resource was not found.");
+/// // Implicit conversion from string (uses default error code)
+/// ResultError genericError = "Operation timed out";
+/// Console.WriteLine(genericError.Code == (int)ResultErrorCode.Generic); // Output: True
 ///
-/// // Deconstruct an error into its components
-/// var (code, name, message, exception) = error3;
-/// </code>
+/// // Deconstruct an error to access all properties
+/// var notFoundError = ResultError.New(
+///     (int)ResultErrorCode.NotFound,
+///     "User with ID '123' was not found."
+/// );
+/// var (code, name, message, exception) = notFoundError;
+/// Console.WriteLine($"Code: {code}, Name: {name}, Message: {message}");
+/// // Output: Code: 404, Name: UnspecifiedError, Message: User with ID '123' was not found.
+/// ]]></code>
 ///
 /// This type is a fundamental building block for robust and predictable error handling in functional-style
 /// C# applications.
@@ -47,28 +66,69 @@ namespace ZeidLab.ToolBox.Results;
 public enum ResultErrorCode
 {
     /// <summary>
-    /// No error
+    /// Represents no error condition. This is the default value for the enum.
     /// </summary>
+    /// <example>
+    /// <code>
+    /// // Check if an error is the None value
+    /// var error = ResultError.Default;
+    /// var isNone = error.Code == (int)ResultErrorCode.None; // true
+    /// </code>
+    /// </example>
     None = 0,
-
+    
     /// <summary>
-    /// Generic error
+    /// Represents a general error condition where a more specific error code is not applicable.
     /// </summary>
+    /// <example>
+    /// <code>
+    /// // Create a generic error
+    /// var error = ResultError.New("An unexpected error occurred.");
+    /// Console.WriteLine(error.Code == (int)ResultErrorCode.Generic); // true
+    /// </code>
+    /// </example>
     Generic = 1,
-
+    
     /// <summary>
-    /// Validation error
+    /// Represents a validation error, typically used when input data fails validation rules.
     /// </summary>
+    /// <example>
+    /// <code>
+    /// // Create a validation error
+    /// var error = ResultError.New((int)ResultErrorCode.Validation, "The username must be at least 3 characters long.");
+    /// Console.WriteLine(error.Code); // Output: 400
+    /// </code>
+    /// </example>
     Validation = 400,
-
+    
     /// <summary>
-    /// Not found error
+    /// Represents a resource not found error, typically used when a requested entity does not exist.
     /// </summary>
+    /// <example>
+    /// <code>
+    /// // Create a not found error
+    /// var error = ResultError.New((int)ResultErrorCode.NotFound, "User with ID '123' was not found.");
+    /// Console.WriteLine(error.Code); // Output: 404
+    /// </code>
+    /// </example>
     NotFound = 404,
-
+    
     /// <summary>
-    /// Internal error
+    /// Represents an internal error, typically used when an unexpected system error occurs.
     /// </summary>
+    /// <example>
+    /// <code>
+    /// try
+    /// {
+    ///     throw new InvalidOperationException("Database connection failed");
+    /// }
+    /// catch (Exception ex)
+    /// {
+    ///     var error = ResultError.New((int)ResultErrorCode.Internal, "An internal error occurred", ex);
+    ///     Console.WriteLine(error.Code); // Output: 500
+    /// }
+    /// </code>
+    /// </example>
     Internal = 500
 }
 
