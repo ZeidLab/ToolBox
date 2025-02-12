@@ -15,27 +15,27 @@ namespace ZeidLab.ToolBox.Results;
 /// or a failure with an error description.</returns>
 /// <example>
 /// Basic usage with a simple calculation:
-/// <code>
-/// Try&lt;int&gt; divide = () => {
+/// <code><![CDATA[
+/// Try<int> divide = () => {
 ///     int dividend = 10;
 ///     int divisor = 2;
 ///     if (divisor == 0)
-///         return Result.Failure&lt;int&gt;("Division by zero");
+///         return Result.Failure<int>("Division by zero");
 ///     return Result.Success(dividend / divisor);
 /// };
-/// 
+///
 /// var result = divide.Try(); // Returns Success(5)
-/// </code>
-/// 
+/// ]]></code>
+///
 /// Handling exceptions automatically:
-/// <code>
-/// Try&lt;string&gt; readFile = () => {
+/// <code><![CDATA[
+/// Try<string> readFile = () => {
 ///     var content = File.ReadAllText("nonexistent.txt");
 ///     return Result.Success(content);
 /// };
-/// 
+///
 /// var result = readFile.Try(); // Returns Failure with FileNotFoundException
-/// </code>
+/// ]]></code>
 /// </example>
 #pragma warning disable CA1716
 public delegate Result<TIn> Try<TIn>();
@@ -47,29 +47,29 @@ public delegate Result<TIn> Try<TIn>();
 /// pattern, providing a structured way to handle both success and failure cases asynchronously.
 /// </summary>
 /// <typeparam name="TIn">The type of the value returned by a successful operation.</typeparam>
-/// <returns>A <see cref="Task{T}"/> of <see cref="Result{TIn}"/> representing either the successful 
+/// <returns>A <see cref="Task{T}"/> of <see cref="Result{TIn}"/> representing either the successful
 /// outcome with a value, or a failure with an error description.</returns>
 /// <example>
 /// Basic usage with an async operation:
-/// <code>
-/// TryAsync&lt;string&gt; fetchData = async () => {
+/// <code><![CDATA[
+/// TryAsync<string> fetchData = async () => {
 ///     using var client = new HttpClient();
 ///     var response = await client.GetStringAsync("https://api.example.com/data");
 ///     return Result.Success(response);
 /// };
-/// 
+///
 /// var result = await fetchData.TryAsync(); // Handles both success and exceptions
-/// </code>
-/// 
+/// ]]></code>
+///
 /// Chaining async operations:
-/// <code>
-/// TryAsync&lt;int&gt; processData = async () => {
-///     var syncOp = new Try&lt;string&gt;(() => Result.Success("42"));
+/// <code><![CDATA[
+/// TryAsync<int> processData = async () => {
+///     var syncOp = new Try<string>(() => Result.Success("42"));
 ///     var asyncOp = syncOp.ToAsync();
 ///     var result = await asyncOp.TryAsync();
 ///     return result.Map(int.Parse);
 /// };
-/// </code>
+/// ]]></code>
 /// </example>
 public delegate Task<Result<TIn>> TryAsync<TIn>();
 
@@ -80,21 +80,21 @@ public delegate Task<Result<TIn>> TryAsync<TIn>();
 /// </summary>
 /// <example>
 /// Basic usage combining sync and async operations:
-/// <code>
+/// <code><![CDATA[
 /// // Synchronous operation
-/// Try&lt;int&gt; getData = () => Result.Success(42);
-/// 
+/// Try<int> getData = () => Result.Success(42);
+///
 /// // Convert to async and chain operations
 /// var result = await getData
 ///     .ToAsync()
 ///     .TryAsync()
 ///     .Map(x => x * 2);
-/// 
+///
 /// Console.WriteLine(result.Match(
 ///     success: x => $"Result: {x}",     // Outputs: "Result: 84"
 ///     failure: err => err.ToString()
 /// ));
-/// </code>
+/// ]]></code>
 /// </example>
 [SuppressMessage("Design", "CA1062:Validate arguments of public methods")]
 [SuppressMessage("Design", "CA1031:Do not catch general exception types")]
@@ -109,13 +109,37 @@ public static class ResultExtensionsTry
     /// <returns>An asynchronous operation that wraps the original synchronous operation.</returns>
     /// <example>
     /// Converting and using a synchronous operation in an async context:
-    /// <code>
-    /// Try&lt;int&gt; syncOp = () => Result.Success(42);
-    /// TryAsync&lt;int&gt; asyncOp = syncOp.ToAsync();
-    /// 
+    /// <code><![CDATA[
+    /// // Synchronous operation that might fail
+    /// Try<int> parseNumber = () => {
+    ///     string input = "abc";
+    ///     return int.Parse(input); // Throws FormatException
+    /// };
+    ///
+    /// // Convert to async and execute safely
+    /// var asyncOp = parseNumber.ToAsync();
     /// var result = await asyncOp.TryAsync();
-    /// Console.WriteLine(result.IsSuccess); // Outputs: True
-    /// </code>
+    ///
+    /// result.Match(
+    ///     success: value => Console.WriteLine($"Parsed: {value}"),
+    ///     failure: error => Console.WriteLine($"Error: {error.Message}") // Output: "Error: Input string was not in a correct format."
+    /// );
+    /// ]]></code>
+    ///
+    /// Chaining sync and async operations:
+    /// <code><![CDATA[
+    /// Try<int> getInventory = () => Result.Success(100);
+    ///
+    /// var updatedInventory = await getInventory
+    ///     .ToAsync()
+    ///     .TryAsync()
+    ///     .MapAsync(async x => {
+    ///         await Task.Delay(100); // Simulate async operation
+    ///         return x - 25;
+    ///     });
+    ///
+    /// Console.WriteLine(updatedInventory.Value); // Output: 75
+    /// ]]></code>
     /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -136,15 +160,15 @@ public static class ResultExtensionsTry
     /// any thrown exception.</returns>
     /// <example>
     /// Safely executing an operation that might throw:
-    /// <code>
-    /// Try&lt;int&gt; divideByZero = () => {
+    /// <code><![CDATA[
+    /// Try<int> divideByZero = () => {
     ///     return Result.Success(100 / 0); // Would throw DivideByZeroException
     /// };
-    /// 
+    ///
     /// var result = divideByZero.Try();
     /// Console.WriteLine(result.IsFailure); // Outputs: True
     /// Console.WriteLine(result.Error is DivideByZeroException); // Outputs: True
-    /// </code>
+    /// ]]></code>
     /// </example>
     [Pure]
     public static Result<TIn> Try<TIn>(this Try<TIn> self)
@@ -170,22 +194,22 @@ public static class ResultExtensionsTry
     /// or a failure result containing any thrown exception.</returns>
     /// <example>
     /// Safely executing an async operation that might throw:
-    /// <code>
-    /// TryAsync&lt;string&gt; fetchData = async () => {
+    /// <code><![CDATA[
+    /// TryAsync<string> fetchData = async () => {
     ///     using var client = new HttpClient();
     ///     try {
     ///         var data = await client.GetStringAsync("https://invalid-url");
     ///         return Result.Success(data);
     ///     }
     ///     catch (HttpRequestException ex) {
-    ///         return Result.Failure&lt;string&gt;(ex);
+    ///         return Result.Failure<string>(ex);
     ///     }
     /// };
-    /// 
+    ///
     /// var result = await fetchData.TryAsync();
     /// if (result.IsFailure)
     ///     Console.WriteLine("Failed to fetch data");
-    /// </code>
+    /// ]]></code>
     /// </example>
     [Pure]
     public static async Task<Result<TIn>> TryAsync<TIn>(this TryAsync<TIn> self)
