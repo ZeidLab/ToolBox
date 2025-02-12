@@ -26,19 +26,27 @@ namespace ZeidLab.ToolBox.Common;
 /// - Compatibility: Can be implicitly converted to and from <see cref="ValueTuple"/> for interoperability with
 ///   other functional programming constructs.
 ///
-/// Example Usage:
-/// <code>
-/// // A method that performs a side effect and returns Result&lt;Unit&gt;
-/// Result&lt;Unit&gt; LogMessage(string message)
-/// {
-///     Console.WriteLine(message);
-///     return Result&lt;Unit&gt;.Success(Unit.Default);
-/// }
+/// <example>
+/// <code><![CDATA[
+/// // Successful operation with Unit
+/// Result<Unit> result = Result<Unit>.Success(Unit.Default);
 ///
-/// // Chaining methods in railway-oriented programming
-/// Result&lt;Unit&gt; result = LogMessage("Hello, World!")
-///     .Bind(_ => LogMessage("Another message."));
-/// </code>
+/// // Chaining operations using Bind
+/// Result<Unit> workflow = result
+///     .Bind(_ => LogMessage("First step completed"))
+///     .Bind(_ => ValidateConfiguration());
+///
+/// // Pattern matching with Maybe
+/// Maybe<int> maybeValue = Maybe<int>.None();
+/// string message = maybeValue.Match(
+///     some: value => $"Value: {value}",
+///     none: () => "No value found"
+/// );
+///
+/// // Error handling example
+/// Result<Unit> errorResult = Result<Unit>.Failure(ResultError.Create("Failed operation"));
+/// ]]></code>
+/// </example>
 /// </summary>
 [Serializable]
 [StructLayout(LayoutKind.Sequential, Size = 1)]
@@ -103,12 +111,21 @@ public readonly record struct Unit : IComparable<Unit>
     public static bool operator <=(Unit lhs, Unit rhs) => true;
 
     /// <summary>
-    /// Provides an alternative value to <see cref="Unit"/>. This method is useful for transforming
-    /// a <see cref="Unit"/> into a meaningful value when needed.
+    /// Transforms a <see cref="Unit"/> into a meaningful value of type <typeparamref name="T"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the alternative value.</typeparam>
-    /// <param name="anything">The alternative value to return.</param>
-    /// <returns>The alternative value.</returns>
+    /// <typeparam name="T">The type of value to return.</typeparam>
+    /// <param name="anything">The value to return.</param>
+    /// <returns>The provided <paramref name="anything"/> value.</returns>
+    /// <example>
+    /// <code><![CDATA[
+    /// // Convert Unit to a default value
+    /// int defaultValue = Unit.Default.Return(42);
+    ///
+    /// // Use with Result<T> for error handling
+    /// Result<int> result = Unit.Default
+    ///     .Return(Result<int>.Success(100));
+    /// ]]></code>
+    /// </example>
     [Pure]
     public static T Return<T>(T anything) => anything;
 
