@@ -7,53 +7,44 @@ using ZeidLab.ToolBox.Common;
 namespace ZeidLab.ToolBox.Results;
 
 /// <summary>
-/// Represents the result of an operation that may either succeed or fail. This type is a fundamental
-/// building block in railway-oriented programming (ROP), where operations are modeled as a series of
-/// steps that either continue on the "happy path" (success) or diverge to an "error track" (failure).
-///
-/// The <see cref="Result{TValue}"/> type encapsulates either a successful value of type <typeparamref name="TValue"/>
-/// or an <see cref="Error"/> representing the failure. It provides a robust and predictable way to handle
-/// errors without relying on exceptions for control flow.
-///
-/// Key Features:
-/// - Immutable and thread-safe: Once created, a <see cref="Result{TValue}"/> instance cannot be modified.
-/// - Value semantics: As a record struct, it is lightweight and copied by value.
-/// - Success/Failure states: The <see cref="IsSuccess"/> and <see cref="IsFailure"/> properties
-///   clearly indicate the outcome of the operation.
-/// - Implicit conversions: Supports implicit conversions from <typeparamref name="TValue"/>, <see cref="Error"/>,
-///   and <see cref="Exception"/> to simplify usage.
-/// - Factory methods: Provides <see cref="Result.Success{TValue}(TValue)"/> and <see cref="Result.Failure{TValue}(ResultError)"/>
-///   methods for creating instances with validation.
-/// - Default value detection: The <see cref="IsDefault"/> property indicates whether the value is the default for <typeparamref name="TValue"/>.
-///
-/// Example Usage:
-/// <code>
-/// // Successful result
-/// Result&lt;int&gt; successResult = Result.Success(42);
-/// Console.WriteLine(successResult.IsSuccess); // Output: True
-/// Console.WriteLine(successResult.IsDefault); // Output: False
-///
-/// // Failed result with an error message
-/// Result&lt;int&gt; failureResult = Result.Failure&lt;int&gt;(ResultError.New("Operation failed."));
-/// Console.WriteLine(failureResult.IsFailure); // Output: True
-/// Console.WriteLine(failureResult.Error.Message); // Output: "Operation failed."
-///
-/// // Failed result from an exception
-/// Result&lt;int&gt; exceptionResult = new InvalidOperationException("Invalid operation");
-/// Console.WriteLine(exceptionResult.IsFailure); // Output: True
-/// Console.WriteLine(exceptionResult.Error.Message); // Output: "Invalid operation"
-///
-/// // Pattern matching with Match extension method
-/// string resultText = successResult.Match(
-///     success: value => $"Success: {value}",
-///     failure: error => $"Failure: {error.Message}"
-/// ); // Output: "Success: 42"
-/// </code>
-///
-/// This type is designed to promote explicit and predictable error handling, making it easier to reason
-/// about the flow of operations in functional-style C# applications.
+/// Represents the result of an operation that may either succeed or fail, providing a fundamental
+/// building block in railway-oriented programming (ROP).
 /// </summary>
 /// <typeparam name="TValue">The type of the value returned by a successful operation.</typeparam>
+/// <remarks>
+/// This type encapsulates either a successful value or an error, providing a robust way to handle
+/// failures without relying on exceptions for control flow.
+/// Key features include:
+/// <list type="bullet">
+/// <item><description>Immutable and thread-safe design</description></item>
+/// <item><description>Value semantics (lightweight record struct)</description></item>
+/// <item><description>Clear success/failure state indicators</description></item>
+/// <item><description>Implicit conversions from value, error, and exception types</description></item>
+/// </list>
+/// </remarks>
+/// <example>
+/// Basic success/failure handling:
+/// <code><![CDATA[
+/// // Create a successful result
+/// Result<int> success = Result.Success(42);
+/// Console.WriteLine(success.IsSuccess); // true
+/// 
+/// // Create a failure result
+/// Result<int> failure = ResultError.New("Operation failed");
+/// Console.WriteLine(failure.IsFailure); // true
+/// 
+/// // Handle exceptions implicitly
+/// Result<int> exceptionResult = new InvalidOperationException("Invalid operation");
+/// Console.WriteLine(exceptionResult.IsFailure); // true
+/// 
+/// // Pattern matching example
+/// var message = success.Match(
+///     success: value => $"Success: {value}",
+///     failure: error => $"Error: {error.Message}"
+/// );
+/// Console.WriteLine(message); // "Success: 42"
+/// ]]></code>
+/// </example>
 [Serializable]
 [StructLayout(LayoutKind.Sequential)]
 [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
@@ -100,7 +91,7 @@ public readonly record struct Result<TValue>
     /// </summary>
     /// <remarks>
     /// Use factory methods like <see cref="Result.Success{TValue}(TValue)"/>
-    /// or <see cref="Result.Failure{TValue}(ResultError)"/> instead. Using the public constructor will throw an exception.
+    /// or <see cref="Result.Failure{TValue}(ResultError)"/> instead.
     /// </remarks>
     /// <exception cref="InvalidOperationException">Thrown when the constructor is called directly.</exception>
 #pragma warning disable S1133
@@ -109,41 +100,80 @@ public readonly record struct Result<TValue>
     public Result() => throw new InvalidOperationException("Use factory methods like Result.Success or Result.Failure instead.");
 
     /// <summary>
-    /// Implicitly converts a value to a success of <see cref="Result{TValue}"/>.
+    /// Implicitly converts a value to a successful <see cref="Result{TValue}"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
-    /// <returns>A successful <see cref="Result{TValue}"/> instance.</returns>
+    /// <returns>A successful result containing the specified value.</returns>
+    /// <example>
+    /// <code><![CDATA[
+    /// Result<int> result = 42; // Implicit conversion to successful result
+    /// Console.WriteLine(result.IsSuccess); // true
+    /// ]]></code>
+    /// </example>
     [Pure]
     public static implicit operator Result<TValue>(TValue value) => Result.Success(value);
 
     /// <summary>
-    /// Implicitly converts an error to a failure of <see cref="Result{TValue}"/>.
+    /// Implicitly converts an error to a failed <see cref="Result{TValue}"/>.
     /// </summary>
     /// <param name="resultError">The error to convert.</param>
-    /// <returns>A failed <see cref="Result{TValue}"/> instance.</returns>
+    /// <returns>A failed result containing the specified error.</returns>
+    /// <example>
+    /// <code><![CDATA[
+    /// var error = ResultError.New("Operation failed");
+    /// Result<int> result = error; // Implicit conversion to failed result
+    /// Console.WriteLine(result.IsFailure); // true
+    /// ]]></code>
+    /// </example>
     [Pure]
     public static implicit operator Result<TValue>(ResultError resultError) => Result.Failure<TValue>(resultError);
 
     /// <summary>
-    /// Implicitly converts an exception to a failure of <see cref="Result{TValue}"/>.
+    /// Implicitly converts an exception to a failed <see cref="Result{TValue}"/>.
     /// </summary>
     /// <param name="error">The exception to convert.</param>
-    /// <returns>A failed <see cref="Result{TValue}"/> instance.</returns>
+    /// <returns>A failed result containing the exception as an error.</returns>
+    /// <example>
+    /// <code><![CDATA[
+    /// Result<int> result = new InvalidOperationException("Invalid operation");
+    /// Console.WriteLine(result.IsFailure); // true
+    /// ]]></code>
+    /// </example>
     [Pure]
     public static implicit operator Result<TValue>(Exception error) => Result.Failure<TValue>(error);
 }
 
 /// <summary>
-/// Static helper class for creating <see cref="Result{TValue}"/> instances.
+/// Provides factory methods for creating <see cref="Result{TValue}"/> instances.
 /// </summary>
+/// <example>
+/// Basic usage:
+/// <code><![CDATA[
+/// // Create a successful result
+/// var success = Result.Success(42);
+/// 
+/// // Create a failure result
+/// var failure = Result.Failure<int>(ResultError.New("Operation failed"));
+/// 
+/// // Create a failure from an exception
+/// var exceptionResult = Result.FromException<int>(new InvalidOperationException());
+/// ]]></code>
+/// </example>
 public static class Result
 {
     /// <summary>
-    /// Returns a successful result with a value.
+    /// Creates a successful result containing the specified value.
     /// </summary>
     /// <typeparam name="TValue">The type of the value.</typeparam>
     /// <param name="value">The value to include in the result.</param>
-    /// <returns>A successful <see cref="Result{TValue}"/> instance.</returns>
+    /// <returns>A successful result containing the specified value.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="value"/> is null.</exception>
+    /// <example>
+    /// <code><![CDATA[
+    /// var result = Result.Success(42);
+    /// Console.WriteLine(result.IsSuccess); // true
+    /// ]]></code>
+    /// </example>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<TValue> Success<TValue>(TValue value)
     {
@@ -152,21 +182,35 @@ public static class Result
     }
 
     /// <summary>
-    /// Returns a failed result with the specified error.
+    /// Creates a failed result with the specified error.
     /// </summary>
-    /// <typeparam name="TValue">The type of the value.</typeparam>
-    /// <param name="resultError">The error to include in the result.</param>
-    /// <returns>A failed <see cref="Result{TValue}"/> instance.</returns>
+    /// <typeparam name="TValue">The type of the value that would have been returned on success.</typeparam>
+    /// <param name="resultError">The error information.</param>
+    /// <returns>A failed result containing the specified error.</returns>
+    /// <example>
+    /// <code><![CDATA[
+    /// var result = Result.Failure<int>(ResultError.New("Operation failed"));
+    /// Console.WriteLine(result.IsFailure); // true
+    /// Console.WriteLine(result.Error.Message); // "Operation failed"
+    /// ]]></code>
+    /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<TValue> Failure<TValue>(ResultError resultError) => new(false, default!, resultError);
 
     /// <summary>
-    /// Returns a failed result for the given exception.
+    /// Creates a failed result from an exception.
     /// </summary>
-    /// <typeparam name="TValue">The type of the value.</typeparam>
+    /// <typeparam name="TValue">The type of the value that would have been returned on success.</typeparam>
     /// <param name="error">The exception to convert to a failure result.</param>
-    /// <returns>A failed <see cref="Result{TValue}"/> instance.</returns>
+    /// <returns>A failed result containing the exception information as an error.</returns>
+    /// <example>
+    /// <code><![CDATA[
+    /// var result = Result.FromException<int>(new InvalidOperationException("Invalid operation"));
+    /// Console.WriteLine(result.IsFailure); // true
+    /// Console.WriteLine(result.Error.Message); // "Invalid operation"
+    /// ]]></code>
+    /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Result<TValue> FromException<TValue>(Exception error) => Failure<TValue>(ResultError.New(error));
