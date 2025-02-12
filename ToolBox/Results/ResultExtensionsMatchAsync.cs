@@ -15,7 +15,8 @@ namespace ZeidLab.ToolBox.Results;
 /// <example>
 /// Basic usage with async/await:
 /// <code>
-/// async Task&lt;string&gt; ProcessUserAsync(int userId)
+/// <![CDATA[
+/// async Task<string> ProcessUserAsync(int userId)
 /// {
 ///     return await GetUserAsync(userId)
 ///         .MatchAsync(
@@ -23,11 +24,13 @@ namespace ZeidLab.ToolBox.Results;
 ///             failure: error => $"Error: {error.Message}"
 ///         );
 /// }
+/// ]]>
 /// </code>
 ///
 /// Using with async transformations:
 /// <code>
-/// async Task&lt;Result&lt;UserProfile&gt;&gt; UpdateProfileAsync(int userId)
+/// <![CDATA[
+/// async Task<Result<UserProfile>> UpdateProfileAsync(int userId)
 /// {
 ///     return await GetUserAsync(userId)
 ///         .MatchAsync(
@@ -35,6 +38,7 @@ namespace ZeidLab.ToolBox.Results;
 ///             failure: async error => await LogErrorAsync(error)
 ///         );
 /// }
+/// ]]>
 /// </code>
 /// </example>
 [SuppressMessage("Design", "CA1062:Validate arguments of public methods")]
@@ -62,7 +66,8 @@ public static class ResultExtensionsMatchAsync
 	/// <example>
 	/// Here's how to use this method to handle different result states:
 	/// <code>
-	/// async Task&lt;int&gt; ProcessUserDataAsync(string userId)
+	/// <![CDATA[
+	/// async Task<int> ProcessUserDataAsync(string userId)
 	/// {
 	///     return await GetUserAsync(userId)
 	///         .MatchAsync(
@@ -70,6 +75,7 @@ public static class ResultExtensionsMatchAsync
 	///             failure: error => 0                     // Return 0 on failure
 	///         );
 	/// }
+	/// ]]>
 	/// </code>
 	/// </example>
 	[Pure]
@@ -103,15 +109,17 @@ public static class ResultExtensionsMatchAsync
 	/// <example>
 	/// Here's how to use this method for Result chaining:
 	/// <code>
-	/// async Task&lt;Result&lt;UserDetails&gt;&gt; GetUserDetailsAsync(string userId)
+	/// <![CDATA[
+	/// async Task<Result<UserDetails>> GetUserDetailsAsync(string userId)
 	/// {
 	///     return await GetUserAsync(userId)
 	///         .MatchAsync(
-	///             success: user => ValidateAndEnrichUser(user),    // Returns Result&lt;UserDetails&gt;
-	///             failure: error => Result.Failure&lt;UserDetails&gt;(
-	///                 new ResultError("User details unavailable", error))
+	///             success: user => ValidateAndEnrichUser(user),    // Returns Result<UserDetails>
+	///             failure: error => Result.Failure<UserDetails>(
+	///                 ResultError.New("User details unavailable", error))
 	///         );
 	/// }
+	/// ]]>
 	/// </code>
 	/// </example>
 	[Pure]
@@ -147,17 +155,19 @@ public static class ResultExtensionsMatchAsync
 	/// <example>
 	/// Here's how to use this method with async transformations:
 	/// <code>
-	/// async Task&lt;Result&lt;UserProfile&gt;&gt; UpdateUserProfileAsync(string userId)
+	/// <![CDATA[
+	/// async Task<Result<UserProfile>> UpdateUserProfileAsync(string userId)
 	/// {
 	///     return await GetUserAsync(userId)
 	///         .MatchAsync(
 	///             success: async user => await UpdateProfileInDatabaseAsync(user),  // Async DB operation
 	///             failure: async error => {
 	///                 await LogErrorAsync(error);                                   // Async logging
-	///                 return Result.Failure&lt;UserProfile&gt;(error);
+	///                 return Result.Failure<UserProfile>(error);
 	///             }
 	///         );
 	/// }
+	/// ]]>
 	/// </code>
 	/// </example>
 	[Pure]
@@ -193,6 +203,7 @@ public static class ResultExtensionsMatchAsync
 	/// <example>
 	/// Here's how to use this method to handle different result states:
 	/// <code>
+	/// <![CDATA[
 	/// public class UserData
 	/// {
 	///     public int Id { get; set; }
@@ -200,15 +211,15 @@ public static class ResultExtensionsMatchAsync
 	/// }
 	///
 	/// // Define an async operation that might fail
-	/// TryAsync&lt;UserData&gt; GetUserAsync(int userId) =>
+	/// TryAsync<UserData> GetUserAsync(int userId) =>
 	///     async () => {
-	///         if (userId &lt; 0)
-	///             return Result.Failure&lt;UserData&gt;(new ResultError("Invalid user ID"));
+	///         if (userId < 0)
+	///             return Result.Failure<UserData>(ResultError.New("Invalid user ID"));
 	///         return Result.Success(new UserData { Id = userId, Name = "John Doe" });
 	///     };
 	///
 	/// // Using MatchAsync to transform the result
-	/// async Task&lt;string&gt; GetUserDisplayAsync(int userId)
+	/// async Task<string> GetUserDisplayAsync(int userId)
 	/// {
 	///     return await GetUserAsync(userId)
 	///         .MatchAsync(
@@ -220,6 +231,7 @@ public static class ResultExtensionsMatchAsync
 	/// // Usage example:
 	/// var validResult = await GetUserDisplayAsync(1);    // Returns: "User found: John Doe"
 	/// var errorResult = await GetUserDisplayAsync(-1);   // Returns: "Error: Invalid user ID"
+	/// ]]>
 	/// </code>
 	/// </example>
 	[Pure]
@@ -253,6 +265,7 @@ public static class ResultExtensionsMatchAsync
 	/// <example>
 	/// Here's how to use this method for Result chaining:
 	/// <code>
+	/// <![CDATA[
 	/// public class UserProfile
 	/// {
 	///     public int UserId { get; set; }
@@ -261,38 +274,39 @@ public static class ResultExtensionsMatchAsync
 	/// }
 	///
 	/// // Define async operations that might fail
-	/// TryAsync&lt;UserProfile&gt; GetUserProfileAsync(int userId) =>
+	/// TryAsync<UserProfile> GetUserProfileAsync(int userId) =>
 	///     async () => {
-	///         if (userId &lt; 0)
-	///             return Result.Failure&lt;UserProfile&gt;(new ResultError("Invalid user ID"));
+	///         if (userId < 0)
+	///             return Result.Failure<UserProfile>(ResultError.New("Invalid user ID"));
 	///         return Result.Success(new UserProfile {
 	///             UserId = userId,
 	///             Email = "user@example.com"
 	///         });
 	///     };
 	///
-	/// TryAsync&lt;UserProfile&gt; ValidateProfileAsync(UserProfile profile) =>
+	/// TryAsync<UserProfile> ValidateProfileAsync(UserProfile profile) =>
 	///     async () => {
 	///         if (string.IsNullOrEmpty(profile.Email))
-	///             return Result.Failure&lt;UserProfile&gt;(new ResultError("Email is required"));
+	///             return Result.Failure<UserProfile>(ResultError.New("Email is required"));
 	///         profile.IsVerified = true;
 	///         return Result.Success(profile);
 	///     };
 	///
 	/// // Using MatchAsync to chain validations
-	/// async Task&lt;Result&lt;UserProfile&gt;&gt; CreateVerifiedProfileAsync(int userId)
+	/// async Task<Result<UserProfile>> CreateVerifiedProfileAsync(int userId)
 	/// {
 	///     return await GetUserProfileAsync(userId)
 	///         .MatchAsync(
 	///             success: profile => ValidateProfileAsync(profile).TryAsync(),
-	///             failure: error => Result.Failure&lt;UserProfile&gt;(
-	///                 new ResultError("Profile creation failed", error))
+	///             failure: error => Result.Failure<UserProfile>(
+	///                 ResultError.New("Profile creation failed", error))
 	///         );
 	/// }
 	///
 	/// // Usage:
 	/// var successResult = await CreateVerifiedProfileAsync(1);  // Returns Success with verified profile
 	/// var failureResult = await CreateVerifiedProfileAsync(-1); // Returns Failure with error
+	/// ]]>
 	/// </code>
 	/// </example>
 	[Pure]
@@ -327,6 +341,7 @@ public static class ResultExtensionsMatchAsync
 	/// <example>
 	/// Here's how to use this method with async transformations:
 	/// <code>
+	/// <![CDATA[
 	/// public class UserMetrics
 	/// {
 	///     public int UserId { get; set; }
@@ -335,16 +350,16 @@ public static class ResultExtensionsMatchAsync
 	/// }
 	///
 	/// // Define async operations
-	/// TryAsync&lt;int&gt; GetUserIdAsync(string username) =>
+	/// TryAsync<int> GetUserIdAsync(string username) =>
 	///     async () => {
 	///         if (string.IsNullOrEmpty(username))
-	///             return Result.Failure&lt;int&gt;(new ResultError("Username is required"));
+	///             return Result.Failure<int>(ResultError.New("Username is required"));
 	///         // Simulate database lookup
 	///         return Result.Success(123);
 	///     };
 	///
 	/// // Async functions for metrics calculation
-	/// async Task&lt;UserMetrics&gt; CalculateMetricsAsync(int userId)
+	/// async Task<UserMetrics> CalculateMetricsAsync(int userId)
 	/// {
 	///     // Simulate parallel API calls
 	///     var postCountTask = Task.FromResult(42);      // Posts count
@@ -360,7 +375,7 @@ public static class ResultExtensionsMatchAsync
 	/// }
 	///
 	/// // Using MatchAsync with async transformations
-	/// async Task&lt;UserMetrics&gt; GetUserMetricsAsync(string username)
+	/// async Task<UserMetrics> GetUserMetricsAsync(string username)
 	/// {
 	///     return await GetUserIdAsync(username)
 	///         .MatchAsync(
@@ -375,6 +390,7 @@ public static class ResultExtensionsMatchAsync
 	/// // Usage:
 	/// var metrics = await GetUserMetricsAsync("johndoe");  // Returns populated metrics
 	/// var empty = await GetUserMetricsAsync("");          // Returns empty metrics
+	/// ]]>
 	/// </code>
 	/// </example>
 	[Pure]
@@ -411,6 +427,7 @@ public static class ResultExtensionsMatchAsync
 	/// <example>
 	/// Here's how to use this method for complex async operations with error handling:
 	/// <code>
+	/// <![CDATA[
 	/// public class OrderDetails
 	/// {
 	///     public int OrderId { get; set; }
@@ -420,10 +437,10 @@ public static class ResultExtensionsMatchAsync
 	/// }
 	///
 	/// // Define async operations that might fail
-	/// TryAsync&lt;OrderDetails&gt; CreateOrderAsync(int orderId) =>
+	/// TryAsync<OrderDetails> CreateOrderAsync(int orderId) =>
 	///     async () => {
-	///         if (orderId &lt; 0)
-	///             return Result.Failure&lt;OrderDetails&gt;(new ResultError("Invalid order ID"));
+	///         if (orderId < 0)
+	///             return Result.Failure<OrderDetails>(ResultError.New("Invalid order ID"));
 	///         return Result.Success(new OrderDetails {
 	///             OrderId = orderId,
 	///             CustomerEmail = "customer@example.com",
@@ -431,40 +448,40 @@ public static class ResultExtensionsMatchAsync
 	///         });
 	///     };
 	///
-	/// async Task&lt;Result&lt;OrderDetails&gt;&gt; ProcessPaymentAsync(OrderDetails order)
+	/// async Task<Result<OrderDetails>> ProcessPaymentAsync(OrderDetails order)
 	/// {
 	///     try {
 	///         await Task.Delay(100); // Simulate payment processing
-	///         if (order.TotalAmount &lt;= 0)
-	///             return Result.Failure&lt;OrderDetails&gt;(new ResultError("Invalid amount"));
+	///         if (order.TotalAmount <= 0)
+	///             return Result.Failure<OrderDetails>(ResultError.New("Invalid amount"));
 	///
 	///         order.IsProcessed = true;
 	///         return Result.Success(order);
 	///     }
 	///     catch (Exception ex) {
-	///         return Result.Failure&lt;OrderDetails&gt;(
-	///             new ResultError("Payment processing failed", ex));
+	///         return Result.Failure<OrderDetails>(
+	///             ResultError.New("Payment processing failed", ex));
 	///     }
 	/// }
 	///
-	/// async Task&lt;Result&lt;OrderDetails&gt;&gt; SendConfirmationEmailAsync(OrderDetails order)
+	/// async Task<Result<OrderDetails>> SendConfirmationEmailAsync(OrderDetails order)
 	/// {
 	///     try {
 	///         if (string.IsNullOrEmpty(order.CustomerEmail))
-	///             return Result.Failure&lt;OrderDetails&gt;(
-	///                 new ResultError("Customer email is required"));
+	///             return Result.Failure<OrderDetails>(
+	///                 ResultError.New("Customer email is required"));
 	///
 	///         await Task.Delay(100); // Simulate email sending
 	///         return Result.Success(order);
 	///     }
 	///     catch (Exception ex) {
-	///         return Result.Failure&lt;OrderDetails&gt;(
-	///             new ResultError("Failed to send confirmation email", ex));
+	///         return Result.Failure<OrderDetails>(
+	///             ResultError.New("Failed to send confirmation email", ex));
 	///     }
 	/// }
 	///
 	/// // Using MatchAsync to compose a complex workflow
-	/// async Task&lt;Result&lt;OrderDetails&gt;&gt; ProcessOrderAsync(int orderId)
+	/// async Task<Result<OrderDetails>> ProcessOrderAsync(int orderId)
 	/// {
 	///     return await CreateOrderAsync(orderId)
 	///         .MatchAsync(
@@ -479,8 +496,8 @@ public static class ResultExtensionsMatchAsync
 	///             },
 	///             failure: async error => {
 	///                 await LogErrorAsync(error);  // Assume logging is defined
-	///                 return Result.Failure&lt;OrderDetails&gt;(
-	///                     new ResultError("Order processing failed", error));
+	///                 return Result.Failure<OrderDetails>(
+	///                     ResultError.New("Order processing failed", error));
 	///             }
 	///         );
 	/// }
@@ -488,6 +505,7 @@ public static class ResultExtensionsMatchAsync
 	/// // Usage:
 	/// var success = await ProcessOrderAsync(1);    // Returns Success with processed order
 	/// var failure = await ProcessOrderAsync(-1);   // Returns Failure with error
+	/// ]]>
 	/// </code>
 	/// </example>
 	[Pure]
@@ -519,6 +537,7 @@ public static class ResultExtensionsMatchAsync
 	/// <example>
 	/// Here's how to use this method for logging or side effects:
 	/// <code>
+	/// <![CDATA[
 	/// async Task ProcessOrderResultAsync(int orderId)
 	/// {
 	///     await GetOrderAsync(orderId)
@@ -527,6 +546,7 @@ public static class ResultExtensionsMatchAsync
 	///             failure: error => Console.WriteLine($"Error: {error.Message}")
 	///         );
 	/// }
+	/// ]]>
 	/// </code>
 	/// </example>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -562,6 +582,7 @@ public static class ResultExtensionsMatchAsync
 	/// <example>
 	/// Here's how to use this method for logging or notifications:
 	/// <code>
+	/// <![CDATA[
 	/// async Task ProcessUserResultAsync(int userId)
 	/// {
 	///     await GetUserAsync(userId)
@@ -583,6 +604,7 @@ public static class ResultExtensionsMatchAsync
 	///             failure: error => LogErrorAsync(error)
 	///         );
 	/// }
+	/// ]]>
 	/// </code>
 	/// </example>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -617,7 +639,8 @@ public static class ResultExtensionsMatchAsync
 	/// <example>
 	/// Here's how to use this method for async operations:
 	/// <code>
-	/// async Task ProcessUserResultAsync(Result&lt;User&gt; userResult)
+	/// <![CDATA[
+	/// async Task ProcessUserResultAsync(Result<User> userResult)
 	/// {
 	///     await userResult.MatchAsync(
 	///         success: async user => {
@@ -632,7 +655,7 @@ public static class ResultExtensionsMatchAsync
 	/// }
 	///
 	/// // Example with database operations:
-	/// async Task UpdateUserProfileAsync(Result&lt;User&gt; userResult)
+	/// async Task UpdateUserProfileAsync(Result<User> userResult)
 	/// {
 	///     await userResult.MatchAsync(
 	///         success: async user => {
@@ -645,6 +668,7 @@ public static class ResultExtensionsMatchAsync
 	///         }
 	///     );
 	/// }
+	/// ]]>
 	/// </code>
 	/// </example>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -679,7 +703,8 @@ public static class ResultExtensionsMatchAsync
 	/// <example>
 	/// Here's how to use this method with Try operations:
 	/// <code>
-	/// async Task ProcessUserDataAsync(Try&lt;User&gt; userTry)
+	/// <![CDATA[
+	/// async Task ProcessUserDataAsync(Try<User> userTry)
 	/// {
 	///     await userTry.MatchAsync(
 	///         success: async user => {
@@ -694,7 +719,7 @@ public static class ResultExtensionsMatchAsync
 	/// }
 	///
 	/// // Example with database operations:
-	/// async Task UpdateUserProfileAsync(Try&lt;User&gt; userTry)
+	/// async Task UpdateUserProfileAsync(Try<User> userTry)
 	/// {
 	///     await userTry.MatchAsync(
 	///         success: async user => {
@@ -707,6 +732,7 @@ public static class ResultExtensionsMatchAsync
 	///         }
 	///     );
 	/// }
+	/// ]]>
 	/// </code>
 	/// </example>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -742,7 +768,8 @@ public static class ResultExtensionsMatchAsync
 	/// <example>
 	/// Here's how to use this method with async operations:
 	/// <code>
-	/// async Task ProcessUserDataAsync(Task&lt;Result&lt;User&gt;&gt; userTask)
+	/// <![CDATA[
+	/// async Task ProcessUserDataAsync(Task<Result<User>> userTask)
 	/// {
 	///     await userTask.MatchAsync(
 	///         success: async user => {
@@ -757,7 +784,7 @@ public static class ResultExtensionsMatchAsync
 	/// }
 	///
 	/// // Example with database operations:
-	/// async Task UpdateUserProfileAsync(Task&lt;Result&lt;User&gt;&gt; userTask)
+	/// async Task UpdateUserProfileAsync(Task<Result<User>> userTask)
 	/// {
 	///     await userTask.MatchAsync(
 	///         success: async user => {
@@ -770,6 +797,7 @@ public static class ResultExtensionsMatchAsync
 	///         }
 	///     );
 	/// }
+	/// ]]>
 	/// </code>
 	/// </example>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -805,7 +833,8 @@ public static class ResultExtensionsMatchAsync
 	/// <example>
 	/// Here's how to use this method with TryAsync operations:
 	/// <code>
-	/// async Task ProcessUserDataAsync(TryAsync&lt;User&gt; userTry)
+	/// <![CDATA[
+	/// async Task ProcessUserDataAsync(TryAsync<User> userTry)
 	/// {
 	///     await userTry.MatchAsync(
 	///         success: async user => {
@@ -820,7 +849,7 @@ public static class ResultExtensionsMatchAsync
 	/// }
 	///
 	/// // Example with database operations:
-	/// async Task UpdateUserProfileAsync(TryAsync&lt;User&gt; userTry)
+	/// async Task UpdateUserProfileAsync(TryAsync<User> userTry)
 	/// {
 	///     await userTry.MatchAsync(
 	///         success: async user => {
@@ -833,6 +862,7 @@ public static class ResultExtensionsMatchAsync
 	///         }
 	///     );
 	/// }
+	/// ]]>
 	/// </code>
 	/// </example>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
