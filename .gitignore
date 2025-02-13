@@ -4,10 +4,16 @@
 .idea
 
 #myProjects Specifics
-.nupkg
-.repotomd
+.nupkg/
+.repotomd/
 ToolBox.xml
 *.sln.DotSettings
+
+.aider*/
+.aider/**
+.aider.chat.history.md
+.aider.chat.history.json
+.env
 
 # User-specific stuff
 .idea/**/workspace.xml
