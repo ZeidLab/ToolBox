@@ -14,27 +14,27 @@ namespace ZeidLab.ToolBox.Results;
 /// </remarks>
 /// <example>
 /// Basic result matching:
-/// <code>
-/// var result = Result.Success&lt;int&gt;(42);
+/// <code><![CDATA[
+/// var result = Result.Success<int>(42);
 /// var matched = result.Match(
 ///     success: value => $"Got {value}",
 ///     failure: error => $"Error: {error.Message}"
 /// ); // matched = "Got 42"
-/// </code>
-/// 
+/// ]]></code>
+///
 /// Chaining with Try:
-/// <code>
-/// var tryResult = new Try&lt;int&gt;(() => int.Parse("xyz"));
+/// <code><![CDATA[
+/// var tryResult = new Try<int>(() => int.Parse("xyz"));
 /// var handled = tryResult.Match(
 ///     success: x => Result.Success($"Parsed {x}"),
 ///     failure: err => Result.Success("Failed to parse")
 /// ); // handled = Result.Success("Failed to parse")
-/// </code>
+/// ]]></code>
 /// </example>
 [SuppressMessage("Design", "CA1062:Validate arguments of public methods")]
 public static class ResultExtensionsMatch
 {
-   
+
 
     /// <summary>
     /// Matches a <see cref="Result{TIn}"/> to a new <see cref="Result{TOut}"/> by applying
@@ -48,13 +48,13 @@ public static class ResultExtensionsMatch
     /// <returns>A new result containing the transformed value or error.</returns>
     /// <example>
     /// Using Match to transform results:
-    /// <code>
-    /// var result = Result.Success&lt;int&gt;(42);
+    /// <code><![CDATA[
+    /// var result = Result.Success<int>(42);
     /// var transformed = result.Match(
     ///     success: x => Result.Success(x * 2),
-    ///     failure: err => Result.Failure&lt;int&gt;(err)
+    ///     failure: err => Result.Failure<int>(err)
     /// ); // transformed = Result.Success(84)
-    /// </code>
+    /// ]]></code>
     /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -110,13 +110,13 @@ public static class ResultExtensionsMatch
     /// <param name="failure">Action to execute if the result is a failure.</param>
     /// <example>
     /// Handling side effects:
-    /// <code>
-    /// var result = Result.Success&lt;int&gt;(42);
+    /// <code><![CDATA[
+    /// var result = Result.Success<int>(42);
     /// result.Match(
     ///     success: value => Console.WriteLine($"Got value: {value}"),
     ///     failure: error => Console.WriteLine($"Error: {error.Message}")
     /// ); // Prints: "Got value: 42"
-    /// </code>
+    /// ]]></code>
     /// </example>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Match<TIn>(this Result<TIn> self, Action<TIn> success, Action<ResultError> failure)

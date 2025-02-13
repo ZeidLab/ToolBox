@@ -8,21 +8,31 @@ namespace ZeidLab.ToolBox.Options;
 /// This struct is similar to a monad that can hold a value or be in a 'None' state.
 /// </summary>
 /// <typeparam name="TIn">The type of the contained value.</typeparam>
+/// <example>
+/// Basic usage:
+/// <code><![CDATA[
+/// // Creating a Maybe with a value
+/// Maybe<int> someValue = Maybe.Some(10);
+///
+/// // Creating a Maybe in the 'None' state
+/// Maybe<string> noneValue = Maybe.None<string>();
+/// ]]></code>
+/// </example>
 [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
 public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
 {
 	/// <summary>
-	/// keeping the value of the maybe, it can be null or default either
+	/// Gets the value of the maybe, it can be null or default either.
 	/// </summary>
 	internal readonly TIn? Value;
 
 	/// <summary>
-	/// Setting flag if the value is null
+	/// Gets a value indicating whether the value is null.
 	/// </summary>
 	internal readonly bool IsNull;
 
 	/// <summary>
-	/// Indicates whether the contained value is the default value of its type.
+	/// Gets a value indicating whether the contained value is the default value of its type.
 	/// </summary>
 #pragma warning disable CA1051
 	public readonly bool IsDefault;
@@ -51,15 +61,14 @@ public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
 	}
 
 	/// <summary>
-	/// Indicates whether the maybe contains a value.
+	/// Gets a value indicating whether the maybe contains a value.
 	/// </summary>
 	public bool IsSome => !IsNull;
 
 	/// <summary>
-	/// Indicates whether the maybe is in the 'None' state.
+	/// Gets a value indicating whether the maybe is in the 'None' state.
 	/// </summary>
 	public bool IsNone => IsNull;
-
 
 
 
@@ -67,9 +76,18 @@ public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
 	/// Implicitly converts a value of type <typeparamref name="TIn"/> to a <see cref="Maybe{TIn}"/> containing that value.
 	/// </summary>
 	/// <param name="value">The value to contain.</param>
-	/// <returns>A <see cref="Maybe{TIn}"/> containing the specified value.</returns>
+	/// <returns>A <see cref="Maybe{TIn}"/> containing the specified value or a 'None' Maybe if the value is null.</returns>
+	/// <example>
+	/// <code><![CDATA[
+	/// Maybe<int> maybeInt = 5; // Implicit conversion from int to Maybe<int>
+	/// string? nullableString = null;
+	/// Maybe<string> maybeString = nullableString; // Implicit conversion from null to Maybe<string> (None)
+	/// ]]></code>
+	/// </example>
 	public static implicit operator Maybe<TIn>(TIn? value)
-		=> value.IsNull() ? new Maybe<TIn>()  : new Maybe<TIn>(value!) ;
+#pragma warning disable CS8604 // Possible null reference argument.
+		=> value.IsNull() ? new Maybe<TIn>() : new Maybe<TIn>(value);
+#pragma warning restore CS8604 // Possible null reference argument.
 
 
 	/// <summary>
@@ -78,7 +96,22 @@ public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
 	/// <param name="other">The other instance to compare with.</param>
 	/// <returns>
 	/// A value indicating the relative order of this instance and <paramref name="other"/>.
+	/// Returns 0 if both are None or if the values are equal.
+	/// Returns -1 if this instance is None or its value is less than the other.
+	/// Returns 1 if this instance is Some and its value is greater than the other.
 	/// </returns>
+	/// <example>
+	/// <code><![CDATA[
+	/// Maybe<int> a = Maybe.Some(5);
+	/// Maybe<int> b = Maybe.Some(10);
+	/// Maybe<int> c = Maybe.None<int>();
+	///
+	/// Console.WriteLine(a.CompareTo(b)); // Output: -1
+	/// Console.WriteLine(a.CompareTo(a)); // Output: 0
+	/// Console.WriteLine(a.CompareTo(c)); // Output: 1
+	/// Console.WriteLine(c.CompareTo(a)); // Output: -1
+	/// ]]></code>
+	/// </example>
 	public int CompareTo(Maybe<TIn> other)
 	{
 		return (IsNull, other.IsNull) switch
@@ -100,8 +133,19 @@ public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
 	/// <param name="obj">The object to compare with.</param>
 	/// <returns>
 	/// A value indicating the relative order of this instance and <paramref name="obj"/>.
+	/// Returns 1 if <paramref name="obj"/> is null.
 	/// </returns>
 	/// <exception cref="ArgumentException">Thrown if <paramref name="obj"/> is not of type <see cref="Maybe{TIn}"/>.</exception>
+	/// <example>
+	/// <code><![CDATA[
+	/// Maybe<int> a = Maybe.Some(5);
+	/// Maybe<int> b = Maybe.Some(10);
+	///
+	/// Console.WriteLine(a.CompareTo(b)); // Output: -1
+	/// Console.WriteLine(a.CompareTo(5)); // Throws ArgumentException
+	/// Console.WriteLine(a.CompareTo(null)); // Output: 1
+	/// ]]></code>
+	/// </example>
 	public int CompareTo(object? obj)
 	{
 		return obj switch
@@ -161,25 +205,39 @@ public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
 /// <summary>
 /// Provides factory methods for creating Maybe instances.
 /// </summary>
+/// <example>
+/// <code><![CDATA[
+/// // Create a Maybe with a value
+/// Maybe<int> maybeInt = Maybe.Some(10);
+///
+/// // Create a Maybe in the None state, explicitly specifying the type as string
+/// Maybe<string> maybeString = Maybe.None<string>();
+/// ]]></code>
+/// </example>
 public static class Maybe
 {
 	/// <summary>
 	/// Creates a new Maybe containing the specified value.
 	/// </summary>
-	/// <typeparam name="T">The type of the value.</typeparam>
+	/// <typeparam name="TIn">The type of the value.</typeparam>
 	/// <param name="value">The non-null value to contain.</param>
-	/// <returns>A new Maybe containing the specified value.</returns>
+	/// <returns>An instance of <see cref="Maybe{TIn}"/> containing the specified value of type <typeparamref name="TIn"/>.</returns>
 	/// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is null.</exception>
-	public static Maybe<T> Some<T>(T value)
+	/// <example>
+	/// <code><![CDATA[
+	/// Maybe<int> maybeInt = Maybe.Some(5);
+	/// ]]></code>
+	/// </example>
+	public static Maybe<TIn> Some<TIn>(TIn value)
 	{
 		Guards.ThrowIfNull(value  , nameof(value));
-		return new Maybe<T>(value);
+		return new Maybe<TIn>(value);
 	}
 
 	/// <summary>
 	/// Creates a new Maybe in the None state.
 	/// </summary>
-	/// <typeparam name="T">The type of the Maybe.</typeparam>
+	/// <typeparam name="TIn">The type of the Maybe.</typeparam>
 	/// <returns>A new Maybe in the None state.</returns>
-	public static Maybe<T> None<T>() => new();
+	public static Maybe<TIn> None<TIn>() => new();
 }

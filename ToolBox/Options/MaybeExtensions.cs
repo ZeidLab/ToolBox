@@ -39,11 +39,11 @@ public static class MaybeExtensions
 	/// regardless of whether you have a value or not. The input parameter is ignored entirely.
 	/// </remarks>
 	/// <example>
-	/// <code>
+	/// <code><![CDATA[
 	/// // Both calls will return a None state Maybe
 	/// var none1 = 42.ToNone();
 	/// var none2 = ((string)null).ToNone();
-	/// </code>
+	/// ]]></code>
 	/// </example>
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -98,19 +98,19 @@ public static class MaybeExtensions
 	/// to the content if <paramref name="self"/> is Some, or the result of <paramref name="none"/> if it is None.
 	/// </returns>
 	/// <example>
-	/// <code>
-	/// var maybeAge = Maybe&lt;int&gt;.Some(25);
+	/// <code><![CDATA[
+	/// var maybeAge = Maybe.Some(25);
 	/// var description = maybeAge.Map(
 	///     some: age => $"Age is {age}",
 	///     none: () => "Age unknown"
 	/// ); // Returns "Age is 25"
 	///
-	/// var maybeNone = Maybe&lt;int&gt;.None();
+	/// var maybeNone = Maybe.<int>None();
 	/// var result = maybeNone.Map(
 	///     some: age => age * 2,
 	///     none: () => 0
 	/// ); // Returns 0
-	/// </code>
+	/// ]]></code>
 	/// </example>
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -158,23 +158,23 @@ public static class MaybeExtensions
 	/// Ensures that the content of a <see cref="Maybe{TIn}"/> instance satisfies a predicate.
 	/// </summary>
 	/// <example>
-	/// <code>
-	/// List&lt;Maybe&lt;int&gt;&gt; maybeList = new List&lt;Maybe&lt;int&gt;&gt;
+	/// <code><![CDATA[
+	/// List<Maybe<int>> maybeList = new List<Maybe<int>>
 	/// {
-	///     Maybe&lt;int&gt;.Some(2),
-	///     Maybe&lt;int&gt;.Some(10),
-	///     Maybe&lt;int&gt;.None(),
-	///     Maybe&lt;int&gt;.Some(42)
+	///     Maybe.Some(2),
+	///     Maybe.Some(10),
+	///     Maybe.None<int>(),
+	///     Maybe.Some(42)
 	/// };
 	///
 	/// var filtered = maybeList
-	///     .Where(x => x.If(value => value &gt; 12))
+	///     .Where(x => x.If(value => value > 12))
 	///     .ToList();
 	///
 	/// Console.WriteLine(filtered.Count); // Output: 2
-	/// var result = filtered[0].if(value => value &gt; 0) ? filtered[0].Reduce(() => 0) : 42;
+	/// var result = filtered[0].if(value => value > 0) ? filtered[0].Reduce(() => 0) : 42;
 	/// Console.WriteLine(result); // Output: 2
-	/// </code>
+	/// ]]></code>
 	/// </example>
 	/// <typeparam name="TIn">The type of the content of the <see cref="Maybe{TIn}"/> instance.</typeparam>
 	/// <param name="self">The <see cref="Maybe{TIn}"/> instance whose content to check.</param>
@@ -182,7 +182,7 @@ public static class MaybeExtensions
 	/// The predicate to evaluate. It takes a value of type <typeparamref name="TIn"/> and returns a <see cref="bool"/>.
 	/// </param>
 	/// <returns>
-	/// <see langword="true"/> if the <see cref="Maybe{TIn}"/> instance is not <see cref="Maybe.None{TIn}"/>
+	/// <see langword="true"/> if the <see cref="Maybe{TIn}"/> instance is not <see cref="Maybe{TIn}.IsNone"/>
 	/// and its content satisfies the <paramref name="predicate"/>; otherwise, <see langword="false"/>.
 	/// </returns>
 	[Pure]
@@ -214,11 +214,11 @@ public static class MaybeExtensions
 	/// Filters the Maybe instance based on a predicate applied to its content.
 	/// </summary>
 	/// <example>
-	/// <code>
-	/// var maybe = Maybe&lt;int&gt;.Some(42);
-	/// var filtered = maybe.Filter(value => value &gt; 0);
+	/// <code><![CDATA[
+	/// var maybe = Maybe.Some(42);
+	/// var filtered = maybe.Filter(value => value > 0);
 	/// Console.WriteLine(filtered.Reduce(() => 0)); // Output: 42
-	/// </code>
+	/// ]]></code>
 	/// </example>
 	/// <typeparam name="TIn">The type of the content within the Maybe instance.</typeparam>
 	/// <param name="self">The Maybe instance to filter.</param>
@@ -239,16 +239,16 @@ public static class MaybeExtensions
 	/// Converts a sequence of Maybe instances to an IEnumerable of their content, excluding None instances.
 	/// </summary>
 	/// <example>
-	/// <code>
-	/// var maybeList = new List&lt;Maybe&lt;int&gt;&gt;
+	/// <code><![CDATA[
+	/// var maybeList = new List<Maybe<int>>
 	/// {
-	///     Maybe&lt;int&gt;.Some(1),
-	///     Maybe&lt;int&gt;.None(),
-	///     Maybe&lt;int&gt;.Some(3)
+	///     Maybe.Some(1),
+	///     Maybe.<int>None(),
+	///     Maybe.Some(3)
 	/// };
 	///
 	/// var result = maybeList.Flatten(); // Output: [1, 3]
-	/// </code>
+	/// ]]></code>
 	/// </example>
 	/// <typeparam name="TIn">The type of the content within the Maybe instances.</typeparam>
 	/// <param name="self">The sequence of Maybe instances to convert.</param>
@@ -261,14 +261,14 @@ public static class MaybeExtensions
 
 	/// <summary>
 	/// Converts a sequence of <see cref="Maybe{TIn}"/> instances to an <see cref="IEnumerable{TIn}"/> of their content,
-	/// replacing <see cref="Maybe.None{TIn}"/> instances with a specified substitute value.
+	/// replacing <see cref="Maybe{TIn}.IsNone"/> instances with a specified substitute value.
 	/// </summary>
 	/// <typeparam name="TIn">The type of the content within the <see cref="Maybe{TIn}"/> instances.</typeparam>
 	/// <param name="self">The sequence of <see cref="Maybe{TIn}"/> instances to convert.</param>
-	/// <param name="substitute">The substitute value to use for <see cref="Maybe.None{TIn}"/> instances.</param>
+	/// <param name="substitute">The substitute value to use for <see cref="Maybe{TIn}.IsNone"/> instances.</param>
 	/// <returns>
 	/// An <see cref="IEnumerable{TIn}"/> of the content of the <see cref="Maybe{TIn}"/> instances,
-	/// with <see cref="Maybe.None{TIn}"/> instances replaced by the substitute value.
+	/// with <see cref="Maybe{TIn}.IsNone"/> instances replaced by the substitute value.
 	/// </returns>
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -277,14 +277,14 @@ public static class MaybeExtensions
 
 	/// <summary>
 	/// Converts a sequence of <see cref="Maybe{TIn}"/> instances to an <see cref="IEnumerable{TIn}"/> of their content,
-	/// using a substitute function for <see cref="Maybe.None{TIn}"/> instances.
+	/// using a substitute function for <see cref="Maybe{TIn}.IsNone"/> instances.
 	/// </summary>
 	/// <typeparam name="TIn">The type of the content within the <see cref="Maybe{TIn}"/> instances.</typeparam>
 	/// <param name="self">The sequence of <see cref="Maybe{TIn}"/> instances to convert.</param>
-	/// <param name="substitute">The function <see cref="Func{TIn}"/> to provide a substitute value for <see cref="Maybe.None{TIn}"/> instances.</param>
+	/// <param name="substitute">The function <see cref="Func{TIn}"/> to provide a substitute value for <see cref="Maybe{TIn}.IsNone"/> instances.</param>
 	/// <returns>
 	/// An <see cref="IEnumerable{TIn}"/> of the content of the <see cref="Maybe{TIn}"/> instances,
-	/// replacing <see cref="Maybe.None{TIn}"/> instances with the result of the substitute function.
+	/// replacing <see cref="Maybe{TIn}.IsNone"/> instances with the result of the substitute function.
 	/// </returns>
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -296,10 +296,10 @@ public static class MaybeExtensions
 	/// </summary>
 	/// <typeparam name="TIn">The type of the content of the <see cref="Maybe{TIn}"/> instance.</typeparam>
 	/// <param name="self">The <see cref="Maybe{TIn}"/> instance to reduce.</param>
-	/// <param name="substitute">The default value to use if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe.None{TIn}"/>.</param>
+	/// <param name="substitute">The default value to use if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe{TIn}.IsNone"/>.</param>
 	/// <returns>
-	/// The content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe.Some{TIn}"/>,
-	/// or the default value if it is <see cref="Maybe.None{TIn}"/>.
+	/// The content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe{TIn}.IsSome"/>,
+	/// or the default value if it is <see cref="Maybe{TIn}.IsNone"/>.
 	/// </returns>
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -314,10 +314,10 @@ public static class MaybeExtensions
 	/// </summary>
 	/// <typeparam name="TIn">The type of the content of the <see cref="Maybe{TIn}"/> instance.</typeparam>
 	/// <param name="self">The <see cref="Maybe{TIn}"/> instance to reduce.</param>
-	/// <param name="substitute">The function to use if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe.None{TIn}"/>.</param>
+	/// <param name="substitute">The function to use if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe{TIn}.IsNone"/>.</param>
 	/// <returns>
-	/// The content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe.Some{TIn}"/>,
-	/// or the result of the provided function if it is <see cref="Maybe.None{TIn}"/>.
+	/// The content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe{TIn}.IsSome"/>,
+	/// or the result of the provided function if it is <see cref="Maybe{TIn}.IsNone"/>.
 	/// </returns>
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -330,11 +330,11 @@ public static class MaybeExtensions
 #pragma warning restore CS8603 // Possible null reference return.
 
 	/// <summary>
-	/// Applies the provided action to the content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe.Some{TIn}"/>.
+	/// Applies the provided action to the content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe{TIn}.IsSome"/>.
 	/// </summary>
 	/// <typeparam name="TIn">The type of the content of the <see cref="Maybe{TIn}"/> instance.</typeparam>
 	/// <param name="self">The <see cref="Maybe{TIn}"/> instance to apply the action to.</param>
-	/// <param name="action">The action to apply to the content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe.Some{TIn}"/>.</param>
+	/// <param name="action">The action to apply to the content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe{TIn}.IsSome"/>.</param>
 	/// <returns>The original <see cref="Maybe{TIn}"/> instance.</returns>
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -351,11 +351,11 @@ public static class MaybeExtensions
 	}
 
 	/// <summary>
-	/// Executes the provided action if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe.None{TIn}"/>.
+	/// Executes the provided action if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe{TIn}.IsNone"/>.
 	/// </summary>
 	/// <typeparam name="TIn">The type of the content of the <see cref="Maybe{TIn}"/> instance.</typeparam>
 	/// <param name="self">The <see cref="Maybe{TIn}"/> instance to check.</param>
-	/// <param name="action">The action to execute if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe.None{TIn}"/>.</param>
+	/// <param name="action">The action to execute if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe{TIn}.IsNone"/>.</param>
 	/// <returns>The original <see cref="Maybe{TIn}"/> instance.</returns>
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -370,14 +370,14 @@ public static class MaybeExtensions
 	}
 
 	/// <summary>
-	/// Returns the value of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe.Some{TIn}"/>,
+	/// Returns the value of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe{TIn}.IsSome"/>,
 	/// otherwise throws an <see cref="InvalidOperationException"/>.
 	/// </summary>
 	/// <typeparam name="TIn">The type of the content of the <see cref="Maybe{TIn}"/> instance.</typeparam>
 	/// <param name="self">The <see cref="Maybe{TIn}"/> instance whose value to return.</param>
 	/// <returns>
-	/// The value of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe.Some{TIn}"/>,
-	/// or throws an <see cref="InvalidOperationException"/> if it is <see cref="Maybe.None{TIn}"/>.
+	/// The value of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe{TIn}.IsSome"/>,
+	/// or throws an <see cref="InvalidOperationException"/> if it is <see cref="Maybe{TIn}.IsNone"/>.
 	/// </returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static TIn ValueOrThrow<TIn>(this Maybe<TIn> self)
