@@ -46,7 +46,7 @@ public static class ResultErrorExtensions
     /// <param name="self">The original error instance.</param>
     /// <returns>
     /// A <see cref="Maybe{T}"/> that contains the exception associated with this
-    /// error, or <see cref="Maybe.None{T}"/> if there is no exception.
+    /// error, or <see cref="Maybe{T}.IsNone"/> if there is no exception.
     /// </returns>
     /// <example>
     /// <code><![CDATA[

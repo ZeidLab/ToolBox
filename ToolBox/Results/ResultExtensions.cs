@@ -102,8 +102,8 @@ public static class ResultExtensions
     /// <returns>
     /// A new <see cref="Maybe{TIn}"/> that will be:
     /// <list type="bullet">
-    /// <item><description><see cref="Maybe.Some{T}"/> if the Result is successful</description></item>
-    /// <item><description><see cref="Maybe.None{T}"/> if the Result is a failure</description></item>
+    /// <item><description><see cref="Maybe{T}.IsSome"/> if the Result is successful</description></item>
+    /// <item><description><see cref="Maybe{T}.IsNone"/> if the Result is a failure</description></item>
     /// </list>
     /// </returns>
     /// <example>
