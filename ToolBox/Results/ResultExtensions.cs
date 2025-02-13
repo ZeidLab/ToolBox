@@ -15,28 +15,28 @@ namespace ZeidLab.ToolBox.Results;
 /// </remarks>
 /// <example>
 /// Basic Result conversion examples:
-/// <code>
+/// <code><![CDATA[
 /// // Converting a value to a successful Result
 /// var number = 42;
 /// var successResult = number.ToSuccess(); // Result.Success(42)
 /// Console.WriteLine(successResult.IsSuccess); // Output: True
-/// 
+///
 /// // Converting an error to a failed Result
 /// var error = ResultError.New("Not found");
-/// var failedResult = error.ToFailure&lt;int&gt;(); // Result.Failure&lt;int&gt;(error)
+/// var failedResult = error.ToFailure<int>(); // Result.Failure<int>(error)
 /// Console.WriteLine(failedResult.IsFailure); // Output: True
 /// Console.WriteLine(failedResult.Error.Message); // Output: "Not found"
-/// 
+///
 /// // Converting a Result to Maybe
 /// var result = Result.Success(42);
 /// var maybe = result.ToMaybe(); // Maybe.Some(42)
 /// Console.WriteLine(maybe.IsSome); // Output: True
-/// 
+///
 /// // Converting to Unit Result
 /// var strResult = Result.Success("hello");
-/// var unitResult = strResult.ToUnitResult(); 
+/// var unitResult = strResult.ToUnitResult();
 /// Console.WriteLine(unitResult.IsSuccess); // Output: True
-/// </code>
+/// ]]></code>
 /// </example>
 public static class ResultExtensions
 {
@@ -47,11 +47,11 @@ public static class ResultExtensions
     /// <param name="self">The value to convert into a successful Result.</param>
     /// <returns>A new successful <see cref="Result{TIn}"/> containing the provided value.</returns>
     /// <example>
-    /// <code>
+    /// <code><![CDATA[
     /// var number = 42;
-    /// Result&lt;int&gt; result = number.ToSuccess();
+    /// Result<int> result = number.ToSuccess();
     /// Console.WriteLine(result.IsSuccess); // Output: True
-    /// </code>
+    /// ]]></code>
     /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -65,12 +65,12 @@ public static class ResultExtensions
     /// <param name="self">The error to be wrapped in the failed Result.</param>
     /// <returns>A new failed <see cref="Result{TIn}"/> containing the provided error.</returns>
     /// <example>
-    /// <code>
+    /// <code><![CDATA[
     /// var error = ResultError.New("Not found");
-    /// Result&lt;int&gt; result = error.ToFailure&lt;int&gt;();
+    /// Result<int> result = error.ToFailure<int>();
     /// Console.WriteLine(result.IsFailure); // Output: True
     /// Console.WriteLine(result.Error.Message); // Output: "Not found"
-    /// </code>
+    /// ]]></code>
     /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -82,12 +82,12 @@ public static class ResultExtensions
     /// This overload automatically converts the exception to a <see cref="ResultError"/> instance.
     /// </remarks>
     /// <example>
-    /// <code>
+    /// <code><![CDATA[
     /// var ex = new InvalidOperationException("Invalid operation");
-    /// Result&lt;int&gt; result = ex.ToFailure&lt;int&gt;();
+    /// Result<int> result = ex.ToFailure<int>();
     /// Console.WriteLine(result.IsFailure); // Output: True
     /// Console.WriteLine(result.Error.Exception == ex); // Output: True
-    /// </code>
+    /// ]]></code>
     /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -107,7 +107,7 @@ public static class ResultExtensions
     /// </list>
     /// </returns>
     /// <example>
-    /// <code>
+    /// <code><![CDATA[
     /// // Success case
     /// var successResult = Result.Success(42);
     /// var someValue = successResult.ToMaybe();
@@ -115,12 +115,12 @@ public static class ResultExtensions
     /// Console.WriteLine(someValue.Match(
     ///     some: x => x,
     ///     none: () => 0)); // Output: 42
-    /// 
+    ///
     /// // Failure case
-    /// var failedResult = Result.Failure&lt;int&gt;(ResultError.New("Error"));
+    /// var failedResult = Result.Failure<int>(ResultError.New("Error"));
     /// var noneValue = failedResult.ToMaybe();
     /// Console.WriteLine(noneValue.IsNone); // Output: True
-    /// </code>
+    /// ]]></code>
     /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -142,20 +142,20 @@ public static class ResultExtensions
     /// </list>
     /// </returns>
     /// <example>
-    /// <code>
+    /// <code><![CDATA[
     /// // Success case
-    /// Try&lt;int&gt; tryParse = () => Result.Success(int.Parse("42"));
-    /// Maybe&lt;int&gt; maybeNumber = tryParse.ToMaybe();
+    /// Try<int> tryParse = () => Result.Success(int.Parse("42"));
+    /// Maybe<int> maybeNumber = tryParse.ToMaybe();
     /// Console.WriteLine(maybeNumber.IsSome); // Output: True
     /// Console.WriteLine(maybeNumber.Match(
     ///     some: x => x,
     ///     none: () => 0)); // Output: 42
-    /// 
+    ///
     /// // Failure case
-    /// Try&lt;int&gt; tryParseInvalid = () => Result.Success(int.Parse("invalid"));
-    /// Maybe&lt;int&gt; maybeInvalid = tryParseInvalid.ToMaybe();
+    /// Try<int> tryParseInvalid = () => Result.Success(int.Parse("invalid"));
+    /// Maybe<int> maybeInvalid = tryParseInvalid.ToMaybe();
     /// Console.WriteLine(maybeInvalid.IsNone); // Output: True
-    /// </code>
+    /// ]]></code>
     /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -169,21 +169,21 @@ public static class ResultExtensions
     /// This asynchronous version works with Task-wrapped Results.
     /// </remarks>
     /// <example>
-    /// <code>
+    /// <code><![CDATA[
     /// // Success case
-    /// Task&lt;Result&lt;int&gt;&gt; asyncSuccess = Task.FromResult(Result.Success(42));
-    /// Maybe&lt;int&gt; maybeNumber = await asyncSuccess.ToMaybeAsync();
+    /// Task<Result<int>> asyncSuccess = Task.FromResult(Result.Success(42));
+    /// Maybe<int> maybeNumber = await asyncSuccess.ToMaybeAsync();
     /// Console.WriteLine(maybeNumber.IsSome); // Output: True
     /// Console.WriteLine(maybeNumber.Match(
     ///     some: x => x,
     ///     none: () => 0)); // Output: 42
-    /// 
+    ///
     /// // Failure case
-    /// Task&lt;Result&lt;int&gt;&gt; asyncFailure = Task.FromResult(
-    ///     Result.Failure&lt;int&gt;(ResultError.New("Failed")));
-    /// Maybe&lt;int&gt; maybeFailure = await asyncFailure.ToMaybeAsync();
+    /// Task<Result<int>> asyncFailure = Task.FromResult(
+    ///     Result.Failure<int>(ResultError.New("Failed")));
+    /// Maybe<int> maybeFailure = await asyncFailure.ToMaybeAsync();
     /// Console.WriteLine(maybeFailure.IsNone); // Output: True
-    /// </code>
+    /// ]]></code>
     /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -207,26 +207,26 @@ public static class ResultExtensions
     /// </list>
     /// </returns>
     /// <example>
-    /// <code>
+    /// <code><![CDATA[
     /// // Success case
-    /// TryAsync&lt;int&gt; asyncTry = async () => {
+    /// TryAsync<int> asyncTry = async () => {
     ///     await Task.Delay(100); // Simulate async work
     ///     return Result.Success(42);
     /// };
-    /// Maybe&lt;int&gt; maybeNumber = await asyncTry.ToMaybeAsync();
+    /// Maybe<int> maybeNumber = await asyncTry.ToMaybeAsync();
     /// Console.WriteLine(maybeNumber.IsSome); // Output: True
     /// Console.WriteLine(maybeNumber.Match(
     ///     some: x => x,
     ///     none: () => 0)); // Output: 42
-    /// 
+    ///
     /// // Failure case
-    /// TryAsync&lt;int&gt; asyncFailure = async () => {
+    /// TryAsync<int> asyncFailure = async () => {
     ///     await Task.Delay(100); // Simulate async work
-    ///     return Result.Failure&lt;int&gt;(ResultError.New("Failed"));
+    ///     return Result.Failure<int>(ResultError.New("Failed"));
     /// };
-    /// Maybe&lt;int&gt; maybeFailure = await asyncFailure.ToMaybeAsync();
+    /// Maybe<int> maybeFailure = await asyncFailure.ToMaybeAsync();
     /// Console.WriteLine(maybeFailure.IsNone); // Output: True
-    /// </code>
+    /// ]]></code>
     /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -248,18 +248,18 @@ public static class ResultExtensions
     /// </list>
     /// </returns>
     /// <example>
-    /// <code>
+    /// <code><![CDATA[
     /// // Success case
     /// var successResult = Result.Success("hello");
     /// var unitResult = successResult.ToUnitResult();
     /// Console.WriteLine(unitResult.IsSuccess); // Output: True
-    /// 
+    ///
     /// // Failure case
-    /// var failedResult = Result.Failure&lt;string&gt;(ResultError.New("Error"));
+    /// var failedResult = Result.Failure<string>(ResultError.New("Error"));
     /// var failedUnitResult = failedResult.ToUnitResult();
     /// Console.WriteLine(failedUnitResult.IsFailure); // Output: True
     /// Console.WriteLine(failedUnitResult.Error.Message); // Output: "Error"
-    /// </code>
+    /// ]]></code>
     /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -273,19 +273,19 @@ public static class ResultExtensions
     /// This asynchronous version works with Task-wrapped Results.
     /// </remarks>
     /// <example>
-    /// <code>
+    /// <code><![CDATA[
     /// // Success case with string result
-    /// Task&lt;Result&lt;string&gt;&gt; asyncSuccess = Task.FromResult(Result.Success("hello"));
-    /// Result&lt;Unit&gt; unitResult = await asyncSuccess.ToUnitResultAsync();
+    /// Task<Result<string>> asyncSuccess = Task.FromResult(Result.Success("hello"));
+    /// Result<Unit> unitResult = await asyncSuccess.ToUnitResultAsync();
     /// Console.WriteLine(unitResult.IsSuccess); // Output: True
-    /// 
+    ///
     /// // Failure case with custom error
     /// var error = ResultError.New("Operation failed");
-    /// Task&lt;Result&lt;int&gt;&gt; asyncFailure = Task.FromResult(Result.Failure&lt;int&gt;(error));
-    /// Result&lt;Unit&gt; failedResult = await asyncFailure.ToUnitResultAsync();
+    /// Task<Result<int>> asyncFailure = Task.FromResult(Result.Failure<int>(error));
+    /// Result<Unit> failedResult = await asyncFailure.ToUnitResultAsync();
     /// Console.WriteLine(failedResult.IsFailure); // Output: True
     /// Console.WriteLine(failedResult.Error.Message); // Output: "Operation failed"
-    /// </code>
+    /// ]]></code>
     /// </example>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
