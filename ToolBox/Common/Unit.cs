@@ -29,7 +29,7 @@ namespace ZeidLab.ToolBox.Common;
 /// <example>
 /// <code><![CDATA[
 /// // Successful operation with Unit
-/// Result<Unit> result = Result<Unit>.Success(Unit.Default);
+/// Result<Unit> result = Result.Success(Unit.Default);
 ///
 /// // Chaining operations using Bind
 /// Result<Unit> workflow = result
@@ -37,14 +37,14 @@ namespace ZeidLab.ToolBox.Common;
 ///     .Bind(_ => ValidateConfiguration());
 ///
 /// // Pattern matching with Maybe
-/// Maybe<int> maybeValue = Maybe<int>.None();
+/// Maybe<int> maybeValue = Maybe.None<int>();
 /// string message = maybeValue.Match(
 ///     some: value => $"Value: {value}",
 ///     none: () => "No value found"
 /// );
 ///
 /// // Error handling example
-/// Result<Unit> errorResult = Result<Unit>.Failure(ResultError.Create("Failed operation"));
+/// Result<Unit> errorResult = Result.Failure<Unit>(ResultError.New("Failed operation"));
 /// ]]></code>
 /// </example>
 /// </summary>
@@ -123,7 +123,7 @@ public readonly record struct Unit : IComparable<Unit>
     ///
     /// // Use with Result<T> for error handling
     /// Result<int> result = Unit.Default
-    ///     .Return(Result<int>.Success(100));
+    ///     .Return(Result.Success(100));
     /// ]]></code>
     /// </example>
     [Pure]

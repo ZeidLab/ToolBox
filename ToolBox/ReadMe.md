@@ -27,9 +27,9 @@ Add the ToolBox library to your project via NuGet:
 Result<int> Divide(int a, int b)
 {
     if (b == 0)
-        return Result<int>.Failure(Error.New("Division by zero is not allowed."));
+        return Result.Failure<int>(Error.New("Division by zero is not allowed."));
 
-    return Result<int>.Success(a / b);
+    return Result.Success(a / b);
 }
 
 var result = Divide(10, 0);
@@ -46,7 +46,7 @@ else
    Result<Unit> LogMessage(string message)
    {
    Console.WriteLine(message);
-   return Result<Unit>.Success(Unit.Default);
+   return Result.Success(Unit.Default);
    }
 
 var result = LogMessage("Hello, World!");
@@ -81,8 +81,8 @@ Console.WriteLine($"Async Error: {asyncResult.Error.Message}");
 4. Chaining Operations with Railway-Oriented Programming
 
 ```csharp
-   Result<int> operation1 = Result<int>.Success(10);
-   Result<int> operation2 = operation1.Bind(value => Result<int>.Success(value * 2));
+   Result<int> operation1 = Result.Success(10);
+   Result<int> operation2 = operation1.Bind(value => Result.Success(value * 2));
 
 if (operation2.IsSuccess)
 Console.WriteLine($"Chained Result: {operation2.Value}");

@@ -15,7 +15,7 @@ namespace ZeidLab.ToolBox.Results;
 /// <example>
 /// Basic result matching:
 /// <code><![CDATA[
-/// var result = Result.Success<int>(42);
+/// var result = Result.Success(42);
 /// var matched = result.Match(
 ///     success: value => $"Got {value}",
 ///     failure: error => $"Error: {error.Message}"
@@ -49,7 +49,7 @@ public static class ResultExtensionsMatch
     /// <example>
     /// Using Match to transform results:
     /// <code><![CDATA[
-    /// var result = Result.Success<int>(42);
+    /// var result = Result.Success(42);
     /// var transformed = result.Match(
     ///     success: x => Result.Success(x * 2),
     ///     failure: err => Result.Failure<int>(err)
@@ -111,7 +111,7 @@ public static class ResultExtensionsMatch
     /// <example>
     /// Handling side effects:
     /// <code><![CDATA[
-    /// var result = Result.Success<int>(42);
+    /// var result = Result.Success(42);
     /// result.Match(
     ///     success: value => Console.WriteLine($"Got value: {value}"),
     ///     failure: error => Console.WriteLine($"Error: {error.Message}")
