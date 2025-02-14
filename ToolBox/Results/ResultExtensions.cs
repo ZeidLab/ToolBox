@@ -112,7 +112,7 @@ public static class ResultExtensions
     /// var successResult = Result.Success(42);
     /// var someValue = successResult.ToMaybe();
     /// Console.WriteLine(someValue.IsSome); // Output: True
-    /// Console.WriteLine(someValue.Match(
+    /// Console.WriteLine(someValue.Map(
     ///     some: x => x,
     ///     none: () => 0)); // Output: 42
     ///
@@ -147,7 +147,7 @@ public static class ResultExtensions
     /// Try<int> tryParse = () => Result.Success(int.Parse("42"));
     /// Maybe<int> maybeNumber = tryParse.ToMaybe();
     /// Console.WriteLine(maybeNumber.IsSome); // Output: True
-    /// Console.WriteLine(maybeNumber.Match(
+    /// Console.WriteLine(maybeNumber.Map(
     ///     some: x => x,
     ///     none: () => 0)); // Output: 42
     ///
@@ -174,7 +174,7 @@ public static class ResultExtensions
     /// Task<Result<int>> asyncSuccess = Task.FromResult(Result.Success(42));
     /// Maybe<int> maybeNumber = await asyncSuccess.ToMaybeAsync();
     /// Console.WriteLine(maybeNumber.IsSome); // Output: True
-    /// Console.WriteLine(maybeNumber.Match(
+    /// Console.WriteLine(maybeNumber.Map(
     ///     some: x => x,
     ///     none: () => 0)); // Output: 42
     ///
@@ -215,7 +215,7 @@ public static class ResultExtensions
     /// };
     /// Maybe<int> maybeNumber = await asyncTry.ToMaybeAsync();
     /// Console.WriteLine(maybeNumber.IsSome); // Output: True
-    /// Console.WriteLine(maybeNumber.Match(
+    /// Console.WriteLine(maybeNumber.Map(
     ///     some: x => x,
     ///     none: () => 0)); // Output: 42
     ///

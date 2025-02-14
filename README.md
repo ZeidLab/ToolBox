@@ -26,6 +26,8 @@ Inspired by [LanguageExt](https://github.com/louthy/language-ext), this library 
 - [Types included in this library](#types-included-in-this-library)
 - [What is `Maybe<T>`?](#what-is-maybet-type)
   - [Why Use `Maybe<T>` Instead of Nullable?](#why-use-maybet-instead-of-nullable)
+  - [Code examples of Maybe<T>](#code-examples-of-maybet)
+  - [Extension Methods of `Maybe<T>` with Examples](#extension-methods-of-maybet-with-examples)
 - [Contribution](#contribution)
 - [License](#license)
 
@@ -68,6 +70,194 @@ Here are some advantages of Using `Maybe<T>`:
 
 [^ Back To Top][TableOfContents]
 
+### Code examples of Maybe<T>
+
+This is a simple example of how to create the `Maybe<T>` type:
+
+```csharp
+ // Creating a Maybe with a value
+ Maybe<int> someValue = Maybe.Some(10);
+ Console.WriteLine(someValue.IsSome); // Output: true
+ Console.WriteLine(someValue.IsNone); // Output: false
+
+ // Creating a Maybe with a value implicitly
+ Maybe<int> someValue2 = 10;
+ Console.WriteLine(someValue2.IsSome); // Output: true
+ Console.WriteLine(someValue2.IsNone); // Output: false
+
+ // Creating a Maybe in the 'None' state
+ Maybe<string> noneValue = Maybe.None<string>();
+ Console.WriteLine(noneValue.IsSome); // Output: false
+ Console.WriteLine(noneValue.IsNone); // Output: true
+```
+
+[^ Back To Top][TableOfContents]
+
+## Extension Methods of `Maybe<T>` with Examples
+The value of `Maybe<T>` instance is not accessible directly, therefore extension methods are provided to help interacting with the `Maybe<T>` type. This section provides a brief overview of each extension method available in the `ZeidLab.ToolBox.Options` namespace.
+
+### `ToSome<TIn>()`
+
+Converts a non-null object to a `Maybe<TIn>` instance in the 'Some' state.
+
+```csharp
+var maybeInt = 10.ToSome(); // maybeInt is now a Maybe<int> in the 'Some' state.
+```
+
+### `ToNone<TIn>()`
+
+Creates a `Maybe<TIn>` instance in the None state, regardless of the input value.
+
+```csharp
+var maybeInt = ((int?)null).ToNone(); // maybeInt is now a Maybe<int> in the 'None' state.
+```
+
+### `Bind<TIn, TOut>(this Maybe<TIn> self, Func<TIn, Maybe<TOut>> map)`
+
+Maps the content of a `Maybe<TIn>` instance to a new `Maybe<TOut>` instance using the provided mapping function. This method is for chaining operations.
+
+A simple example:
+```csharp
+Maybe<int> maybeInt = Maybe.Some(5);
+Maybe<string> maybeString = maybeInt.Bind(x => x.ToString().ToSome()); // maybeString is now a Maybe<string> containing "5".
+```
+An example with method chaining and implicit conversion:
+```csharp
+// Initial Maybe value
+Maybe<int> maybeNumber = Maybe.Some(10);
+
+// Function that multiplies the number by 2 and
+// returns an implicitly converted instance of Maybe<int> with the state of Some
+Func<int, Maybe<int>> multiplyByTwo = x => x * 2;
+
+// Function that converts the number to a string if it's even
+// returns an implicitly converted instance of Maybe<string> with the state of Some
+Func<int, Maybe<string>> convertToString = x => x.ToString();
+
+// Chaining operations using Bind
+Maybe<string> result = maybeNumber
+	.Bind(multiplyByTwo)
+	.Bind(convertToString);
+
+// Output result
+result.Do(
+	some: val => Console.WriteLine($"Result: {val}"),
+	none: () => Console.WriteLine("No result")
+	);
+```
+
+
+
+### `Map<TIn, TOut>(this Maybe<TIn> self, Func<TIn, TOut> some, Func<TOut> none)`
+
+Maps the content of a `Maybe<TIn>` instance to a new value using two functions: one for handling the Some case and another for handling the None case.
+
+```csharp
+var maybeAge = Maybe.Some(25);
+var description = maybeAge.Map(
+    some: age => $"Age is {age}",
+    none: () => "Age unknown"
+); // Returns "Age is 25"
+```
+
+### `If<TIn>(this Maybe<TIn> self, Func<TIn, bool> predicate)`
+
+Ensures that the content of a `Maybe{TIn}` instance satisfies a predicate.
+
+```csharp
+Maybe<int> maybeInt = Maybe.Some(10);
+bool result = maybeInt.If(x => x > 5); // result is true.
+```
+
+### `Where<TIn>(this IEnumerable<Maybe<TIn>> self, Func<TIn, bool> predicate)`
+
+Filters a sequence of Maybe instances based on a predicate applied to their content.
+
+```csharp
+var maybeList = new List<Maybe<int>> { Maybe.Some(5), Maybe.None<int>(), Maybe.Some(10) };
+var filtered = maybeList.Where(x => x > 5); // filtered contains only Maybe.Some(10).
+```
+
+### `Filter<TIn>(this Maybe<TIn> self, Func<TIn, bool> predicate)`
+
+Filters the Maybe instance based on a predicate applied to its content.
+
+```csharp
+var maybe = Maybe.Some(42);
+var filtered = maybe.Filter(value => value > 0); // Returns Maybe.Some(42)
+```
+
+### `Flatten<TIn>(this IEnumerable<Maybe<TIn>> self)`
+
+Converts a sequence of Maybe instances to an IEnumerable of their content, excluding None instances.
+
+```csharp
+var maybeList = new List<Maybe<int>> { Maybe.Some(1), Maybe.<int>None(), Maybe.Some(3) };
+var result = maybeList.Flatten(); // Output: [1, 3]
+```
+
+### `Flatten<TIn>(this IEnumerable<Maybe<TIn>> self, TIn substitute)`
+
+Converts a sequence of `Maybe{TIn}` instances to an `IEnumerable{TIn}` of their content, replacing `Maybe{TIn}.IsNone` instances with a specified substitute value.
+
+```csharp
+var maybeList = new List<Maybe<int>> { Maybe.Some(1), Maybe.None<int>(), Maybe.Some(3) };
+var result = maybeList.Flatten(0); // Output: [1, 0, 3]
+```
+
+### `Flatten<TIn>(this IEnumerable<Maybe<TIn>> self, Func<TIn> substitute)`
+
+Converts a sequence of `Maybe{TIn}` instances to an `IEnumerable{TIn}` of their content, using a substitute function for `Maybe{TIn}.IsNone` instances.
+
+```csharp
+var maybeList = new List<Maybe<int>> { Maybe.Some(1), Maybe.None<int>(), Maybe.Some(3) };
+var result = maybeList.Flatten(() => 0); // Output: [1, 0, 3]
+```
+
+### `Reduce<TIn>(this Maybe<TIn> self, TIn substitute)`
+
+Reduces the content of a `Maybe{TIn}` instance to a single value using the provided default value.
+
+```csharp
+Maybe<int> maybeInt = Maybe.Some(10);
+int result = maybeInt.Reduce(0); // result is 10.
+```
+
+### `Reduce<TIn>(this Maybe<TIn> self, Func<TIn> substitute)`
+
+Reduces the content of a `Maybe{TIn}` instance to a single value using the provided function.
+
+```csharp
+Maybe<int> maybeInt = Maybe.None<int>();
+int result = maybeInt.Reduce(() => 0); // result is 0.
+```
+
+### `DoIfSome<TIn>(this Maybe<TIn> self, Action<TIn> action)`
+
+Applies the provided action to the content of the `Maybe{TIn}` instance if it is `Maybe{TIn}.IsSome`.
+
+```csharp
+Maybe<int> maybeInt = Maybe.Some(10);
+maybeInt.DoIfSome(x => Console.WriteLine(x)); // Prints 10 to the console.
+```
+
+### `DoIfNone<TIn>(this Maybe<TIn> self, Action action)`
+
+Executes the provided action if the `Maybe{TIn}` instance is `Maybe{TIn}.IsNone`.
+
+```csharp
+Maybe<int> maybeInt = Maybe.None<int>();
+maybeInt.DoIfNone(() => Console.WriteLine("No value.")); // Prints "No value." to the console.
+```
+
+### `ValueOrThrow<TIn>(this Maybe<TIn> self)`
+
+Returns the value of the `Maybe{TIn}` instance if it is `Maybe{TIn}.IsSome`, otherwise throws an `InvalidOperationException`.
+
+```csharp
+Maybe<int> maybeInt = Maybe.Some(10);
+int value = maybeInt.ValueOrThrow(); // value is 10.
+```
 ## Contribution
 Contributions are welcome! Please feel free to submit issues, feature requests, or pull requests.
 

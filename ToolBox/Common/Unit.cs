@@ -38,7 +38,7 @@ namespace ZeidLab.ToolBox.Common;
 ///
 /// // Pattern matching with Maybe
 /// Maybe<int> maybeValue = Maybe.None<int>();
-/// string message = maybeValue.Match(
+/// string message = maybeValue.Map(
 ///     some: value => $"Value: {value}",
 ///     none: () => "No value found"
 /// );

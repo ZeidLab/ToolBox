@@ -1,66 +1,65 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <AnalysisLevel>latest</AnalysisLevel>
-        <AnalysisMode>All</AnalysisMode>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-		<TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net9.0;net7.0;net6.0</TargetFrameworks>
-        <!-- Versioning -->
-        <VersionBase>1.0.0-preview</VersionBase>
-        <BuildNumber>$([System.DateTime]::Now.ToString("yyMMddHHmmss"))</BuildNumber>
-        <Version>$(VersionBase)-$(BuildNumber)</Version>
+	<PropertyGroup>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<AnalysisMode>All</AnalysisMode>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;</TargetFrameworks>
+		<!-- Versioning -->
+		<VersionBase>1.0.0</VersionBase>
+		<BuildNumber>$([System.DateTime]::Now.ToString("yyMMddHHmmss"))</BuildNumber>
+		<Version>$(VersionBase)-$(BuildNumber)</Version>
 
-        <!-- Basic Project Properties -->
+		<!-- Basic Project Properties -->
 
-        <PackageId>$(RootNamespace)</PackageId>
-        <PackageVersion>$(Version)</PackageVersion>
-        <Title>ZeidLab ToolBox</Title> <!-- A friendly title for your package -->
-        <Product>ToolBox</Product> <!-- The product name -->
-        <Description>A library for adding Railway-Oriented Programming, and Functional Programming in c# by using Result{T} and Maybe{T} extension methods.</Description>
-        <PackageProjectUrl>https://github.com/ZeidLab/ToolBox</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/ZeidLab/ToolBox</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
-        <PackageTags>
-            RailwayOriented; OptionalParameter;
-            Result; Maybe; Either; Validation; FunctionalProgramming
-        </PackageTags>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression> <!-- Specify the license type -->
+		<PackageId>$(RootNamespace)</PackageId>
+		<PackageVersion>$(Version)</PackageVersion>
+		<Title>ZeidLab ToolBox</Title> <!-- A friendly title for your package -->
+		<Product>ToolBox</Product> <!-- The product name -->
+		<Description>A library for adding Railway-Oriented Programming, and Functional Programming in c# by using Result{T} and Maybe{T} extension methods.</Description>
+		<PackageProjectUrl>https://github.com/ZeidLab/ToolBox</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/ZeidLab/ToolBox</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>
+			RailwayOriented; OptionalParameter;
+			Result; Maybe; Either; Validation; FunctionalProgramming
+		</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression> <!-- Specify the license type -->
 
 
-        <!-- Documentation -->
-        <PublishRepositoryUrl>true</PublishRepositoryUrl> <!-- Publish the repository URL in the package -->
+		<!-- Documentation -->
+		<PublishRepositoryUrl>true</PublishRepositoryUrl> <!-- Publish the repository URL in the package -->
 
-        <!-- Publish documentation file -->
-        <DocumentationFile>$(MSBuildProjectName).xml</DocumentationFile>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile> <!-- Generate XML documentation -->
-        <PublishDocumentationFile>true</PublishDocumentationFile>
-        <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
+		<!-- Publish documentation file -->
+		<DocumentationFile>$(MSBuildProjectName).xml</DocumentationFile>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile> <!-- Generate XML documentation -->
+		<PublishDocumentationFile>true</PublishDocumentationFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 
-        <!-- Source Link Support -->
-        <IncludeSymbols>true</IncludeSymbols> <!-- Include symbols in the package -->
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <TargetFramework /> <!-- Use the snupkg format for symbols -->
+		<!-- Source Link Support -->
+		<IncludeSymbols>true</IncludeSymbols> <!-- Include symbols in the package -->
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<TargetFramework/> <!-- Use the snupkg format for symbols -->
 
-    </PropertyGroup>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="..\README.md" Pack="true" PackagePath="\"/>
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AsyncMethodNameFixer"/>
+		<PackageReference Include="ConfigureAwaitChecker.Analyzer">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 
-    <ItemGroup>
-        <PackageReference Include="AsyncMethodNameFixer" />
-        <PackageReference Include="ConfigureAwaitChecker.Analyzer">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
+		<PackageReference Include="SonarAnalyzer.CSharp">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
-        <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
-        <PackageReference Include="SonarAnalyzer.CSharp">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
 
-    <ItemGroup>
-        <!-- Include ReadMe.md in the package -->
-        <None Include="ReadMe.md" Pack="true" PackagePath="\"/>
-    </ItemGroup>
 
 </Project>

@@ -28,15 +28,16 @@ namespace ZeidLab.ToolBox.Results;
 /// // Create a successful result
 /// Result<int> success = Result.Success(42);
 /// Console.WriteLine(success.IsSuccess); // true
-/// 
+///
 /// // Create a failure result
-/// Result<int> failure = ResultError.New("Operation failed");
+/// // "Operation failed" will implicitly converted to ResultError
+/// Result<int> failure = Result.Failure<int>("Operation failed");
 /// Console.WriteLine(failure.IsFailure); // true
-/// 
+///
 /// // Handle exceptions implicitly
 /// Result<int> exceptionResult = new InvalidOperationException("Invalid operation");
 /// Console.WriteLine(exceptionResult.IsFailure); // true
-/// 
+///
 /// // Pattern matching example
 /// var message = success.Match(
 ///     success: value => $"Success: {value}",
@@ -151,10 +152,10 @@ public readonly record struct Result<TValue>
 /// <code><![CDATA[
 /// // Create a successful result
 /// var success = Result.Success(42);
-/// 
+///
 /// // Create a failure result
 /// var failure = Result.Failure<int>(ResultError.New("Operation failed"));
-/// 
+///
 /// // Create a failure from an exception
 /// var exceptionResult = Result.FromException<int>(new InvalidOperationException());
 /// ]]></code>
