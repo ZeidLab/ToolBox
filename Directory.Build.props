@@ -50,5 +50,5 @@
             $(MSBuildProjectDirectory)))
         </EditorConfigFile>
     </PropertyGroup>
-    
+
 </Project>
