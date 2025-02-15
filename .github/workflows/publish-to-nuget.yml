@@ -1,11 +1,15 @@
 ﻿name: Publish to NuGet
 
 on:
-    workflow_dispatch:  # Manual trigger
-    pull_request:       # Trigger on pull request events
-        types: [closed]   # Only trigger when a pull request is closed
+    # Manual trigger
+    workflow_dispatch:
+    # Trigger on pull request events
+    pull_request:
+        # Only trigger when a pull request is closed
+        types: [ closed ]
+        # Only trigger for pull requests targeting the master branch
         branches:
-            - master        # Only trigger for pull requests targeting the master branch
+            - master
 
 jobs:
     build-and-test:
@@ -21,117 +25,117 @@ jobs:
             failure_reason: ${{ steps.run_tests.outputs.failure_reason }}
 
         steps:
-            - name: Checkout code
-              uses: actions/checkout@v3
+            -   name: Checkout code
+                uses: actions/checkout@v3
 
-            - name: Setup .NET
-              uses: actions/setup-dotnet@v3
-              with:
-                  dotnet-version: '9.0.x'
+            -   name: Setup .NET
+                uses: actions/setup-dotnet@v3
+                with:
+                    dotnet-version: '9.0.x'
 
-            - name: Cache NuGet packages
-              id: cache-nuget
-              uses: actions/cache@v3
-              with:
-                  path: ~/.nuget/packages
-                  key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-nuget-
+            -   name: Cache NuGet packages
+                id: cache-nuget
+                uses: actions/cache@v3
+                with:
+                    path: ~/.nuget/packages
+                    key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+                    restore-keys: |
+                        ${{ runner.os }}-nuget-
 
-            - name: Create temporary NuGet.Config
-              run: |
-                  echo '<?xml version="1.0" encoding="utf-8"?>
-                  <configuration>
-                      <packageSources>
-                          <clear />
-                          <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
-                      </packageSources>
-                  </configuration>' > ./nuget.config
+            -   name: Create temporary NuGet.Config
+                run: |
+                    echo '<?xml version="1.0" encoding="utf-8"?>
+                    <configuration>
+                        <packageSources>
+                            <clear />
+                            <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
+                        </packageSources>
+                    </configuration>' > ./nuget.config
 
-            - name: Restore dependencies
-              run: dotnet restore --configfile ./nuget.config
+            -   name: Restore dependencies
+                run: dotnet restore --configfile ./nuget.config
 
-            - name: Build the solution
-              run: dotnet build --configuration Release
+            -   name: Build the solution
+                run: dotnet build --configuration Release
 
-            - name: Run unit tests with coverage
-              id: run_tests
-              run: |
-                  if dotnet test ToolBox.Test.Units --configuration Release --collect:"XPlat Code Coverage" --logger trx; then
-                    echo "test_passed=true" >> $GITHUB_OUTPUT
-                    echo "failure_reason=" >> $GITHUB_OUTPUT
-                  else
-                    echo "test_passed=false" >> $GITHUB_OUTPUT
-                    echo "failure_reason=Test failures" >> $GITHUB_OUTPUT
-                    exit 1
-                  fi
+            -   name: Run unit tests with coverage
+                id: run_tests
+                run: |
+                    if dotnet test ToolBox.Test.Units --configuration Release --collect:"XPlat Code Coverage" --logger trx; then
+                      echo "test_passed=true" >> $GITHUB_OUTPUT
+                      echo "failure_reason=" >> $GITHUB_OUTPUT
+                    else
+                      echo "test_passed=false" >> $GITHUB_OUTPUT
+                      echo "failure_reason=Test failures" >> $GITHUB_OUTPUT
+                      exit 1
+                    fi
 
-            - name: Generate and merge coverage reports
-              id: check_coverage
-              run: |
-                  # Install reportgenerator if not already installed
-                  dotnet tool install -g dotnet-reportgenerator-globaltool
+            -   name: Generate and merge coverage reports
+                id: check_coverage
+                run: |
+                    # Install reportgenerator if not already installed
+                    dotnet tool install -g dotnet-reportgenerator-globaltool
 
-                  # Install libxml2-utils for xmllint
-                  sudo apt-get update
-                  sudo apt-get install -y libxml2-utils
+                    # Install libxml2-utils for xmllint
+                    sudo apt-get update
+                    sudo apt-get install -y libxml2-utils
 
-                  # Find all coverage.cobertura.xml files
-                  COVERAGE_FILES=$(find ToolBox.Test.Units/TestResults -name "coverage.cobertura.xml")
+                    # Find all coverage.cobertura.xml files
+                    COVERAGE_FILES=$(find ToolBox.Test.Units/TestResults -name "coverage.cobertura.xml")
 
-                  if [ -z "$COVERAGE_FILES" ]; then
-                    echo "No coverage reports found."
-                    echo "coverage_passed=false" >> $GITHUB_OUTPUT
-                    exit 1
-                  fi
+                    if [ -z "$COVERAGE_FILES" ]; then
+                      echo "No coverage reports found."
+                      echo "coverage_passed=false" >> $GITHUB_OUTPUT
+                      exit 1
+                    fi
 
-                  # Format the file paths as a semicolon-separated list
-                  COVERAGE_FILES_SEMICOLON=$(echo "$COVERAGE_FILES" | tr '\n' ';' | sed 's/;$//')
+                    # Format the file paths as a semicolon-separated list
+                    COVERAGE_FILES_SEMICOLON=$(echo "$COVERAGE_FILES" | tr '\n' ';' | sed 's/;$//')
 
-                  # Merge all coverage reports into a single report
-                  reportgenerator "-reports:$COVERAGE_FILES_SEMICOLON" -targetdir:./merged-coverage-report -reporttypes:Cobertura
+                    # Merge all coverage reports into a single report
+                    reportgenerator "-reports:$COVERAGE_FILES_SEMICOLON" -targetdir:./merged-coverage-report -reporttypes:Cobertura
 
-                  # Use the merged report for coverage calculation
-                  MERGED_COVERAGE_FILE="./merged-coverage-report/Cobertura.xml"
+                    # Use the merged report for coverage calculation
+                    MERGED_COVERAGE_FILE="./merged-coverage-report/Cobertura.xml"
 
-                  if [ ! -f "$MERGED_COVERAGE_FILE" ]; then
-                    echo "Merged coverage report not found."
-                    echo "coverage_passed=false" >> $GITHUB_OUTPUT
-                    exit 1
-                  fi
+                    if [ ! -f "$MERGED_COVERAGE_FILE" ]; then
+                      echo "Merged coverage report not found."
+                      echo "coverage_passed=false" >> $GITHUB_OUTPUT
+                      exit 1
+                    fi
 
-                  # Extract the line coverage percentage from the merged report
-                  COVERAGE=$(xmllint --xpath 'string(//coverage/@line-rate)' "$MERGED_COVERAGE_FILE" | awk '{print $1*100}')
+                    # Extract the line coverage percentage from the merged report
+                    COVERAGE=$(xmllint --xpath 'string(//coverage/@line-rate)' "$MERGED_COVERAGE_FILE" | awk '{print $1*100}')
 
-                  if [ -z "$COVERAGE" ]; then
-                    echo "Coverage report is invalid or missing coverage data."
-                    echo "coverage_passed=false" >> $GITHUB_OUTPUT
-                    exit 1
-                  fi
+                    if [ -z "$COVERAGE" ]; then
+                      echo "Coverage report is invalid or missing coverage data."
+                      echo "coverage_passed=false" >> $GITHUB_OUTPUT
+                      exit 1
+                    fi
 
-                  echo "Code Coverage: $COVERAGE%"
+                    echo "Code Coverage: $COVERAGE%"
 
-                  # Check if the code coverage meets the threshold
-                  if (( $(echo "$COVERAGE > 80" | bc -l) )); then
-                    echo "Coverage threshold met."
-                    echo "coverage_passed=true" >> $GITHUB_OUTPUT
-                  else
-                    echo "Coverage threshold not met."
-                    echo "coverage_passed=false" >> $GITHUB_OUTPUT
-                    exit 1
-                  fi
+                    # Check if the code coverage meets the threshold
+                    if (( $(echo "$COVERAGE > 95" | bc -l) )); then
+                      echo "Coverage threshold met."
+                      echo "coverage_passed=true" >> $GITHUB_OUTPUT
+                    else
+                      echo "Coverage threshold not met."
+                      echo "coverage_passed=false" >> $GITHUB_OUTPUT
+                      exit 1
+                    fi
 
-            - name: Upload test results
-              uses: actions/upload-artifact@v4
-              with:
-                  name: test-results
-                  path: ToolBox.Test.Units/TestResults
+            -   name: Upload test results
+                uses: actions/upload-artifact@v4
+                with:
+                    name: test-results
+                    path: ToolBox.Test.Units/TestResults
 
-            - name: Upload merged coverage report
-              uses: actions/upload-artifact@v4
-              with:
-                  name: merged-coverage-report
-                  path: ./merged-coverage-report
+            -   name: Upload merged coverage report
+                uses: actions/upload-artifact@v4
+                with:
+                    name: merged-coverage-report
+                    path: ./merged-coverage-report
 
     publish:
         needs: build-and-test
@@ -139,38 +143,38 @@ jobs:
         if: needs.build-and-test.outputs.test_passed == 'true' && needs.build-and-test.outputs.coverage_passed == 'true'
 
         steps:
-            - name: Checkout code
-              uses: actions/checkout@v3
+            -   name: Checkout code
+                uses: actions/checkout@v3
 
-            - name: Setup .NET
-              uses: actions/setup-dotnet@v3
-              with:
-                  dotnet-version: '9.0.x'
+            -   name: Setup .NET
+                uses: actions/setup-dotnet@v3
+                with:
+                    dotnet-version: '9.0.x'
 
-            - name: Cache NuGet packages
-              id: cache-nuget
-              uses: actions/cache@v3
-              with:
-                  path: ~/.nuget/packages
-                  key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-nuget-
+            -   name: Cache NuGet packages
+                id: cache-nuget
+                uses: actions/cache@v3
+                with:
+                    path: ~/.nuget/packages
+                    key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+                    restore-keys: |
+                        ${{ runner.os }}-nuget-
 
-            - name: Create temporary NuGet.Config
-              run: |
-                  echo '<?xml version="1.0" encoding="utf-8"?>
-                  <configuration>
-                      <packageSources>
-                          <clear />
-                          <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
-                      </packageSources>
-                  </configuration>' > ./nuget.config
+            -   name: Create temporary NuGet.Config
+                run: |
+                    echo '<?xml version="1.0" encoding="utf-8"?>
+                    <configuration>
+                        <packageSources>
+                            <clear />
+                            <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
+                        </packageSources>
+                    </configuration>' > ./nuget.config
 
-            - name: Restore dependencies
-              run: dotnet restore --configfile ./nuget.config
+            -   name: Restore dependencies
+                run: dotnet restore --configfile ./nuget.config
 
-            - name: Pack the ToolBox project
-              run: dotnet pack ToolBox --configuration Release --output ./artifacts
+            -   name: Pack the ToolBox project
+                run: dotnet pack ToolBox --configuration Release --output ./artifacts
 
-            - name: Publish to NuGet
-              run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source https://api.nuget.org/v3/index.json
+            -   name: Publish to NuGet
+                run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source https://api.nuget.org/v3/index.json
