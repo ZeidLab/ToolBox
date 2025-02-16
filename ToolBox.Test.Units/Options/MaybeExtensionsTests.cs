@@ -27,7 +27,7 @@ public class MaybeExtensionsTests
 			.Bind(convertToString);
 
 		// Output result
-		result.Do(
+		result.Tap(
 			some: val => Console.WriteLine($"Result: {val}"),
 			none: () => Console.WriteLine("No result")
 		);
@@ -130,7 +130,7 @@ public class MaybeExtensionsTests
     }
 
     [Fact]
-    public void Do_WhenMaybeIsSome_ShouldApplySomeFunction()
+    public void Tap_WhenMaybeIsSome_ShouldApplySomeFunction()
     {
         // Arrange
         var maybe = Maybe.Some(42);
@@ -139,14 +139,14 @@ public class MaybeExtensionsTests
         Action none = () => output = "none";
 
         // Act
-        var result = maybe.Do(some, none);
+        var result = maybe.Tap(some, none);
 
         // Assert
         output.Should().Be("42");
     }
 
     [Fact]
-    public void Do_WhenMaybeIsNone_ShouldApplyNoneFunction()
+    public void Tap_WhenMaybeIsNone_ShouldApplyNoneFunction()
     {
         // Arrange
         var maybe = Maybe.None<int>();
@@ -155,7 +155,7 @@ public class MaybeExtensionsTests
         Action none = () => output = "none";
 
         // Act
-        var result = maybe.Do(some, none);
+        var result = maybe.Tap(some, none);
 
         // Assert
         output.Should().Be("none");
@@ -204,14 +204,14 @@ public class MaybeExtensionsTests
     }
 
     [Fact]
-    public void DoIfSome_WhenMaybeIsSome_ShouldExecuteAction()
+    public void TapIfSome_WhenMaybeIsSome_ShouldExecuteAction()
     {
         // Arrange
         var maybe = Maybe.Some(42);
         var action = Substitute.For<Action<int>>();
 
         // Act
-        var result = maybe.DoIfSome(action);
+        var result = maybe.TapIfSome(action);
 
         // Assert
         result.Should().Be(maybe);
@@ -219,14 +219,14 @@ public class MaybeExtensionsTests
     }
 
     [Fact]
-    public void DoIfSome_WhenMaybeIsNone_ShouldNotExecuteAction()
+    public void TapIfSome_WhenMaybeIsNone_ShouldNotExecuteAction()
     {
         // Arrange
         var maybe = Maybe.None<int>();
         var action = Substitute.For<Action<int>>();
 
         // Act
-        var result = maybe.DoIfSome(action);
+        var result = maybe.TapIfSome(action);
 
         // Assert
         result.Should().Be(maybe);
@@ -234,14 +234,14 @@ public class MaybeExtensionsTests
     }
 
     [Fact]
-    public void DoIfNone_WhenMaybeIsNone_ShouldExecuteAction()
+    public void TapIfNone_WhenMaybeIsNone_ShouldExecuteAction()
     {
         // Arrange
         var maybe = Maybe.None<int>();
         var action = Substitute.For<Action>();
 
         // Act
-        var result = maybe.DoIfNone(action);
+        var result = maybe.TapIfNone(action);
 
         // Assert
         result.Should().Be(maybe);
@@ -249,14 +249,14 @@ public class MaybeExtensionsTests
     }
 
     [Fact]
-    public void DoIfNone_WhenMaybeIsSome_ShouldNotExecuteAction()
+    public void TapIfNone_WhenMaybeIsSome_ShouldNotExecuteAction()
     {
         // Arrange
         var maybe = Maybe.Some(42);
         var action = Substitute.For<Action>();
 
         // Act
-        var result = maybe.DoIfNone(action);
+        var result = maybe.TapIfNone(action);
 
         // Assert
         result.Should().Be(maybe);

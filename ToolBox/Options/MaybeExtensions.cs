@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 
 // ReSharper disable once CheckNamespace
@@ -307,7 +308,24 @@ public static class MaybeExtensions
 	/// <returns>The original <see cref="Maybe{TIn}"/> instance.</returns>
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static Maybe<TIn> TapIfSome<TIn>(this Maybe<TIn> self, Action<TIn> action)
+		where TIn : notnull
+	{
+		if (!self.IsNull)
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CA1062
+			action(self.Value);
+#pragma warning restore CA1062
+#pragma warning restore CS8604 // Possible null reference argument.
+		return self;
+	}
+#pragma warning disable S1133
+	[Obsolete("Use TapIfSome method instead, this is going to be deleted in next version",true)]
+	[ExcludeFromCodeCoverage]
+#pragma warning restore S1133
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 	public static Maybe<TIn> DoIfSome<TIn>(this Maybe<TIn> self, Action<TIn> action)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 		where TIn : notnull
 	{
 		if (!self.IsNull)
@@ -328,7 +346,22 @@ public static class MaybeExtensions
 	/// <returns>The original <see cref="Maybe{TIn}"/> instance.</returns>
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static Maybe<TIn> TapIfNone<TIn>(this Maybe<TIn> self, Action action)
+		where TIn : notnull
+	{
+		if (self.IsNull)
+#pragma warning disable CA1062
+			action();
+#pragma warning restore CA1062
+		return self;
+	}
+#pragma warning disable S1133
+	[Obsolete("Use TapIfNone method instead, this is going to be deleted in next version",true)]
+	[ExcludeFromCodeCoverage]
+#pragma warning restore S1133
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 	public static Maybe<TIn> DoIfNone<TIn>(this Maybe<TIn> self, Action action)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 		where TIn : notnull
 	{
 		if (self.IsNull)
@@ -371,12 +404,36 @@ public static class MaybeExtensions
 	/// <example>
 	/// <code><![CDATA[
 	/// Maybe<int> maybe = Maybe.Some(42);
-	/// maybe.Do(
+	/// maybe.Tap(
 	///		some: value => Console.WriteLine($"The value is {value}"),
 	///		none: () => Console.WriteLine("No value"));
 	/// ]]></code>
 	/// </example>
+	public static Maybe<TIn> Tap<TIn>(this Maybe<TIn> self, Action<TIn> some, Action none)
+		where TIn : notnull
+	{
+		if (self.IsNull)
+
+#pragma warning disable CA1062
+			none();
+#pragma warning restore CA1062
+		else
+#pragma warning disable CA1062
+#pragma warning disable CS8604 // Possible null reference argument.
+			some(self.Value);
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CA1062
+		return self;
+	}
+
+
+#pragma warning disable S1133
+	[Obsolete("Use Tap method instead, this is going to be deleted in next version",true)]
+	[ExcludeFromCodeCoverage]
+#pragma warning restore S1133
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 	public static Maybe<TIn> Do<TIn>(this Maybe<TIn> self, Action<TIn> some, Action none)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 		where TIn : notnull
 	{
 		if (self.IsNull)
