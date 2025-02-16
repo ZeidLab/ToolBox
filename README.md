@@ -1,6 +1,4 @@
-﻿[Changelog](CHANGELOG.md) | [License](LICENSE.txt) | [Contributing](CONTRIBUTING.md)
-
-## 🤔 What is `ZeidLab.ToolBox` Library?
+﻿## 🤔 What is `ZeidLab.ToolBox` Library?
 
 **ZeidLab.ToolBox** is a versatile and robust utility library designed to simplify common programming tasks, enhance error handling, and promote functional programming paradigms in C#. It provides a collection of tools and extensions that streamline operations such as null checks, error handling, task management, and railway-oriented programming (ROP) sometimes known as "Result Pattern".
 
