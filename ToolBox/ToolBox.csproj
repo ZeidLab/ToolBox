@@ -7,6 +7,7 @@
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 		<TargetFrameworks>netstandard2.0;netstandard2.1;</TargetFrameworks>
 		<!-- Versioning -->
+		<Deterministic>true</Deterministic>
 		<VersionBase>1.1</VersionBase>
 		<BuildNumber>$([System.DateTime]::Now.ToString("yyMM"))</BuildNumber>
 		<Revision>$([System.DateTime]::Now.ToString("ddHH"))</Revision>
