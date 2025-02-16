@@ -1,17 +1,15 @@
-﻿## 🤔 What is `ZeidLab.ToolBox` Library?
+﻿[Changelog](CHANGELOG.md) | [License](LICENSE.txt) | [Contributing](CONTRIBUTING.md)
+
+## 🤔 What is `ZeidLab.ToolBox` Library?
 
 **ZeidLab.ToolBox** is a versatile and robust utility library designed to simplify common programming tasks, enhance error handling, and promote functional programming paradigms in C#. It provides a collection of tools and extensions that streamline operations such as null checks, error handling, task management, and railway-oriented programming (ROP) sometimes known as "Result Pattern".
 
 ### 🎁 Features
 
 * **Unit Type:** A type representing the absence of a meaningful value, useful in functional programming.
-
 * **Maybe Type:** A monadic type for handling optional values, similar to Option in functional languages.
-
 * **Result Type:** A robust error-handling type for railway-oriented programming, allowing chaining of operations with explicit success and failure states.
-
 * **Error Handling:** Structured error handling with ResultError,supporting error codes, messages, and exceptions.
-
 * **Asynchronous Support:** Comprehensive support for asynchronous operations with Result types.
 
 Inspired by [LanguageExt](https://github.com/louthy/language-ext), this library offers a more compact and user-friendly alternative with extensive examples and tutorials.
@@ -19,6 +17,7 @@ Inspired by [LanguageExt](https://github.com/louthy/language-ext), this library 
 [^ Back To Top](#-what-is-zeidlabtoolbox-library)
 
 ## 📦 Installation
+
 To use **ZeidLab.ToolBox** in your project, you can install it via NuGet:
 
 ```bash
@@ -50,18 +49,19 @@ Thank you for being part of this community—let’s build smarter, together
 
 [^ Back To Top](#-what-is-zeidlabtoolbox-library)
 
-
 ## 🤝 Contributions are welcome!
+
 Please feel free to submit issues, feature requests, or pull requests.
 
-1. [x] Fork the repository.
-2. [x] Create a new branch for your feature or bugfix.
-3. [x] Commit your changes.
-4. [x] Push your branch and submit a pull request.
+1. [X]  Fork the repository.
+2. [X]  Create a new branch for your feature or bugfix.
+3. [X]  Commit your changes.
+4. [X]  Push your branch and submit a pull request.
 
 [^ Back To Top](#-what-is-zeidlabtoolbox-library)
 
 ## License
+
 This project is licensed under the MIT License. See the [LICENSE](./LICENSE.txt) file for details.
 
 [^ Back To Top](#-what-is-zeidlabtoolbox-library)
