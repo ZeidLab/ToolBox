@@ -76,7 +76,7 @@ public enum ResultErrorCode
     /// </code>
     /// </example>
     None = 0,
-    
+
     /// <summary>
     /// Represents a general error condition where a more specific error code is not applicable.
     /// </summary>
@@ -88,7 +88,7 @@ public enum ResultErrorCode
     /// </code>
     /// </example>
     Generic = 1,
-    
+
     /// <summary>
     /// Represents a validation error, typically used when input data fails validation rules.
     /// </summary>
@@ -100,7 +100,7 @@ public enum ResultErrorCode
     /// </code>
     /// </example>
     Validation = 400,
-    
+
     /// <summary>
     /// Represents a resource not found error, typically used when a requested entity does not exist.
     /// </summary>
@@ -112,7 +112,7 @@ public enum ResultErrorCode
     /// </code>
     /// </example>
     NotFound = 404,
-    
+
     /// <summary>
     /// Represents an internal error, typically used when an unexpected system error occurs.
     /// </summary>
@@ -293,7 +293,7 @@ public readonly record struct ResultError
         Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
         Guards.ThrowIfNullOrWhiteSpace(name, nameof(name));
         Guards.ThrowIfNull(exception, nameof(exception));
-        return new ResultError(exception.HResult, name, message, exception);
+        return new ResultError(DefaultCode, name, message, exception);
     }
 
     /// <summary>
@@ -323,21 +323,21 @@ public readonly record struct ResultError
     {
         Guards.ThrowIfNullOrWhiteSpace(message, nameof(message));
         Guards.ThrowIfNull(exception, nameof(exception));
-        return new ResultError(exception.HResult, DefaultName, message, exception);
+        return new ResultError(DefaultCode, DefaultName, message, exception);
     }
 
     /// <summary>
     /// Deconstructs the error into its code, name, message, and unhandled exception.
     /// </summary>
-    /// <param name="code">The error code.</param>
-    /// <param name="name">The error name.</param>
-    /// <param name="message">The error message.</param>
-    /// <param name="unhandledException">The unhandled exception that caused this error, or none if none.</param>
-    public void Deconstruct(out int code, out string name, out string message, out Exception? unhandledException)
+    /// <param name="codeParam">The error code.</param>
+    /// <param name="nameParam">The error name.</param>
+    /// <param name="messageParam">The error message.</param>
+    /// <param name="exceptionParam">The unhandled exception that caused this error, or none if none.</param>
+    public void Deconstruct(out int codeParam, out string nameParam, out string messageParam, out Exception? exceptionParam)
     {
-        code = Code;
-        name = Name;
-        message = Message;
-        unhandledException = Exception;
+        codeParam = Code;
+        nameParam = Name;
+        messageParam = Message;
+        exceptionParam = Exception;
     }
 }
