@@ -24,6 +24,12 @@ dotnet add package ZeidLab.ToolBox
 
 [^ Back To Top](#-what-is-zeidlabtoolbox-library)
 
+## 📝 ChangeLogs
+
+By each release we add new features and bug fixes. You can find the full change log [here](https://github.com/ZeidLab/ToolBox/releases).
+
+[^ Back To Top](#-what-is-zeidlabtoolbox-library)
+
 ## 📖 Need Help? Read the Wiki and watch the Tutorials
 
 There is a very detailed [Wiki](https://github.com/ZeidLab/ToolBox/wiki) for this library full of descriptions and examples. also there is a [YouTube channel with a dedicated video tutorials playlist](https://youtube.com/@zeidlabco?si=xAsUEwBoDNrJdmdK) for this library.
