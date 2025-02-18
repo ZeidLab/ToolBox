@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 		README.md = README.md
 		LICENSE.txt = LICENSE.txt
+		DocFragments.xml = DocFragments.xml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolBox.Test.Units", "ToolBox.Test.Units\ToolBox.Test.Units.csproj", "{AB608E21-4CC3-45BC-B245-55F8F6BD95B2}"
@@ -22,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "githubWorkflows", "githubWo
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\publish-to-nuget.yml = .github\workflows\publish-to-nuget.yml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolBox.ExampleProject", "ToolBox.ExampleProject\ToolBox.ExampleProject.csproj", "{0ECFFDA2-9B05-494F-A73A-5A9BDEA8AA20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +44,10 @@ Global
 		{712B7BFB-A104-4791-A009-3A474E13A2D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{712B7BFB-A104-4791-A009-3A474E13A2D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{712B7BFB-A104-4791-A009-3A474E13A2D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0ECFFDA2-9B05-494F-A73A-5A9BDEA8AA20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ECFFDA2-9B05-494F-A73A-5A9BDEA8AA20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ECFFDA2-9B05-494F-A73A-5A9BDEA8AA20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0ECFFDA2-9B05-494F-A73A-5A9BDEA8AA20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4CC0B56A-DE64-46E0-8CEA-11ACBD529699} = {763B823B-67B8-48A1-BA0A-4FEF19ED30EA}

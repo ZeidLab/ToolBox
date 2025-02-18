@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doc>
+	<members>
+		<!-- This member element acts as a container for the shared documentation fragment -->
+		<member name="BindDoc">
+			<summary>
+				This is a test content That I want to include
+			</summary>
+			<remarks>
+				This is tested remark
+			</remarks>
+		</member>
+		<member name="BindDoc3">
+			<summary>
+				Binds the value of a successful result to a new result by applying the specified function.
+				If the input result is a failure, the error is propagated.
+			</summary>
+			<remarks>
+				Use this method to chain operations on a Result object without having to repeat error handling logic.
+			</remarks>
+		</member>
+	</members>
+</doc>

@@ -45,6 +45,8 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<None Include="..\README.md" Pack="true" PackagePath="\"/>
+		<None Include="..\DocFragments.xml" Pack="true" PackagePath="\"/>
+
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="AsyncMethodNameFixer"/>
