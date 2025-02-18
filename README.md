@@ -1,16 +1,21 @@
 ﻿## 🤔 What is `ZeidLab.ToolBox` Library?
 
-**ZeidLab.ToolBox** is a versatile and robust utility library designed to simplify common programming tasks, enhance error handling, and promote functional programming paradigms in C#. It provides a collection of tools and extensions that streamline operations such as null checks, error handling, task management, and railway-oriented programming (ROP) sometimes known as "Result Pattern".
+**ZeidLab.ToolBox** is a versatile and robust utility library designed to simplify common programming tasks, enhance
+error handling, and promote functional programming paradigms in C#. It provides a collection of tools and extensions
+that streamline operations such as null checks, error handling, task management, and railway-oriented programming (ROP)
+sometimes known as "Result Pattern".
 
 ### 🎁 Features
 
 * **Unit Type:** A type representing the absence of a meaningful value, useful in functional programming.
 * **Maybe Type:** A monadic type for handling optional values, similar to Option in functional languages.
-* **Result Type:** A robust error-handling type for railway-oriented programming, allowing chaining of operations with explicit success and failure states.
+* **Result Type:** A robust error-handling type for railway-oriented programming, allowing chaining of operations with
+  explicit success and failure states.
 * **Error Handling:** Structured error handling with ResultError,supporting error codes, messages, and exceptions.
 * **Asynchronous Support:** Comprehensive support for asynchronous operations with Result types.
 
-Inspired by [LanguageExt](https://github.com/louthy/language-ext), this library offers a more compact and user-friendly alternative with extensive examples and tutorials.
+Inspired by [LanguageExt](https://github.com/louthy/language-ext), this library offers a more compact and user-friendly
+alternative with extensive examples and tutorials.
 
 [^ Back To Top](#-what-is-zeidlabtoolbox-library)
 
@@ -21,24 +26,41 @@ To use **ZeidLab.ToolBox** in your project, you can install it via NuGet:
 ```bash
 dotnet add package ZeidLab.ToolBox
 ```
+for more information please visit [ToolBox Package On NuGet](https://www.nuget.org/packages/ZeidLab.ToolBox).
 
 [^ Back To Top](#-what-is-zeidlabtoolbox-library)
 
 ## 📝 ChangeLogs
 
-By each release we add new features and bug fixes. You can find the full change log [here](https://github.com/ZeidLab/ToolBox/releases).
+By each release we add new features and bug fixes. You can find the full change
+log [here](https://github.com/ZeidLab/ToolBox/releases).
 
 [^ Back To Top](#-what-is-zeidlabtoolbox-library)
 
 ## 📖 Need Help? Read the Wiki and watch the Tutorials
 
-There is a very detailed [Wiki](https://github.com/ZeidLab/ToolBox/wiki) for this library full of descriptions and examples. also there is a [YouTube channel with a dedicated video tutorials playlist](https://youtube.com/@zeidlabco?si=xAsUEwBoDNrJdmdK) for this library.
+There is a very detailed [Wiki](https://github.com/ZeidLab/ToolBox/wiki) for this library full of descriptions and
+examples. also there is
+a [YouTube channel with a dedicated video tutorials playlist](https://youtube.com/@zeidlabco?si=xAsUEwBoDNrJdmdK) for
+this library.
+
+The main topics of this library are:
+
+| Types and PageLink                                                               | Short Description                                                                                                                        |
+|----------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| [`Maybe<TIn>`](https://github.com/ZeidLab/ToolBox/wiki/Maybe-Type)               | A monadic type for handling optional values, similar to Option in functional languages.                                                  |
+| [`Result<TIn>`](https://github.com/ZeidLab/ToolBox/wiki/Result-Type)             | A robust error-handling type for railway-oriented programming, allowing chaining of operations with explicit success and failure states. |
+| [`Unit`](https://github.com/ZeidLab/ToolBox/wiki/Unit-Type)                      | A type representing the absence of a meaningful value, useful in functional programming.                                                 |
+| [`ResultError`](https://github.com/ZeidLab/ToolBox/wiki/ResultError-Type)        | Structured error handling with supporting error codes, messages, and exceptions.                                                         |
+| [`Try<TIn>`](https://github.com/ZeidLab/ToolBox/wiki/Try-And-TryAsync-Type)      | A delegate to handel the unhandled exceptions in an efficient and expressive way in a synchronous flow of functions.                     |
+| [`TryAsync<TIn>`](https://github.com/ZeidLab/ToolBox/wiki/Try-And-TryAsync-Type) | A delegate to handel the unhandled exceptions in an efficient and expressive way in a synchronous flow of functions.                     |
 
 [^ Back To Top](#-what-is-zeidlabtoolbox-library)
 
 ## ⭐️ Star and Follow
 
-Star this repository and follow me on GitHub to stay informed about new releases and updates. Your support fuels this project's growth!
+Star this repository and follow me on GitHub to stay informed about new releases and updates. Your support fuels this
+project's growth!
 
 [^ Back To Top](#-what-is-zeidlabtoolbox-library)
 
