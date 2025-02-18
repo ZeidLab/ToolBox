@@ -2,36 +2,13 @@
 using FluentAssertions;
 using NSubstitute;
 using ZeidLab.ToolBox.Options;
+using ZeidLab.ToolBox.Results;
 
 namespace ZeidLab.ToolBox.Test.Units.Options;
 
 [SuppressMessage("ReSharper", "ConvertToLocalFunction")]
 public class MaybeExtensionsTests
 {
-	private void AlakiMethod()
-	{
-		// Initial Maybe value
-		Maybe<int> maybeNumber = Maybe.Some(10);
-
-		// Function that multiplies the number by 2 and
-		// returns an implicitly converted instance of Maybe<int> with the state of Some
-		Func<int, Maybe<int>> multiplyByTwo = x => x * 2;
-
-		// Function that converts the number to a string if it's even
-		// returns an implicitly converted instance of Maybe<string> with the state of Some
-		Func<int, Maybe<string>> convertToString = x => x.ToString();
-
-		// Chaining operations using Bind
-		Maybe<string> result = maybeNumber
-			.Bind(multiplyByTwo)
-			.Bind(convertToString);
-
-		// Output result
-		result.Tap(
-			some: val => Console.WriteLine($"Result: {val}"),
-			none: () => Console.WriteLine("No result")
-		);
-	}
     [Fact]
     public void ToSome_WhenCalledWithNonNullValue_ShouldReturnSomeWithValue()
     {
