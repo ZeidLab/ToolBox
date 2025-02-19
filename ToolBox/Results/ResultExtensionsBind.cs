@@ -195,7 +195,7 @@ public static class ResultExtensionsBind
 	{
 		var result = await self.ConfigureAwait(false);
 		return result.IsSuccess
-			? await func(result.Value).TryAsync()
+			? await func(result.Value).TryAsync().ConfigureAwait(false)
 			: Result.Failure<TOut>(result.Error);
 	}
 
