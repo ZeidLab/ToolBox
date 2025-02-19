@@ -1,62 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
-<doc>
-	<BindExtensionMethods>
-		<summary>
-			Asynchronously or synchronously transforms a successful
-			<see cref="Result{TIn}"/>
-			or
-			<see cref="Try{TIn}"/>
-			or
-			<see cref="TryAsync{TIn}"/>
-			to a new
-			<see cref="Result{TOut}"/>
-			output by using the provided function which is
-			<paramref name="func"/>
-			in this method. If the input result is a failure, the failure is propagated without executing the function.
-		</summary>
-		<typeparam name="TIn">The type of the value in the input object like<see cref="Result{TIn}"/>.
-		</typeparam>
-		<typeparam name="TOut">The type of output value rapped in a<see cref="Result{TOut}"/>.
-		</typeparam>
-		<param name="self">
-			<see cref="Result{TIn}"/>
-			or
-			<see cref="Try{TIn}"/>
-			or
-			<see cref="TryAsync{TIn}"/>
-		</param>
-		<param name="func">The function returning one of these :
-			<see cref="Result{TIn}"/>
-			or
-			<see cref="Try{TIn}"/>
-			or
-			<see cref="TryAsync{TIn}"/>
-		</param>
-		<returns>
-			<para>
-				Always returns
-				<see cref="Result{TOut}"/>
-				or a Task of
-				<see cref="Result{TOut}"/>
-			</para>
-			<list type="bullet">
-				<item>
-					<description>Successful
-						<see cref="Result{TOut}"/>
-						with the transformed value if both the input result and the transformation succeed
-					</description>
-				</item>
-				<item>
-					<description>A failure of
-						<see cref="Result{TOut}"/>
-						containing the error from either the input result or the transformation
-					</description>
-				</item>
-			</list>
-		</returns>
-		<example>
-			<code>
-				<![CDATA[
 using ZeidLab.ToolBox.Results;
 
 namespace ZeidLab.ToolBox.ExampleProject.ResultExamples
@@ -108,6 +49,8 @@ namespace ZeidLab.ToolBox.ExampleProject.ResultExamples
 				.BindAsync(ValidatePositive)
 				.BindAsync(ValidateEven)
 				.BindAsync(MultiplyByTwoAsync)
+				// Result<int>.Value or Result<int>.Error is not accessible publicly
+				// to get the result value, you need to use the Match or MatchAsync method
 				.MatchAsync(
 					success: (int x) => Console.WriteLine($"Async Success: {x}"),
 					failure: (ResultError error) => Console.WriteLine($"Async Failure: {error.Message}")
@@ -116,6 +59,8 @@ namespace ZeidLab.ToolBox.ExampleProject.ResultExamples
 			ParseNumber("InvalidString")
 				.Bind(ValidatePositive)
 				.Bind(x => x % 2 == 0 ? Result.Success(x + 3) : BindExampleErrors.NotEven)
+				// Result<int>.Value or Result<int>.Error is not accessible publicly
+				// to get the result value, you need to use the Match or MatchAsync method
 				.Match(
 					success: (int x) => Console.WriteLine($"Async Success: {x}"),
 					failure: (ResultError error) => Console.WriteLine($"Async Failure: {error.Message}")
@@ -123,8 +68,3 @@ namespace ZeidLab.ToolBox.ExampleProject.ResultExamples
 		}
 	}
 }
-]]>
-			</code>
-		</example>
-	</BindExtensionMethods>
-</doc>
