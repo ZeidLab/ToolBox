@@ -319,23 +319,7 @@ public static class MaybeExtensions
 #pragma warning restore CS8604 // Possible null reference argument.
 		return self;
 	}
-#pragma warning disable S1133
-	[Obsolete("Use TapIfSome method instead, this is going to be deleted in next version",true)]
-	[ExcludeFromCodeCoverage]
-#pragma warning restore S1133
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-	public static Maybe<TIn> DoIfSome<TIn>(this Maybe<TIn> self, Action<TIn> action)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-		where TIn : notnull
-	{
-		if (!self.IsNull)
-#pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CA1062
-			action(self.Value);
-#pragma warning restore CA1062
-#pragma warning restore CS8604 // Possible null reference argument.
-		return self;
-	}
+
 
 	/// <summary>
 	/// Executes the provided action if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe{TIn}.IsNone"/>.
@@ -355,21 +339,7 @@ public static class MaybeExtensions
 #pragma warning restore CA1062
 		return self;
 	}
-#pragma warning disable S1133
-	[Obsolete("Use TapIfNone method instead, this is going to be deleted in next version",true)]
-	[ExcludeFromCodeCoverage]
-#pragma warning restore S1133
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-	public static Maybe<TIn> DoIfNone<TIn>(this Maybe<TIn> self, Action action)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-		where TIn : notnull
-	{
-		if (self.IsNull)
-#pragma warning disable CA1062
-			action();
-#pragma warning restore CA1062
-		return self;
-	}
+
 
 	/// <summary>
 	/// Returns the value of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe{TIn}.IsSome"/>,
@@ -426,27 +396,4 @@ public static class MaybeExtensions
 		return self;
 	}
 
-
-#pragma warning disable S1133
-	[Obsolete("Use Tap method instead, this is going to be deleted in next version",true)]
-	[ExcludeFromCodeCoverage]
-#pragma warning restore S1133
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-	public static Maybe<TIn> Do<TIn>(this Maybe<TIn> self, Action<TIn> some, Action none)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-		where TIn : notnull
-	{
-		if (self.IsNull)
-
-#pragma warning disable CA1062
-			none();
-#pragma warning restore CA1062
-		else
-#pragma warning disable CA1062
-#pragma warning disable CS8604 // Possible null reference argument.
-			some(self.Value);
-#pragma warning restore CS8604 // Possible null reference argument.
-#pragma warning restore CA1062
-		return self;
-	}
 }
