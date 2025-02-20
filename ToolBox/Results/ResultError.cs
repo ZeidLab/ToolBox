@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ZeidLab.ToolBox.Common;
@@ -137,6 +138,7 @@ public enum ResultErrorCode
 /// </summary>
 [Serializable]
 [StructLayout(LayoutKind.Sequential)]
+[DebuggerDisplay("Code = {Code}, Name = {Name}, Message = {Message}, ExceptionType = {Exception}")]
 public readonly record struct ResultError
 {
     /// <summary>

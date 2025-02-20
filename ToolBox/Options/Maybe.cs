@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using ZeidLab.ToolBox.Common;
 
 namespace ZeidLab.ToolBox.Options;
@@ -19,6 +20,7 @@ namespace ZeidLab.ToolBox.Options;
 /// ]]></code>
 /// </example>
 [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
+[DebuggerDisplay("IsSome = {IsSome},IsDefault = {IsDefault}, Value = {Value}")]
 public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
 {
 	/// <summary>
@@ -69,7 +71,6 @@ public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
 	/// Gets a value indicating whether the maybe is in the 'None' state.
 	/// </summary>
 	public bool IsNone => IsNull;
-
 
 
 	/// <summary>
@@ -201,7 +202,6 @@ public readonly record struct Maybe<TIn> : IComparable<Maybe<TIn>>, IComparable
 	}
 }
 
-
 /// <summary>
 /// Provides factory methods for creating Maybe instances.
 /// </summary>
@@ -230,7 +230,7 @@ public static class Maybe
 	/// </example>
 	public static Maybe<TIn> Some<TIn>(TIn value)
 	{
-		Guards.ThrowIfNull(value  , nameof(value));
+		Guards.ThrowIfNull(value, nameof(value));
 		return new Maybe<TIn>(value);
 	}
 

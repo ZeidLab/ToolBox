@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
@@ -49,6 +50,7 @@ namespace ZeidLab.ToolBox.Results;
 [Serializable]
 [StructLayout(LayoutKind.Sequential)]
 [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
+[DebuggerDisplay("IsSuccess = {IsSuccess},IsDefault = {IsDefault}, Value = {Value}, Error =({Error})")]
 public readonly record struct Result<TValue>
 {
     internal readonly TValue Value;
