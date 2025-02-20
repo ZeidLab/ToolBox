@@ -1,55 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doc>
 	<BindExtensionMethods>
-		<summary>
-			Asynchronously or synchronously transforms a successful
-			<see cref="Result{TIn}"/>
-			or
-			<see cref="Try{TIn}"/>
-			or
-			<see cref="TryAsync{TIn}"/>
-			to a new
-			<see cref="Result{TOut}"/>
-			output by using the provided function which is
-			<paramref name="func"/>
-			in this method. If the input result is a failure, the failure is propagated without executing the function.
-		</summary>
-		<typeparam name="TIn">The type of the value in the input object like<see cref="Result{TIn}"/>.
-		</typeparam>
-		<typeparam name="TOut">The type of output value rapped in a<see cref="Result{TOut}"/>.
-		</typeparam>
-		<param name="self">
-			<see cref="Result{TIn}"/>
-			or
-			<see cref="Try{TIn}"/>
-			or
-			<see cref="TryAsync{TIn}"/>
-		</param>
-		<param name="func">The function returning one of these :
-			<see cref="Result{TIn}"/>
-			or
-			<see cref="Try{TIn}"/>
-			or
-			<see cref="TryAsync{TIn}"/>
-		</param>
 		<returns>
-			<para>
-				Always returns
-				<see cref="Result{TOut}"/>
-				or a Task of
-				<see cref="Result{TOut}"/>
-			</para>
 			<list type="bullet">
 				<item>
-					<description>Successful
-						<see cref="Result{TOut}"/>
-						with the transformed value if both the input result and the transformation succeed
+					<description>
+						Successful with the transformed value if both the input result and the transformation succeed.
 					</description>
 				</item>
 				<item>
-					<description>A failure of
-						<see cref="Result{TOut}"/>
-						containing the error from either the input result or the transformation
+					<description>
+						A failure containing the error from either the original result or from the transformation.
 					</description>
 				</item>
 			</list>
