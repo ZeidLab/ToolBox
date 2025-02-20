@@ -46,14 +46,15 @@ this library.
 
 The main topics of this library are:
 
-| Types and PageLink                                                               | Short Description                                                                                                                        |
-|----------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
-| [`Maybe<TIn>`](https://github.com/ZeidLab/ToolBox/wiki/Maybe-Type)               | A monadic type for handling optional values, similar to Option in functional languages.                                                  |
-| [`Result<TIn>`](https://github.com/ZeidLab/ToolBox/wiki/Result-Type)             | A robust error-handling type for railway-oriented programming, allowing chaining of operations with explicit success and failure states. |
-| [`Unit`](https://github.com/ZeidLab/ToolBox/wiki/Unit-Type)                      | A type representing the absence of a meaningful value, useful in functional programming.                                                 |
-| [`ResultError`](https://github.com/ZeidLab/ToolBox/wiki/ResultError-Type)        | Structured error handling with supporting error codes, messages, and exceptions.                                                         |
-| [`Try<TIn>`](https://github.com/ZeidLab/ToolBox/wiki/Try-And-TryAsync-Type)      | A delegate to handel the unhandled exceptions in an efficient and expressive way in a synchronous flow of functions.                     |
-| [`TryAsync<TIn>`](https://github.com/ZeidLab/ToolBox/wiki/Try-And-TryAsync-Type) | A delegate to handel the unhandled exceptions in an efficient and expressive way in a synchronous flow of functions.                     |
+| Types and PageLink                                                                    | Short Description                                                                                                                        |
+|---------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| [`Maybe<TIn>`](https://github.com/ZeidLab/ToolBox/wiki/Maybe-Type)                    | A monadic type for handling optional values, similar to Option in functional languages.                                                  |
+| [`Result<TIn>`](https://github.com/ZeidLab/ToolBox/wiki/Result-Type)                  | A robust error-handling type for railway-oriented programming, allowing chaining of operations with explicit success and failure states. |
+| [`Unit`](https://github.com/ZeidLab/ToolBox/wiki/Unit-Type)                           | A type representing the absence of a meaningful value, useful in functional programming.                                                 |
+| [`ResultError`](https://github.com/ZeidLab/ToolBox/wiki/ResultError-Type)             | Structured error handling with supporting error codes, messages, and exceptions.                                                         |
+| [`Try<TIn>`](https://github.com/ZeidLab/ToolBox/wiki/Try-And-TryAsync-Type)           | A delegate to handel the unhandled exceptions in an efficient and expressive way in a synchronous flow of functions.                     |
+| [`TryAsync<TIn>`](https://github.com/ZeidLab/ToolBox/wiki/Try-And-TryAsync-Type)      | A delegate to handel the unhandled exceptions in an efficient and expressive way in a synchronous flow of functions.                     |
+| [Extension Methods](https://github.com/ZeidLab/ToolBox/wiki/Result-Extension-Methods) | Methods to interact with `Result<TIn>` types                                                                                             |
 
 [^ Back To Top](#-what-is-zeidlabtoolbox-library)
 
