@@ -109,13 +109,13 @@ namespace ZeidLab.ToolBox.Options
         /// </example>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<TOut> MatchAsync<TIn, TOut>(this Maybe<TIn> self, Func<TIn, Task<TOut>> some, Task<TOut> none)
+        public static Task<TOut> MatchAsync<TIn, TOut>(this Maybe<TIn> self, Func<TIn, Task<TOut>> some, Func<Task<TOut>> none)
             where TIn : notnull
             where TOut : notnull
         {
 #pragma warning disable CA1062
 #pragma warning disable CS8604 // Possible null reference argument.
-            return !self.IsNull ? some(self.Value) : none;
+            return !self.IsNull ? some(self.Value) : none();
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CA1062
         }
@@ -191,12 +191,12 @@ namespace ZeidLab.ToolBox.Options
         /// ]]></code>
         /// </example>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task MatchAsync<TIn>(this Maybe<TIn> self, Func<TIn, Task> some, Task none)
+        public static Task MatchAsync<TIn>(this Maybe<TIn> self, Func<TIn, Task> some, Func<Task> none)
             where TIn : notnull
         {
 #pragma warning disable CA1062
 #pragma warning disable CS8604 // Possible null reference argument.
-            return !self.IsNull ? some(self.Value) : none;
+            return !self.IsNull ? some(self.Value) : none();
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CA1062
         }
@@ -294,7 +294,7 @@ namespace ZeidLab.ToolBox.Options
         public static async Task<TOut> MatchAsync<TIn, TOut>(
             this Task<Maybe<TIn>> self,
             Func<TIn, Task<TOut>> some,
-            Task<TOut> none)
+            Func<Task<TOut>> none)
             where TIn : notnull
             where TOut : notnull
         {
@@ -303,44 +303,7 @@ namespace ZeidLab.ToolBox.Options
 #pragma warning restore CA1062
         }
 
-        /// <summary>
-        /// Awaits a <see cref="Task"/> producing a <see cref="Maybe{TIn}"/> and matches its result by executing one of two actions.
-        /// </summary>
-        /// <param name="self">
-        /// A <see cref="Task"/> that produces a <see cref="Maybe{TIn}"/>.
-        /// </param>
-        /// <param name="some">
-        /// An action to perform if the produced <see cref="Maybe{TIn}"/> contains a value.
-        /// </param>
-        /// <param name="none">
-        /// An action to perform if the produced <see cref="Maybe{TIn}"/> is null.
-        /// </param>
-        /// <typeparam name="TIn">
-        /// The type contained in the <see cref="Maybe{TIn}"/>; must be non-null.
-        /// </typeparam>
-        /// <returns>
-        /// A <see cref="Task"/> representing the asynchronous matching operation.
-        /// </returns>
-        /// <example>
-        /// The example demonstrates logging a message based on whether a task-returned optional value exists.
-        /// <code><![CDATA[
-        /// // Assume GetMaybeUserAsync returns Task<Maybe<User>>
-        /// await GetMaybeUserAsync().MatchAsync(
-        ///     some: user => { Console.WriteLine($"User: {user.Name}"); return Task.CompletedTask; },
-        ///     none: () => { Console.WriteLine("User not found."); return Task.CompletedTask; });
-        /// ]]></code>
-        /// </example>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task MatchAsync<TIn>(
-            this Task<Maybe<TIn>> self,
-            Action<TIn> some,
-            Action none)
-            where TIn : notnull
-        {
-#pragma warning disable CA1062
-            (await self.ConfigureAwait(false)).Match(some, none);
-#pragma warning restore CA1062
-        }
+
 
         /// <summary>
         /// Awaits a <see cref="Task"/> producing a <see cref="Maybe{TIn}"/> and asynchronously executes
@@ -374,7 +337,7 @@ namespace ZeidLab.ToolBox.Options
         public static async Task MatchAsync<TIn>(
             this Task<Maybe<TIn>> self,
             Func<TIn, Task> some,
-            Task none)
+            Func<Task> none)
             where TIn : notnull
         {
 #pragma warning disable CA1062
