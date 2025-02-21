@@ -107,6 +107,7 @@ public class MaybeExtensionsTests
     }
 
     [Fact]
+    [Obsolete("Obsolete")]
     public void Tap_WhenMaybeIsSome_ShouldApplySomeFunction()
     {
         // Arrange
@@ -123,6 +124,7 @@ public class MaybeExtensionsTests
     }
 
     [Fact]
+    [Obsolete("Obsolete")]
     public void Tap_WhenMaybeIsNone_ShouldApplyNoneFunction()
     {
         // Arrange
