@@ -146,11 +146,11 @@ namespace ZeidLab.ToolBox.Options
         /// </example>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<TIn> ReduceAsync<TIn>(this Maybe<TIn> self, Task<TIn> substitute)
+        public static Task<TIn> ReduceAsync<TIn>(this Maybe<TIn> self, Func<Task<TIn>> substitute)
             where TIn : notnull =>
     #pragma warning disable CS8603 // Possible null reference return.
     #pragma warning disable CA1062
-            !self.IsNull ? self.Value!.AsTaskAsync() : substitute;
+            !self.IsNull ? self.Value!.AsTaskAsync() : substitute();
     #pragma warning restore CA1062
     #pragma warning restore CS8603 // Possible null reference return.
 
@@ -273,7 +273,7 @@ namespace ZeidLab.ToolBox.Options
         /// </example>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<TIn> ReduceAsync<TIn>(this Task<Maybe<TIn>> self, Task<TIn> substitute)
+        public static async Task<TIn> ReduceAsync<TIn>(this Task<Maybe<TIn>> self, Func<Task<TIn>> substitute)
             where TIn : notnull =>
     #pragma warning disable CA1062
             await (await self.ConfigureAwait(false)).ReduceAsync(substitute: substitute).ConfigureAwait(false);
