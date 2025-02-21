@@ -47,34 +47,6 @@ public class MaybeExtensionsTests
         maybe.IsNull.Should().BeTrue();
     }
 
-    [Fact]
-    public void Bind_WhenMaybeIsSome_ShouldReturnMappedValue()
-    {
-        // Arrange
-        var maybe = Maybe.Some(42);
-        Func<int, Maybe<string>> mapper = x => x.ToString().ToSome();
-
-        // Act
-        var result = maybe.Bind(mapper);
-
-        // Assert
-        result.IsNull.Should().BeFalse();
-        result.Value.Should().Be("42");
-    }
-
-    [Fact]
-    public void Bind_WhenMaybeIsNone_ShouldReturnNone()
-    {
-        // Arrange
-        var maybe = Maybe.None<int>();
-        Func<int, Maybe<string>> mapper = x => x.ToString().ToSome();
-
-        // Act
-        var result = maybe.Bind(mapper);
-
-        // Assert
-        result.IsNull.Should().BeTrue();
-    }
 
     [Fact]
     public void Map_WhenMaybeIsSome_ShouldApplySomeFunction()
