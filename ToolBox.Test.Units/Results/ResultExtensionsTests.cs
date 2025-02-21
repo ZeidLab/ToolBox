@@ -1,9 +1,11 @@
-﻿using FluentAssertions;
+﻿using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
 using ZeidLab.ToolBox.Common;
 using ZeidLab.ToolBox.Results;
 
 namespace ZeidLab.ToolBox.Test.Units.Results
 {
+    [SuppressMessage("Naming", "AMNF0002:Non-awaitable (Synchronous) methods should not be suffixed with \'Async\'")]
     public class ResultExtensionsTests
     {
         // Helper method to create a sample error
