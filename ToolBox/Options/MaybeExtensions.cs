@@ -51,32 +51,6 @@ public static class MaybeExtensions
 	public static Maybe<TIn> ToNone<TIn>(this TIn? self)
 		=> Maybe.None<TIn>();
 
-	/// <summary>
-	/// Maps the content of a <see cref="Maybe{TIn}"/> instance to a new <see cref="Maybe{TOut}"/> instance
-	/// using the provided mapping function.
-	/// </summary>
-	/// <typeparam name="TIn">The type of the content in the original <see cref="Maybe{TIn}"/> instance.</typeparam>
-	/// <typeparam name="TOut">The type of the content in the resulting <see cref="Maybe{TOut}"/> instance.</typeparam>
-	/// <param name="self">The original <see cref="Maybe{TIn}"/> instance to map.</param>
-	/// <param name="map">
-	/// The mapping function to apply if <paramref name="self"/> is Some.
-	/// It takes a value of type <typeparamref name="TIn"/> and returns a <see cref="Maybe{TOut}"/>.
-	/// </param>
-	/// <returns>
-	/// A new <see cref="Maybe{TOut}"/> instance with the mapped content if <paramref name="self"/> is Some,
-	/// or a new None instance if <paramref name="self"/> is None.
-	/// </returns>
-	[Pure]
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static Maybe<TOut> Bind<TIn, TOut>(this Maybe<TIn> self, Func<TIn, Maybe<TOut>> map)
-		where TOut : notnull
-		where TIn : notnull =>
-#pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CA1062
-		!self.IsNull ? map(self.Value) : Maybe.None<TOut>();
-#pragma warning restore CA1062
-#pragma warning restore CS8604 // Possible null reference argument.
-
 
 	/// <summary>
 	/// Maps the content of a <see cref="Maybe{TIn}"/> instance to a new value using two functions:
@@ -261,84 +235,7 @@ public static class MaybeExtensions
 	public static IEnumerable<TIn> Flatten<TIn>(this IEnumerable<Maybe<TIn>> self, Func<TIn> substitute)
 		where TIn : notnull => self.Select(x => x.Reduce(substitute));
 
-	/// <summary>
-	/// Reduces the content of a <see cref="Maybe{TIn}"/> instance to a single value using the provided default value.
-	/// </summary>
-	/// <typeparam name="TIn">The type of the content of the <see cref="Maybe{TIn}"/> instance.</typeparam>
-	/// <param name="self">The <see cref="Maybe{TIn}"/> instance to reduce.</param>
-	/// <param name="substitute">The default value to use if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe{TIn}.IsNone"/>.</param>
-	/// <returns>
-	/// The content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe{TIn}.IsSome"/>,
-	/// or the default value if it is <see cref="Maybe{TIn}.IsNone"/>.
-	/// </returns>
-	[Pure]
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static TIn Reduce<TIn>(this Maybe<TIn> self, TIn substitute)
-		where TIn : notnull =>
-#pragma warning disable CS8603 // Possible null reference return.
-		!self.IsNull ? self.Value : substitute;
-#pragma warning restore CS8603 // Possible null reference return.
 
-	/// <summary>
-	/// Reduces the content of a <see cref="Maybe{TIn}"/> instance to a single value using the provided function.
-	/// </summary>
-	/// <typeparam name="TIn">The type of the content of the <see cref="Maybe{TIn}"/> instance.</typeparam>
-	/// <param name="self">The <see cref="Maybe{TIn}"/> instance to reduce.</param>
-	/// <param name="substitute">The function to use if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe{TIn}.IsNone"/>.</param>
-	/// <returns>
-	/// The content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe{TIn}.IsSome"/>,
-	/// or the result of the provided function if it is <see cref="Maybe{TIn}.IsNone"/>.
-	/// </returns>
-	[Pure]
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static TIn Reduce<TIn>(this Maybe<TIn> self, Func<TIn> substitute)
-		where TIn : notnull =>
-#pragma warning disable CS8603 // Possible null reference return.
-#pragma warning disable CA1062
-		!self.IsNull ? self.Value : substitute();
-#pragma warning restore CA1062
-#pragma warning restore CS8603 // Possible null reference return.
-
-	/// <summary>
-	/// Applies the provided action to the content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe{TIn}.IsSome"/>.
-	/// </summary>
-	/// <typeparam name="TIn">The type of the content of the <see cref="Maybe{TIn}"/> instance.</typeparam>
-	/// <param name="self">The <see cref="Maybe{TIn}"/> instance to apply the action to.</param>
-	/// <param name="action">The action to apply to the content of the <see cref="Maybe{TIn}"/> instance if it is <see cref="Maybe{TIn}.IsSome"/>.</param>
-	/// <returns>The original <see cref="Maybe{TIn}"/> instance.</returns>
-	[Pure]
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static Maybe<TIn> TapIfSome<TIn>(this Maybe<TIn> self, Action<TIn> action)
-		where TIn : notnull
-	{
-		if (!self.IsNull)
-#pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CA1062
-			action(self.Value);
-#pragma warning restore CA1062
-#pragma warning restore CS8604 // Possible null reference argument.
-		return self;
-	}
-
-
-	/// <summary>
-	/// Executes the provided action if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe{TIn}.IsNone"/>.
-	/// </summary>
-	/// <typeparam name="TIn">The type of the content of the <see cref="Maybe{TIn}"/> instance.</typeparam>
-	/// <param name="self">The <see cref="Maybe{TIn}"/> instance to check.</param>
-	/// <param name="action">The action to execute if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe{TIn}.IsNone"/>.</param>
-	/// <returns>The original <see cref="Maybe{TIn}"/> instance.</returns>
-	[Pure]
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static Maybe<TIn> TapIfNone<TIn>(this Maybe<TIn> self, Action action)
-		where TIn : notnull
-	{
-		if (self.IsNull)
-#pragma warning disable CA1062
-			action();
-#pragma warning restore CA1062
-		return self;
-	}
 
 
 	/// <summary>
@@ -362,38 +259,6 @@ public static class MaybeExtensions
 #pragma warning restore CS8603 // Possible null reference return.
 	}
 
-	/// <summary>
-	/// Executes a given action if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe{TIn}.IsSome"/>,
-	/// or another action if it is <see cref="Maybe{TIn}.IsNone"/>.
-	/// </summary>
-	/// <typeparam name="TIn">The type of the content of the <see cref="Maybe{TIn}"/> instance.</typeparam>
-	/// <param name="self">The <see cref="Maybe{TIn}"/> instance to check.</param>
-	/// <param name="some">The action to execute if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe{TIn}.IsSome"/>.</param>
-	/// <param name="none">The action to execute if the <see cref="Maybe{TIn}"/> instance is <see cref="Maybe{TIn}.IsNone"/>.</param>
-	/// <returns>The original <see cref="Maybe{TIn}"/> instance.</returns>
-	/// <example>
-	/// <code><![CDATA[
-	/// Maybe<int> maybe = Maybe.Some(42);
-	/// maybe.Tap(
-	///		some: value => Console.WriteLine($"The value is {value}"),
-	///		none: () => Console.WriteLine("No value"));
-	/// ]]></code>
-	/// </example>
-	public static Maybe<TIn> Tap<TIn>(this Maybe<TIn> self, Action<TIn> some, Action none)
-		where TIn : notnull
-	{
-		if (self.IsNull)
 
-#pragma warning disable CA1062
-			none();
-#pragma warning restore CA1062
-		else
-#pragma warning disable CA1062
-#pragma warning disable CS8604 // Possible null reference argument.
-			some(self.Value);
-#pragma warning restore CS8604 // Possible null reference argument.
-#pragma warning restore CA1062
-		return self;
-	}
 
 }
