@@ -72,6 +72,52 @@ namespace ZeidLab.ToolBox.Options
 #pragma warning restore CS8604 // Possible null reference argument.
             return self;
         }
+/// <summary>
+/// Asynchronously executes the specified <paramref name="action"/> on the content of the <see cref="Maybe{TIn}"/> instance
+/// if it contains a value (i.e. it is in a <see cref="Maybe{TIn}.IsSome"/> state).
+/// The method then returns the original instance, allowing for fluent chaining.
+/// </summary>
+/// <typeparam name="TIn">
+/// The type of the content in the <see cref="Maybe{TIn}"/> instance.
+/// Must be a non-nullable type.
+/// </typeparam>
+/// <param name="self">
+/// The <see cref="Maybe{TIn}"/> instance on which to perform the action.
+/// </param>
+/// <param name="action">
+/// The asynchronous <see cref="Func{TIn, Task}"/> to execute if <paramref name="self"/> contains a value.
+/// The provided value is used as an argument.
+/// </param>
+/// <returns>
+/// The original <see cref="Maybe{TIn}"/> instance.
+/// </returns>
+/// <example>
+/// <code><![CDATA[
+/// // Example: Asynchronously logging the value if present.
+/// Maybe<int> maybeValue = Maybe.Some(42);
+/// await maybeValue.TapIfSomeAsync(async value => {
+///     await Task.Delay(100); // Simulate asynchronous operation.
+///     Console.WriteLine($"Value: {value}");
+/// });
+/// // Expected output: "Value: 42"
+///
+/// // Edge-case: if no value is present, the action is not executed.
+/// Maybe<int> noneValue = Maybe.None<int>();
+/// await noneValue.TapIfSomeAsync(async value => Console.WriteLine("This will not be printed"));
+/// ]]></code>
+/// </example>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async Task<Maybe<TIn>> TapIfSomeAsync<TIn>(this Maybe<TIn> self, Func<TIn,Task> action)
+	        where TIn : notnull
+        {
+            if (!self.IsNull)
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CA1062
+               await action(self.Value).ConfigureAwait(false);
+#pragma warning restore CA1062
+#pragma warning restore CS8604 // Possible null reference argument.
+            return self;
+        }
 
         /// <summary>
         /// Executes the specified <paramref name="action"/> if the <see cref="Maybe{TIn}"/> instance
@@ -113,6 +159,52 @@ namespace ZeidLab.ToolBox.Options
 #pragma warning restore CA1062
             return self;
         }
+        /// <summary>
+        /// Executes the specified asynchronous <paramref name="action"/> if the <see cref="Maybe{TIn}"/> instance
+        /// does not contain a value (i.e. it is in a <see cref="Maybe{TIn}.IsNone"/> state).
+        /// The method then returns the original instance wrapped in a <see cref="Task"/>,
+        /// facilitating asynchronous fluent method chaining.
+        /// </summary>
+        /// <typeparam name="TIn">
+        /// The type of the content in the <see cref="Maybe{TIn}"/> instance.
+        /// Must be a non-nullable type.
+        /// </typeparam>
+        /// <param name="self">
+        /// The <see cref="Maybe{TIn}"/> instance to evaluate.
+        /// </param>
+        /// <param name="action">
+        /// The asynchronous <see cref="Func{Task}"/> to execute if <paramref name="self"/> does not contain a value.
+        /// </param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the asynchronous operation,
+        /// containing the original <see cref="Maybe{TIn}"/> instance.
+        /// </returns>
+        /// <example>
+        /// <code><![CDATA[
+        /// // Common use-case: handling the absence of a value asynchronously.
+        /// Maybe<int> none = Maybe.None<int>();
+        /// await none.TapIfNoneAsync(async () => await Console.Out.WriteLineAsync("No value found"));
+        /// // Expected output: "No value found"
+        ///
+        /// // Edge-case: if a value exists, the action is not executed.
+        /// Maybe<int> some = Maybe.Some(10);
+        /// await some.TapIfNoneAsync(async () => await Console.Out.WriteLineAsync("This will not be printed"));
+        /// ]]></code>
+        /// </example>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async Task<Maybe<TIn>> TapIfNoneAsync<TIn>(this Maybe<TIn> self, Func<Task> action)
+
+	        where TIn : notnull
+        {
+	        if (self.IsNull)
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CA1062
+		        await action().ConfigureAwait(false);
+#pragma warning restore CA1062
+#pragma warning restore CS8604 // Possible null reference argument.
+	        return self;
+        }
+
 
         #endregion
 

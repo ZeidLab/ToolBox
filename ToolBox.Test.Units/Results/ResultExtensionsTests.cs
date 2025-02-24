@@ -203,29 +203,29 @@ namespace ZeidLab.ToolBox.Test.Units.Results
         }
 
         // Helper function to create a successful Try<TIn>
-        private Try<T> CreateSuccessfulTry<T>(T value) => () => value;
-
-        // Helper function to create a failed Try<TIn>
-        private Try<T> CreateFailedTry<T>() => () => throw new Exception("Test exception");
-
-        // Helper function to create a successful Result<TIn>
-        private Result<T> CreateSuccessfulResult<T>(T value) => Result.Success(value);
-
-        // Helper function to create a failed Result<TIn>
-        private Result<T> CreateFailedResult<T>() => Result.Failure<T>(new Exception("Test exception"));
-
-        // Helper function to create a successful TryAsync<TIn>
-        private TryAsync<T> CreateSuccessfulTryAsync<T>(T value) => async () => value;
-
-        // Helper function to create a failed TryAsync<TIn>
-        private TryAsync<T> CreateFailedTryAsync<T>() => async () => throw new Exception("Test exception");
+        // private Try<T> CreateSuccessfulTry<T>(T value) => () => value;
+        //
+        // // Helper function to create a failed Try<TIn>
+        // private Try<T> CreateFailedTry<T>() => () => throw new Exception("Test exception");
+        //
+        // // Helper function to create a successful Result<TIn>
+        // private Result<T> CreateSuccessfulResult<T>(T value) => Result.Success(value);
+        //
+        // // Helper function to create a failed Result<TIn>
+        // private Result<T> CreateFailedResult<T>() => Result.Failure<T>(new Exception("Test exception"));
+        //
+        // // Helper function to create a successful TryAsync<TIn>
+        // private TryAsync<T> CreateSuccessfulTryAsync<T>(T value) => async () => value;
+        //
+        // // Helper function to create a failed TryAsync<TIn>
+        // private TryAsync<T> CreateFailedTryAsync<T>() => async () => throw new Exception("Test exception");
 
         [Fact]
         public void ToMaybe_WithSuccessfulTry_ShouldReturnSomeWithValue()
         {
             // Arrange
             var value = 42;
-            var tryInstance = CreateSuccessfulTry(value);
+            var tryInstance = TestHelper.CreateTryFuncWithSuccess(value);
 
             // Act
             var maybe = tryInstance.ToMaybe();
@@ -240,7 +240,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
         public void ToMaybe_WithFailedTry_ShouldReturnNone()
         {
             // Arrange
-            var tryInstance = CreateFailedTry<int>();
+            var tryInstance = TestHelper.CreateTryFuncWithFailure<int>(TestHelper.DefaultResultError);
 
             // Act
             var maybe = tryInstance.ToMaybe();
@@ -256,7 +256,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
         {
             // Arrange
             var value = 42;
-            var resultTask = Task.FromResult(CreateSuccessfulResult(value));
+            var resultTask = TestHelper.CreateSuccessResultTaskAsync(value);
 
             // Act
             var maybe = await resultTask.ToMaybeAsync();
@@ -271,7 +271,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
         public async Task ToMaybeAsync_WithFailedResult_ShouldReturnNone()
         {
             // Arrange
-            var resultTask = Task.FromResult(CreateFailedResult<int>());
+            var resultTask = TestHelper.CreateFailureResultTaskAsync<int>(TestHelper.DefaultResultError);
 
             // Act
             var maybe = await resultTask.ToMaybeAsync();
@@ -287,7 +287,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
         {
             // Arrange
             var value = 42;
-            var tryAsyncInstance = CreateSuccessfulTryAsync(value);
+            var tryAsyncInstance = TestHelper.CreateTryAsyncFuncWithSuccess(value);
 
             // Act
             var maybe = await tryAsyncInstance.ToMaybeAsync();
@@ -302,7 +302,7 @@ namespace ZeidLab.ToolBox.Test.Units.Results
         public async Task ToMaybeAsync_WithFailedTryAsync_ShouldReturnNone()
         {
             // Arrange
-            var tryAsyncInstance = CreateFailedTryAsync<int>();
+            var tryAsyncInstance = TestHelper.CreateTryAsyncFuncWithFailure<int>(TestHelper.DefaultResultError);
 
             // Act
             var maybe = await tryAsyncInstance.ToMaybeAsync();
