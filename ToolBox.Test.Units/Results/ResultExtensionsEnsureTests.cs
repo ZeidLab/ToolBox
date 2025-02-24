@@ -1,149 +1,503 @@
-﻿using FluentAssertions;
+﻿﻿using System;
+using System.Threading.Tasks;
+using FluentAssertions;
+using Xunit;
 using ZeidLab.ToolBox.Results;
+using ZeidLab.ToolBox.Test.Units.Common;
 
 namespace ZeidLab.ToolBox.Test.Units.Results;
 
 public class ResultExtensionsEnsureTests
 {
+    #region Result<TIn>.Ensure
+
     [Fact]
-    public void Ensure_WhenResultIsFailure_ShouldReturnOriginalResult()
+    public void Ensure_PredicateIsTrue_ReturnsOriginalResult()
     {
         // Arrange
-        var error = ResultError.New("Test error");
-        var result = Result.Failure<int>(error);
+        var result = TestHelper.CreateSuccessResult(42);
         Func<int, bool> predicate = x => x > 0;
+        var resultError = TestHelper.DefaultResultError;
 
         // Act
-        var ensuredResult = result.Ensure(predicate, ResultError.New("Should not be used"));
+        var actual = result.Ensure(predicate, resultError);
 
         // Assert
-        ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.Error.Should().Be(error);
+        actual.Should().Be(result);
+        actual.IsSuccess.Should().BeTrue();
+        actual.IsFailure.Should().BeFalse();
+        actual.Value.Should().Be(42);
     }
 
     [Fact]
-    public void Ensure_WhenResultIsSuccessAndPredicateIsTrue_ShouldReturnOriginalResult()
+    public void Ensure_PredicateIsFalse_ReturnsFailureResult()
     {
         // Arrange
-        var result = Result.Success(42);
-        Func<int, bool> predicate = x => x > 0;
-
-        // Act
-        var ensuredResult = result.Ensure(predicate, ResultError.New("Should not be used"));
-
-        // Assert
-        ensuredResult.IsSuccess.Should().BeTrue();
-        ensuredResult.Value.Should().Be(42);
-    }
-
-    [Fact]
-    public void Ensure_WhenResultIsSuccessAndPredicateIsFalse_ShouldReturnFailedResultWithProvidedError()
-    {
-        // Arrange
-        var result = Result.Success(42);
-        var error = ResultError.New("Predicate failed");
+        var result = TestHelper.CreateSuccessResult(42);
         Func<int, bool> predicate = x => x < 0;
+        var resultError = TestHelper.DefaultResultError;
 
         // Act
-        var ensuredResult = result.Ensure(predicate, error);
+        var actual = result.Ensure(predicate, resultError);
 
         // Assert
-        ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.Error.Should().Be(error);
+        actual.IsSuccess.Should().BeFalse();
+        actual.IsFailure.Should().BeTrue();
+        actual.Error.Should().Be(resultError);
     }
 
     [Fact]
-    public async Task EnsureAsync_WhenResultIsFailure_ShouldReturnOriginalResult()
+    public void Ensure_ResultIsFailure_ReturnsOriginalResult()
     {
         // Arrange
-        var error = ResultError.New("Test error");
-        var result = Task.FromResult(Result.Failure<int>(error));
+        var result = TestHelper.CreateFailureResult<int>(TestHelper.DefaultResultError);
         Func<int, bool> predicate = x => x > 0;
+        var resultError = TestHelper.DefaultResultError;
 
         // Act
-        var ensuredResult = await result.EnsureAsync(predicate, ResultError.New("Should not be used"));
+        var actual = result.Ensure(predicate, resultError);
 
         // Assert
-        ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.Error.Should().Be(error);
+        actual.Should().Be(result);
+        actual.IsSuccess.Should().BeFalse();
+        actual.IsFailure.Should().BeTrue();
+        actual.Error.Should().Be(TestHelper.DefaultResultError);
+    }
+
+    #endregion
+
+    #region Result<TIn>.EnsureAsync
+
+    [Fact]
+    public async Task EnsureAsync_PredicateIsTrue_ReturnsOriginalResult()
+    {
+        // Arrange
+        var result = TestHelper.CreateSuccessResult(42);
+        Func<int, Task<bool>> predicate = async x =>
+        {
+            await Task.Delay(1);
+            return x > 0;
+        };
+        var resultError = TestHelper.DefaultResultError;
+
+        // Act
+        var actual = await result.EnsureAsync(predicate, resultError);
+
+        // Assert
+        actual.Should().Be(result);
+        actual.IsSuccess.Should().BeTrue();
+        actual.IsFailure.Should().BeFalse();
+        actual.Value.Should().Be(42);
     }
 
     [Fact]
-    public async Task EnsureAsync_WhenResultIsSuccessAndPredicateIsTrue_ShouldReturnOriginalResult()
+    public async Task EnsureAsync_PredicateIsFalse_ReturnsFailureResult()
     {
         // Arrange
-        var result = Task.FromResult(Result.Success(42));
+        var result = TestHelper.CreateSuccessResult(42);
+        Func<int, Task<bool>> predicate = async x =>
+        {
+            await Task.Delay(1);
+            return x < 0;
+        };
+        var resultError = TestHelper.DefaultResultError;
+
+        // Act
+        var actual = await result.EnsureAsync(predicate, resultError);
+
+        // Assert
+        actual.IsSuccess.Should().BeFalse();
+        actual.IsFailure.Should().BeTrue();
+        actual.Error.Should().Be(resultError);
+    }
+
+    [Fact]
+    public async Task EnsureAsync_ResultIsFailure_ReturnsOriginalResult()
+    {
+        // Arrange
+        var result = TestHelper.CreateFailureResult<int>(TestHelper.DefaultResultError);
+        Func<int, Task<bool>> predicate = async x =>
+        {
+            await Task.Delay(1);
+            return x > 0;
+        };
+        var resultError = TestHelper.DefaultResultError;
+
+        // Act
+        var actual = await result.EnsureAsync(predicate, resultError);
+
+        // Assert
+        actual.Should().Be(result);
+        actual.IsSuccess.Should().BeFalse();
+        actual.IsFailure.Should().BeTrue();
+        actual.Error.Should().Be(TestHelper.DefaultResultError);
+    }
+
+    #endregion
+
+    #region Try<TIn>.Ensure
+
+    [Fact]
+    public void Ensure_TryPredicateIsTrue_ReturnsOriginalResult()
+    {
+        // Arrange
+        Try<int> tryResult = () => TestHelper.CreateSuccessResult(42);
         Func<int, bool> predicate = x => x > 0;
+        var resultError = TestHelper.DefaultResultError;
 
         // Act
-        var ensuredResult = await result.EnsureAsync(predicate, ResultError.New("Should not be used"));
+        var actual = tryResult.Ensure(predicate, resultError);
 
         // Assert
-        ensuredResult.IsSuccess.Should().BeTrue();
-        ensuredResult.Value.Should().Be(42);
+        actual.IsSuccess.Should().BeTrue();
+        actual.IsFailure.Should().BeFalse();
+        actual.Value.Should().Be(42);
     }
 
     [Fact]
-    public async Task EnsureAsync_WhenResultIsSuccessAndPredicateIsFalse_ShouldReturnFailedResultWithProvidedError()
+    public void Ensure_TryPredicateIsFalse_ReturnsFailureResult()
     {
         // Arrange
-        var result = Task.FromResult(Result.Success(42));
-        var error = ResultError.New("Predicate failed");
+        Try<int> tryResult = () => TestHelper.CreateSuccessResult(42);
         Func<int, bool> predicate = x => x < 0;
+        var resultError = TestHelper.DefaultResultError;
 
         // Act
-        var ensuredResult = await result.EnsureAsync(predicate, error);
+        var actual = tryResult.Ensure(predicate, resultError);
 
         // Assert
-        ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.Error.Should().Be(error);
+        actual.IsSuccess.Should().BeFalse();
+        actual.IsFailure.Should().BeTrue();
+        actual.Error.Should().Be(resultError);
     }
 
     [Fact]
-    public async Task EnsureAsync_WithAsyncPredicate_WhenResultIsFailure_ShouldReturnOriginalResult()
+    public void Ensure_TryResultIsFailure_ReturnsOriginalResult()
     {
         // Arrange
-        var error = ResultError.New("Test error");
-        var result = Task.FromResult(Result.Failure<int>(error));
-        Func<int, Task<bool>> predicate = x => Task.FromResult(x > 0);
+        Try<int> tryResult = () => TestHelper.CreateFailureResult<int>(TestHelper.DefaultResultError);
+        Func<int, bool> predicate = x => x > 0;
+        var resultError = TestHelper.DefaultResultError;
 
         // Act
-        var ensuredResult = await result.EnsureAsync(predicate, ResultError.New("Should not be used"));
+        var actual = tryResult.Ensure(predicate, resultError);
 
         // Assert
-        ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.Error.Should().Be(error);
+        actual.IsSuccess.Should().BeFalse();
+        actual.IsFailure.Should().BeTrue();
+        actual.Error.Should().Be(TestHelper.DefaultResultError);
+    }
+
+    #endregion
+
+    #region Try<TIn>.EnsureAsync
+
+    [Fact]
+    public async Task EnsureAsync_TryPredicateIsTrue_ReturnsOriginalResult()
+    {
+        // Arrange
+        Try<int> tryResult = () => TestHelper.CreateSuccessResult(42);
+        Func<int, Task<bool>> predicate = async x =>
+        {
+            await Task.Delay(1);
+            return x > 0;
+        };
+        var resultError = TestHelper.DefaultResultError;
+
+        // Act
+        var actual = await tryResult.EnsureAsync(predicate, resultError);
+
+        // Assert
+        actual.IsSuccess.Should().BeTrue();
+        actual.IsFailure.Should().BeFalse();
+        actual.Value.Should().Be(42);
     }
 
     [Fact]
-    public async Task EnsureAsync_WithAsyncPredicate_WhenResultIsSuccessAndPredicateIsTrue_ShouldReturnOriginalResult()
+    public async Task EnsureAsync_TryPredicateIsFalse_ReturnsFailureResult()
     {
         // Arrange
-        var result = Task.FromResult(Result.Success(42));
-        Func<int, Task<bool>> predicate = x => Task.FromResult(x > 0);
+        Try<int> tryResult = () => TestHelper.CreateSuccessResult(42);
+        Func<int, Task<bool>> predicate = async x =>
+        {
+            await Task.Delay(1);
+            return x < 0;
+        };
+        var resultError = TestHelper.DefaultResultError;
 
         // Act
-        var ensuredResult = await result.EnsureAsync(predicate, ResultError.New("Should not be used"));
+        var actual = await tryResult.EnsureAsync(predicate, resultError);
 
         // Assert
-        ensuredResult.IsSuccess.Should().BeTrue();
-        ensuredResult.Value.Should().Be(42);
+        actual.IsSuccess.Should().BeFalse();
+        actual.IsFailure.Should().BeTrue();
+        actual.Error.Should().Be(resultError);
     }
 
     [Fact]
-    public async Task
-        EnsureAsync_WithAsyncPredicate_WhenResultIsSuccessAndPredicateIsFalse_ShouldReturnFailedResultWithProvidedError()
+    public async Task EnsureAsync_TryResultIsFailure_ReturnsOriginalResult()
     {
         // Arrange
-        var result = Task.FromResult(Result.Success(42));
-        var error = ResultError.New("Predicate failed");
-        Func<int, Task<bool>> predicate = x => Task.FromResult(x < 0);
+        Try<int> tryResult = () => TestHelper.CreateFailureResult<int>(TestHelper.DefaultResultError);
+        Func<int, Task<bool>> predicate = async x =>
+        {
+            await Task.Delay(1);
+            return x > 0;
+        };
+        var resultError = TestHelper.DefaultResultError;
 
         // Act
-        var ensuredResult = await result.EnsureAsync(predicate, error);
+        var actual = await tryResult.EnsureAsync(predicate, resultError);
 
         // Assert
-        ensuredResult.IsFailure.Should().BeTrue();
-        ensuredResult.Error.Should().Be(error);
+        actual.IsSuccess.Should().BeFalse();
+        actual.IsFailure.Should().BeTrue();
+        actual.Error.Should().Be(TestHelper.DefaultResultError);
     }
+
+    #endregion
+
+    #region Task<Result<TIn>>.EnsureAsync (Sync Predicate)
+
+    [Fact]
+    public async Task EnsureAsync_TaskResultSyncPredicateIsTrue_ReturnsOriginalResult()
+    {
+        // Arrange
+        var taskResult = TestHelper.CreateSuccessResultTaskAsync(42);
+        Func<int, bool> predicate = x => x > 0;
+        var resultError = TestHelper.DefaultResultError;
+
+        // Act
+        var actual = await taskResult.EnsureAsync(predicate, resultError);
+
+        // Assert
+        actual.IsSuccess.Should().BeTrue();
+        actual.IsFailure.Should().BeFalse();
+        actual.Value.Should().Be(42);
+    }
+
+    [Fact]
+    public async Task EnsureAsync_TaskResultSyncPredicateIsFalse_ReturnsFailureResult()
+    {
+        // Arrange
+        var taskResult = TestHelper.CreateSuccessResultTaskAsync(42);
+        Func<int, bool> predicate = x => x < 0;
+        var resultError = TestHelper.DefaultResultError;
+
+        // Act
+        var actual = await taskResult.EnsureAsync(predicate, resultError);
+
+        // Assert
+        actual.IsSuccess.Should().BeFalse();
+        actual.IsFailure.Should().BeTrue();
+        actual.Error.Should().Be(resultError);
+    }
+
+    [Fact]
+    public async Task EnsureAsync_TaskResultSyncResultIsFailure_ReturnsOriginalResult()
+    {
+        // Arrange
+        var taskResult = TestHelper.CreateFailureResultTaskAsync<int>(TestHelper.DefaultResultError);
+        Func<int, bool> predicate = x => x > 0;
+        var resultError = TestHelper.DefaultResultError;
+
+        // Act
+        var actual = await taskResult.EnsureAsync(predicate, resultError);
+
+        // Assert
+        actual.IsSuccess.Should().BeFalse();
+        actual.IsFailure.Should().BeTrue();
+        actual.Error.Should().Be(TestHelper.DefaultResultError);
+    }
+
+    #endregion
+
+    #region Task<Result<TIn>>.EnsureAsync (Async Predicate)
+
+    [Fact]
+    public async Task EnsureAsync_TaskResultAsyncPredicateIsTrue_ReturnsOriginalResult()
+    {
+        // Arrange
+        var taskResult = TestHelper.CreateSuccessResultTaskAsync(42);
+        Func<int, Task<bool>> predicate = async x =>
+        {
+            await Task.Delay(1);
+            return x > 0;
+        };
+        var resultError = TestHelper.DefaultResultError;
+
+        // Act
+        var actual = await taskResult.EnsureAsync(predicate, resultError);
+
+        // Assert
+        actual.IsSuccess.Should().BeTrue();
+        actual.IsFailure.Should().BeFalse();
+        actual.Value.Should().Be(42);
+    }
+
+    [Fact]
+    public async Task EnsureAsync_TaskResultAsyncPredicateIsFalse_ReturnsFailureResult()
+    {
+        // Arrange
+        var taskResult = TestHelper.CreateSuccessResultTaskAsync(42);
+        Func<int, Task<bool>> predicate = async x =>
+        {
+            await Task.Delay(1);
+            return x < 0;
+        };
+        var resultError = TestHelper.DefaultResultError;
+
+        // Act
+        var actual = await taskResult.EnsureAsync(predicate, resultError);
+
+        // Assert
+        actual.IsSuccess.Should().BeFalse();
+        actual.IsFailure.Should().BeTrue();
+        actual.Error.Should().Be(resultError);
+    }
+
+    [Fact]
+    public async Task EnsureAsync_TaskResultAsyncResultIsFailure_ReturnsOriginalResult()
+    {
+        // Arrange
+        var taskResult = TestHelper.CreateFailureResultTaskAsync<int>(TestHelper.DefaultResultError);
+        Func<int, Task<bool>> predicate = async x =>
+        {
+            await Task.Delay(1);
+            return x > 0;
+        };
+        var resultError = TestHelper.DefaultResultError;
+
+        // Act
+        var actual = await taskResult.EnsureAsync(predicate, resultError);
+
+        // Assert
+        actual.IsSuccess.Should().BeFalse();
+        actual.IsFailure.Should().BeTrue();
+        actual.Error.Should().Be(TestHelper.DefaultResultError);
+    }
+
+    #endregion
+
+    #region TryAsync<TIn>.EnsureAsync (Sync Predicate)
+
+    [Fact]
+    public async Task EnsureAsync_TryAsyncSyncPredicateIsTrue_ReturnsOriginalResult()
+    {
+        // Arrange
+        TryAsync<int> tryAsyncResult = () => TestHelper.CreateSuccessResultTaskAsync(42);
+        Func<int, bool> predicate = x => x > 0;
+        var resultError = TestHelper.DefaultResultError;
+
+        // Act
+        var actual = await tryAsyncResult.EnsureAsync(predicate, resultError);
+
+        // Assert
+        actual.IsSuccess.Should().BeTrue();
+        actual.IsFailure.Should().BeFalse();
+        actual.Value.Should().Be(42);
+    }
+
+    [Fact]
+    public async Task EnsureAsync_TryAsyncSyncPredicateIsFalse_ReturnsFailureResult()
+    {
+        // Arrange
+        TryAsync<int> tryAsyncResult = () => TestHelper.CreateSuccessResultTaskAsync(42);
+        Func<int, bool> predicate = x => x < 0;
+        var resultError = TestHelper.DefaultResultError;
+
+        // Act
+        var actual = await tryAsyncResult.EnsureAsync(predicate, resultError);
+
+        // Assert
+        actual.IsSuccess.Should().BeFalse();
+        actual.IsFailure.Should().BeTrue();
+        actual.Error.Should().Be(resultError);
+    }
+
+    [Fact]
+    public async Task EnsureAsync_TryAsyncSyncResultIsFailure_ReturnsOriginalResult()
+    {
+        // Arrange
+        TryAsync<int> tryAsyncResult = () => TestHelper.CreateFailureResultTaskAsync<int>(TestHelper.DefaultResultError);
+        Func<int, bool> predicate = x => x > 0;
+        var resultError = TestHelper.DefaultResultError;
+
+        // Act
+        var actual = await tryAsyncResult.EnsureAsync(predicate, resultError);
+
+        // Assert
+        actual.IsSuccess.Should().BeFalse();
+        actual.IsFailure.Should().BeTrue();
+        actual.Error.Should().Be(TestHelper.DefaultResultError);
+    }
+
+    #endregion
+
+    #region TryAsync<TIn>.EnsureAsync (Async Predicate)
+
+    [Fact]
+    public async Task EnsureAsync_TryAsyncAsyncPredicateIsTrue_ReturnsOriginalResult()
+    {
+        // Arrange
+        TryAsync<int> tryAsyncResult = () => TestHelper.CreateSuccessResultTaskAsync(42);
+        Func<int, Task<bool>> predicate = async x =>
+        {
+            await Task.Delay(1);
+            return x > 0;
+        };
+        var resultError = TestHelper.DefaultResultError;
+
+        // Act
+        var actual = await tryAsyncResult.EnsureAsync(predicate, resultError);
+
+        // Assert
+        actual.IsSuccess.Should().BeTrue();
+        actual.IsFailure.Should().BeFalse();
+        actual.Value.Should().Be(42);
+    }
+
+    [Fact]
+    public async Task EnsureAsync_TryAsyncAsyncPredicateIsFalse_ReturnsFailureResult()
+    {
+        // Arrange
+        TryAsync<int> tryAsyncResult = () => TestHelper.CreateSuccessResultTaskAsync(42);
+        Func<int, Task<bool>> predicate = async x =>
+        {
+            await Task.Delay(1);
+            return x < 0;
+        };
+        var resultError = TestHelper.DefaultResultError;
+
+        // Act
+        var actual = await tryAsyncResult.EnsureAsync(predicate, resultError);
+
+        // Assert
+        actual.IsSuccess.Should().BeFalse();
+        actual.IsFailure.Should().BeTrue();
+        actual.Error.Should().Be(resultError);
+    }
+
+    [Fact]
+    public async Task EnsureAsync_TryAsyncAsyncResultIsFailure_ReturnsOriginalResult()
+    {
+        // Arrange
+        TryAsync<int> tryAsyncResult = () => TestHelper.CreateFailureResultTaskAsync<int>(TestHelper.DefaultResultError);
+        Func<int, Task<bool>> predicate = async x =>
+        {
+            await Task.Delay(1);
+            return x > 0;
+        };
+        var resultError = TestHelper.DefaultResultError;
+
+        // Act
+        var actual = await tryAsyncResult.EnsureAsync(predicate, resultError);
+
+        // Assert
+        actual.IsSuccess.Should().BeFalse();
+        actual.IsFailure.Should().BeTrue();
+        actual.Error.Should().Be(TestHelper.DefaultResultError);
+    }
+
+    #endregion
 }
