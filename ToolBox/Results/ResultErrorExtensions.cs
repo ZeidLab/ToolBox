@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ZeidLab.ToolBox.Common;
 using ZeidLab.ToolBox.Options;
@@ -114,6 +116,8 @@ public static class ResultErrorExtensions
     /// }
     /// ]]></code>
     /// </example>
+    [Pure]
+    [ExcludeFromCodeCoverage]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static ResultError WithCode(this ResultError self, ResultErrorCode code)
     {
@@ -223,6 +227,8 @@ public static class ResultErrorExtensions
 	/// }
 	/// ]]></code>
 	/// </example>
+	[Pure]
+	[ExcludeFromCodeCoverage]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static bool IsErrorCode(this ResultError self, ResultErrorCode code)
 	{
@@ -244,6 +250,8 @@ public static class ResultErrorExtensions
 	/// }
 	/// ]]></code>
 	/// </example>
+	[Pure]
+	[ExcludeFromCodeCoverage]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static bool IsValidationError(this ResultError self)
 	{
@@ -265,6 +273,8 @@ public static class ResultErrorExtensions
 	/// }
 	/// ]]></code>
 	/// </example>
+	[Pure]
+	[ExcludeFromCodeCoverage]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static bool IsNotFoundError(this ResultError self)
 	{
@@ -286,6 +296,8 @@ public static class ResultErrorExtensions
 	/// }
 	/// ]]></code>
 	/// </example>
+	[Pure]
+	[ExcludeFromCodeCoverage]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static bool IsInternalError(this ResultError self)
 	{

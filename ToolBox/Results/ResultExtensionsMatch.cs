@@ -25,10 +25,10 @@ namespace ZeidLab.ToolBox.Results;
 /// Chaining with Try:
 /// <code><![CDATA[
 /// var tryResult = new Try<int>(() => int.Parse("xyz"));
-/// var handled = tryResult.Match(
-///     success: x => Result.Success($"Parsed {x}"),
-///     failure: err => Result.Success("Failed to parse")
-/// ); // handled = Result.Success("Failed to parse")
+/// tryResult.Match(
+///     success: x => Console.WriteLine($"Parsed {x}"),
+///     failure: err => Console.WriteLine($"Failed to parse, {err.Message}")
+/// ); // Prints: "Failed to parse, Input string was not in a correct format."
 /// ]]></code>
 /// </example>
 [SuppressMessage("Design", "CA1062:Validate arguments of public methods")]
