@@ -48,35 +48,6 @@ public class MaybeExtensionsTests
     }
 
 
-    [Fact]
-    public void Map_WhenMaybeIsSome_ShouldApplySomeFunction()
-    {
-        // Arrange
-        var maybe = Maybe.Some(42);
-        Func<int, string> some = x => x.ToString();
-        var none = () => "none";
-
-        // Act
-        var result = maybe.Map(some, none);
-
-        // Assert
-        result.Should().Be("42");
-    }
-
-    [Fact]
-    public void Map_WhenMaybeIsNone_ShouldApplyNoneFunction()
-    {
-        // Arrange
-        var maybe = Maybe.None<int>();
-        Func<int, string> some = x => x.ToString();
-        var none = () => "none";
-
-        // Act
-        var result = maybe.Map(some, none);
-
-        // Assert
-        result.Should().Be("none");
-    }
 
     [Fact]
     public void If_WhenMaybeIsSomeAndPredicateIsTrue_ShouldReturnTrue()

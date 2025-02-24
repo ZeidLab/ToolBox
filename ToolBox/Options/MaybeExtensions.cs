@@ -52,44 +52,16 @@ public static class MaybeExtensions
 		=> Maybe.None<TIn>();
 
 
-	/// <summary>
-	/// Maps the content of a <see cref="Maybe{TIn}"/> instance to a new value using two functions:
-	/// one for handling the Some case and another for handling the None case. This method always returns
-	/// a value, making it useful for providing default values or handling both states of a Maybe instance.
-	/// </summary>
-	/// <typeparam name="TIn">The type of the content in the original <see cref="Maybe{TIn}"/> instance.</typeparam>
-	/// <typeparam name="TOut">The type of the result value after mapping.</typeparam>
-	/// <param name="self">The original <see cref="Maybe{TIn}"/> instance to map.</param>
-	/// <param name="some">
-	/// The mapping function to apply if <paramref name="self"/> is Some.
-	/// Takes a value of type <typeparamref name="TIn"/> and returns a value of type <typeparamref name="TOut"/>.
-	/// </param>
-	/// <param name="none">
-	/// The function to execute if <paramref name="self"/> is None.
-	/// Returns a default or fallback value of type <typeparamref name="TOut"/>.
-	/// </param>
-	/// <returns>
-	/// A value of type <typeparamref name="TOut"/>: either the result of applying <paramref name="some"/>
-	/// to the content if <paramref name="self"/> is Some, or the result of <paramref name="none"/> if it is None.
-	/// </returns>
-	/// <example>
-	/// <code><![CDATA[
-	/// var maybeAge = Maybe.Some(25);
-	/// var description = maybeAge.Map(
-	///     some: age => $"Age is {age}",
-	///     none: () => "Age unknown"
-	/// ); // Returns "Age is 25"
-	///
-	/// var maybeNone = Maybe.<int>None();
-	/// var result = maybeNone.Map(
-	///     some: age => age * 2,
-	///     none: () => 0
-	/// ); // Returns 0
-	/// ]]></code>
-	/// </example>
+
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[ExcludeFromCodeCoverage]
+#pragma warning disable S1133
+	[Obsolete("Use .Match and .MatchAsync instead",true)]
+#pragma warning restore S1133
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 	public static TOut Map<TIn, TOut>(this Maybe<TIn> self, Func<TIn, TOut> some, Func<TOut> none)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 		where TIn : notnull =>
 #pragma warning disable CS8604 // Possible null reference argument.
 #pragma warning disable CA1062
