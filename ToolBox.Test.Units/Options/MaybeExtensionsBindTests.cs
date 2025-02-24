@@ -1,6 +1,5 @@
 using FluentAssertions;
 using ZeidLab.ToolBox.Options;
-using Xunit;
 
 namespace ZeidLab.ToolBox.Test.Units.Options;
 
