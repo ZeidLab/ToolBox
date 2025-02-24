@@ -111,9 +111,16 @@ public static class MaybeExtensions
 #pragma warning restore CS8604 // Possible null reference argument.
 
 
+
 	/// <summary>
-	/// Filters the Maybe instance based on a predicate applied to its content.
+	/// Filters the <see cref="Maybe{TIn}"/> instance based on a predicate applied to its content.
 	/// </summary>
+	/// <typeparam name="TIn">The type of the content within the <see cref="Maybe{TIn}"/> instance.</typeparam>
+	/// <param name="self">The <see cref="Maybe{TIn}"/> instance to filter.</param>
+	/// <param name="predicate">The predicate function to apply to the content of the <see cref="Maybe{TIn}"/> instance.</param>
+	/// <returns>
+	/// A <see cref="Maybe{TIn}"/> instance with the same content if the predicate is true, or None if the predicate is false.
+	/// </returns>
 	/// <example>
 	/// <code><![CDATA[
 	/// var maybe = Maybe.Some(42);
@@ -121,12 +128,6 @@ public static class MaybeExtensions
 	/// Console.WriteLine(filtered.Reduce(() => 0)); // Output: 42
 	/// ]]></code>
 	/// </example>
-	/// <typeparam name="TIn">The type of the content within the Maybe instance.</typeparam>
-	/// <param name="self">The Maybe instance to filter.</param>
-	/// <param name="predicate">The predicate function to apply to the content of the Maybe instance.</param>
-	/// <returns>
-	/// A Maybe instance with the same content if the predicate is true, or None if the predicate is false.
-	/// </returns>
 	[Pure]
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static Maybe<TIn> Filter<TIn>(this Maybe<TIn> self, Func<TIn, bool> predicate)

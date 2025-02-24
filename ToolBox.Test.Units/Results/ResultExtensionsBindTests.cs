@@ -1,8 +1,5 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿using Xunit;
-using FluentAssertions;
+﻿using FluentAssertions;
 using ZeidLab.ToolBox.Results;
-using System;
-using System.Threading.Tasks;
 
 namespace ZeidLab.ToolBox.Test.Units.Results
 {
