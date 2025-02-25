@@ -5,7 +5,7 @@ namespace ZeidLab.ToolBox.Test.Units.Options;
 
 public sealed class MaybeExtensionsBindTests
 {
-    #region Bind
+    #region Bind<TIn, TOut>(this Maybe<TIn> self, Func<TIn, Maybe<TOut>> map)
 
     [Fact]
     public void Bind_SomeValue_TransformsValue()
@@ -36,7 +36,7 @@ public sealed class MaybeExtensionsBindTests
 
     #endregion
 
-    #region BindAsync_ValueMaybe_Func
+    #region BindAsync<TIn, TOut>(this Maybe<TIn> self, Func<TIn, Task<Maybe<TOut>>> map)
 
     [Fact]
     public async Task BindAsync_ValueMaybeFunc_SomeValue_TransformsValueAsynchronously()
@@ -75,7 +75,7 @@ public sealed class MaybeExtensionsBindTests
 
     #endregion
 
-    #region BindAsync_TaskMaybe_Func
+    #region BindAsync<TIn, TOut>(this Task<Maybe<TIn>> self, Func<TIn, Maybe<TOut>> map)
 
     [Fact]
     public async Task BindAsync_TaskMaybeFunc_SomeValue_TransformsValue()
@@ -106,7 +106,7 @@ public sealed class MaybeExtensionsBindTests
 
     #endregion
 
-    #region BindAsync_TaskMaybe_FuncAsync
+    #region BindAsync<TIn, TOut>(this Task<Maybe<TIn>> self, Func<TIn, Task<Maybe<TOut>>> map)
 
     [Fact]
     public async Task BindAsync_TaskMaybeFuncAsync_SomeValue_TransformsValueWithAsyncTransformation()
