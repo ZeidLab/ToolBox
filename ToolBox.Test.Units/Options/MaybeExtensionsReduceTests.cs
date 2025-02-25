@@ -6,13 +6,13 @@ using Xunit;
 
 public sealed class MaybeExtensionsReduceTests
 {
-    #region Reduce_SubstituteValue
+    #region Reduce<T>(this Maybe<T> self, T substitute)
 
     [Fact]
     public void Reduce_SubstituteValue_Some_ReturnsValue()
     {
         // Arrange
-        var maybe = Maybe.Some(5); // Use Maybe.Some
+        var maybe = Maybe.Some(5); 
         var substitute = 0;
 
         // Act
@@ -26,7 +26,7 @@ public sealed class MaybeExtensionsReduceTests
     public void Reduce_SubstituteValue_None_ReturnsSubstitute()
     {
         // Arrange
-        var maybe = Maybe.None<int>(); // Use Maybe.None<int>()
+        var maybe = Maybe.None<int>(); 
         var substitute = 0;
 
         // Act
@@ -38,13 +38,13 @@ public sealed class MaybeExtensionsReduceTests
 
     #endregion
 
-    #region Reduce_SubstituteFunc
+    #region Reduce<T>(this Maybe<T> self, Func<T> substitute)
 
     [Fact]
     public void Reduce_SubstituteFunc_Some_ReturnsValue()
     {
         // Arrange
-        var maybe = Maybe.Some("Hello"); // Use Maybe.Some
+        var maybe = Maybe.Some("Hello"); 
         Func<string> substituteFunc = () => "Default";
 
         // Act
@@ -58,7 +58,7 @@ public sealed class MaybeExtensionsReduceTests
     public void Reduce_SubstituteFunc_None_ReturnsSubstitute()
     {
         // Arrange
-        var maybe = Maybe.None<string>(); // Use Maybe.None<string>()
+        var maybe = Maybe.None<string>(); 
         Func<string> substituteFunc = () => "Default";
 
         // Act
@@ -70,13 +70,13 @@ public sealed class MaybeExtensionsReduceTests
 
     #endregion
 
-    #region ReduceAsync_SubstituteTask
+    #region ReduceAsync<T>(this Maybe<T> self, Func<Task<T>> substitute)
 
     [Fact]
     public async Task ReduceAsync_SubstituteTask_Some_ReturnsValue()
     {
         // Arrange
-        var maybe = Maybe.Some(10); // Use Maybe.Some
+        var maybe = Maybe.Some(10); 
         Func<Task<int>> substituteTask = () => Task.FromResult(0);
 
         // Act
@@ -90,7 +90,7 @@ public sealed class MaybeExtensionsReduceTests
     public async Task ReduceAsync_SubstituteTask_None_ReturnsSubstitute()
     {
         // Arrange
-        var maybe = Maybe.None<int>(); // Use Maybe.None<int>()
+        var maybe = Maybe.None<int>(); 
         Func<Task<int>> substituteTask = () => Task.FromResult(0);
 
         // Act
@@ -102,13 +102,13 @@ public sealed class MaybeExtensionsReduceTests
 
     #endregion
 
-    #region ReduceAsync_SubstituteValue_TaskMaybe
+    #region ReduceAsync<T>(this Task<Maybe<T>> self, T substitute)
 
     [Fact]
     public async Task ReduceAsync_SubstituteValue_TaskMaybe_Some_ReturnsValue()
     {
         // Arrange
-        Task<Maybe<int>> maybeTask = Task.FromResult(Maybe.Some(20)); // Use Maybe.Some
+        Task<Maybe<int>> maybeTask = Task.FromResult(Maybe.Some(20)); 
         var substitute = 0;
 
         // Act
@@ -122,7 +122,7 @@ public sealed class MaybeExtensionsReduceTests
     public async Task ReduceAsync_SubstituteValue_TaskMaybe_None_ReturnsSubstitute()
     {
         // Arrange
-        Task<Maybe<int>> maybeTask = Task.FromResult(Maybe.None<int>()); // Use Maybe.None<int>()
+        Task<Maybe<int>> maybeTask = Task.FromResult(Maybe.None<int>()); 
         var substitute = 0;
 
         // Act
@@ -134,13 +134,13 @@ public sealed class MaybeExtensionsReduceTests
 
     #endregion
 
-    #region ReduceAsync_SubstituteFunc_TaskMaybe
+    #region ReduceAsync<T>(this Task<Maybe<T>> self, Func<T> substitute)
 
     [Fact]
     public async Task ReduceAsync_SubstituteFunc_TaskMaybe_Some_ReturnsValue()
     {
         // Arrange
-        Task<Maybe<string>> maybeTask = Task.FromResult(Maybe.Some("Async")); // Use Maybe.Some
+        Task<Maybe<string>> maybeTask = Task.FromResult(Maybe.Some("Async")); 
         Func<string> substituteFunc = () => "Default";
 
         // Act
@@ -154,7 +154,7 @@ public sealed class MaybeExtensionsReduceTests
     public async Task ReduceAsync_SubstituteFunc_TaskMaybe_None_ReturnsSubstitute()
     {
         // Arrange
-        Task<Maybe<string>> maybeTask = Task.FromResult(Maybe.None<string>()); // Use Maybe.None<string>()
+        Task<Maybe<string>> maybeTask = Task.FromResult(Maybe.None<string>()); 
         Func<string> substituteFunc = () => "Default";
 
         // Act
@@ -166,13 +166,13 @@ public sealed class MaybeExtensionsReduceTests
 
     #endregion
 
-    #region ReduceAsync_SubstituteTask_TaskMaybe
+    #region ReduceAsync<T>(this Task<Maybe<T>> self, Func<Task<T>> substitute)
 
     [Fact]
     public async Task ReduceAsync_SubstituteTask_TaskMaybe_Some_ReturnsValue()
     {
         // Arrange
-        Task<Maybe<int>> maybeTask = Task.FromResult(Maybe.Some(30)); // Use Maybe.Some
+        Task<Maybe<int>> maybeTask = Task.FromResult(Maybe.Some(30)); 
         Func<Task<int>> substituteTask = () => Task.FromResult(0);
 
         // Act
@@ -186,7 +186,7 @@ public sealed class MaybeExtensionsReduceTests
     public async Task ReduceAsync_SubstituteTask_TaskMaybe_None_ReturnsSubstitute()
     {
         // Arrange
-        Task<Maybe<int>> maybeTask = Task.FromResult(Maybe.None<int>()); // Use Maybe.None<int>()
+        Task<Maybe<int>> maybeTask = Task.FromResult(Maybe.None<int>()); 
         Func<Task<int>> substituteTask = () => Task.FromResult(0);
 
         // Act
