@@ -49,8 +49,8 @@
 
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="AsyncMethodNameFixer"/>
-		<PackageReference Include="ConfigureAwaitChecker.Analyzer">
+		<PackageReference Include="AsyncMethodNameFixer" PrivateAssets="All"/>
+		<PackageReference Include="ConfigureAwaitChecker.Analyzer" >
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
